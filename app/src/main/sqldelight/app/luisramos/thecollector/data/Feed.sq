@@ -1,0 +1,21 @@
+import app.luisramos.thecollector.data.model.FeedUpdateMode;
+import java.util.Date;
+
+CREATE TABLE feed (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL,
+    updateMode TEXT as FeedUpdateMode,
+    updateTimeInterval INTEGER,
+    createdAt INTEGER as Date NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM feed;
+
+insertFeed:
+INSERT INTO feed (title, url, updateMode, updateTimeInterval, createdAt)
+VALUES (?, ?, ?, ?, ?);
+
+lastInsertRowId: SELECT last_insert_rowid();
