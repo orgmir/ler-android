@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import app.luisramos.thecollector.App
-import app.luisramos.thecollector.AppContainer
+import app.luisramos.thecollector.di.AppContainer
 
 open class BaseFragment : Fragment() {
 
