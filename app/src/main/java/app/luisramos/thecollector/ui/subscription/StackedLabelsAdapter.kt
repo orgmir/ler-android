@@ -1,4 +1,4 @@
-package app.luisramos.thecollector.ui.main
+package app.luisramos.thecollector.ui.subscription
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,21 +15,23 @@ class StackedLabelsAdapter : RecyclerView.Adapter<StackedLabelsAdapter.ViewHolde
             notifyDataSetChanged()
         }
 
+    var onItemClick: ((Pair<String, String>) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_stacked_labels, parent, false
-            )
+            LayoutInflater.from(parent.context).inflate(R.layout.item_stacked_labels, parent, false)
         return ViewHolder(view)
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (text1, text2) = items[position]
+        val item = items[position]
+        val (text1, text2) = item
         holder.itemView.apply {
             textView1.text = text1
             textView2.text = text2
+            setOnClickListener { onItemClick?.invoke(item) }
         }
     }
 

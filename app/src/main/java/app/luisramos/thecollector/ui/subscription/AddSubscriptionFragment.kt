@@ -1,4 +1,4 @@
-package app.luisramos.thecollector.ui.main
+package app.luisramos.thecollector.ui.subscription
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,18 +10,22 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
-import app.luisramos.thecollector.ui.main.AddSubscriptionViewModel.UiState
+import app.luisramos.thecollector.ui.base.BaseFragment
+import app.luisramos.thecollector.ui.event.observeEvent
+import app.luisramos.thecollector.ui.subscription.AddSubscriptionViewModel.UiState
 import kotlinx.android.synthetic.main.fragment_add_subscription.*
 import kotlinx.android.synthetic.main.main_fragment.recyclerView
 
 class AddSubscriptionFragment : BaseFragment() {
 
     companion object {
-        fun newInstance() = AddSubscriptionFragment()
+        fun newInstance() =
+            AddSubscriptionFragment()
     }
 
     private val viewModel: AddSubscriptionViewModel by viewModels()
-    private val adapter = StackedLabelsAdapter()
+    private val adapter =
+        StackedLabelsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +35,8 @@ class AddSubscriptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        toolbar?.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
@@ -47,6 +53,11 @@ class AddSubscriptionFragment : BaseFragment() {
             }
         }
 
+        adapter.onItemClick = { item ->
+            val (_, link) = item
+            viewModel.addSubscription(link)
+        }
+
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             swipeRefreshLayout.isRefreshing = it is UiState.Loading
             when (it) {
@@ -58,5 +69,10 @@ class AddSubscriptionFragment : BaseFragment() {
                 is UiState.Loaded -> adapter.items = it.items
             }
         })
+
+        viewModel.goBack.observeEvent(this) {
+            Toast.makeText(requireContext(), "Subscription added", Toast.LENGTH_SHORT).show()
+            activity?.onBackPressed()
+        }
     }
 }

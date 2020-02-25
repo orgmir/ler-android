@@ -29,7 +29,6 @@ class MainViewModel(
         data.value = feeds
     }
 
-
 }
 
 suspend fun <R> toggling(liveData: MutableLiveData<Boolean>, block: suspend () -> R): R {

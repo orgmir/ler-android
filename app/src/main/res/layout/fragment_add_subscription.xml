@@ -16,7 +16,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -24,10 +27,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:elevation="2dp"
         android:hint="@string/hint_url"
-        android:padding="@dimen/space_m"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/spacing_s"
+        app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
+        app:layout_constraintEnd_toStartOf="@id/imageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -40,5 +43,25 @@
             android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="16dp"
+        android:background="?selectableItemBackground"
+        android:src="@drawable/ic_baseline_search_24"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textInputLayout"
+        app:layout_constraintTop_toTopOf="@id/textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

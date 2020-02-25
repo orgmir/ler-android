@@ -1,4 +1,4 @@
-package app.luisramos.thecollector.ui.main
+package app.luisramos.thecollector.ui.sidemenu
 
 import android.view.LayoutInflater
 import android.view.View

@@ -5,6 +5,9 @@ import android.view.*
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
+import app.luisramos.thecollector.ui.base.BaseFragment
+import app.luisramos.thecollector.ui.sidemenu.FeedAdapter
+import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : BaseFragment() {
@@ -15,11 +18,6 @@ class MainFragment : BaseFragment() {
 
     private val viewModel: MainViewModel by viewModels()
     private val adapter = FeedAdapter()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +44,11 @@ class MainFragment : BaseFragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
@@ -62,6 +65,7 @@ class MainFragment : BaseFragment() {
     private fun showAddSubscriptionDialog() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, AddSubscriptionFragment.newInstance())
-            .commitNow()
+            .addToBackStack(null)
+            .commit()
     }
 }

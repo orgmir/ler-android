@@ -1,8 +1,10 @@
-package app.luisramos.thecollector.ui.main
+package app.luisramos.thecollector.ui.subscription
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.luisramos.thecollector.ui.event.EmptyEvent
+import app.luisramos.thecollector.ui.event.postEmptyEvent
 import app.luisramos.thecollector.usecases.FetchAndSaveChannelUseCase
 import app.luisramos.thecollector.usecases.FetchFeedsFromHtmlUseCase
 import kotlinx.coroutines.launch
@@ -13,6 +15,7 @@ class AddSubscriptionViewModel(
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState>()
+    val goBack = MutableLiveData<EmptyEvent>()
 
     fun fetchFeeds(url: String) = viewModelScope.launch {
         uiState.value = UiState.Loading
@@ -28,16 +31,12 @@ class AddSubscriptionViewModel(
     }
 
     fun addSubscription(url: String) = viewModelScope.launch {
-        // TODO validate url
-        //  check for http or https
-        // TODO add feed auto discovery
-
+        uiState.value = UiState.Loading
         val result = fetchAndSaveChannelUseCase.fetchAndSaveChannel(url)
         if (result.isFailure) {
-            uiState.value =
-                UiState.ShowError("Failed adding subscription. Please try again")
+            uiState.value = UiState.ShowError("Failed adding subscription. Please try again")
         } else {
-            // go back to previous fragment
+            goBack.postEmptyEvent()
         }
     }
 
@@ -47,4 +46,3 @@ class AddSubscriptionViewModel(
         data class Loaded(val items: List<Pair<String, String>>) : UiState()
     }
 }
-

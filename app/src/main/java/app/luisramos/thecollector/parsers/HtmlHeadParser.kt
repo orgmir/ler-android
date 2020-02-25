@@ -11,11 +11,11 @@ class HtmlHeadParser {
     fun parse(inputStream: InputStream, baseUri: String): List<FeedLink> {
         inputStream.use {
             val document = Jsoup.parse(inputStream, null, baseUri)
-            return readDocument(document)
+            return readDocument(document, baseUri)
         }
     }
 
-    private fun readDocument(document: Document): List<FeedLink> =
+    private fun readDocument(document: Document, baseUri: String): List<FeedLink> =
         document.select("link")
             .filter {
                 val type = it.attr("type")
@@ -23,7 +23,10 @@ class HtmlHeadParser {
             }
             .map {
                 val title = it.attr("title")
-                val link = it.attr("href")
+                var link = it.attr("href")
+                if (!link.contains(baseUri)) {
+                    link = "$baseUri$link"
+                }
                 FeedLink(title, link)
             }
 
