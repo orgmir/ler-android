@@ -1,0 +1,22 @@
+import java.util.Date;
+
+
+CREATE TABLE feedItem (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    link TEXT NOT NULL,
+    unread INTEGER as Boolean DEFAULT 1,
+    publishedAt INTEGER as Date,
+    updatedAt INTEGER as Date,
+    createdAt INTEGER as Date,
+    feed_id INTEGER NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM feedItem;
+
+insertFeedItem:
+INSERT INTO feedItem (title, description, link, publishedAt, updatedAt, createdAt, feed_id)
+VALUES (?, ?, ?, ?, ?, ?, ?);

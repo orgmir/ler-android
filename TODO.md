@@ -8,9 +8,14 @@
 - [ ] Allow filtering list just showing articles from one subscription
 - [ ] Save all feed items when saving a new subscription
 - [ ] Periodically fetch and update subscriptions, every hour?
+- [ ] Pull the favicon from the website somehow and save it
+- [ ] Fix database for new feed item type and queries
 
 - [ ] Setup CI on gitlab?
 
+- [x] Add RSS feed parser
+- [x] Make both feed parsers complete
+- [x] Add FeedItem database table
 - [x] Add back button press logic to dismiss "Add Subscription" screen
 - [x] Add back arrow to Add Subscrition screen
 - [x] Add dividier line to input field in add subscrition screen

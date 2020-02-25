@@ -27,23 +27,7 @@
             rel="alternate" />
         <published>2012-09-25T19:29:14Z</published>
         <updated>2020-02-22T11:18:48Z</updated>
-        <summary type="html">
-            &lt;p&gt;I have a lot of mongodb documents in a collection of the form:&lt;/p&gt;
-
-            &lt;pre&gt;&lt;code&gt;{
-            .... &quot;URL&quot;:&quot;www.abc.com/helloWorldt/...&quot; .....
-            } &lt;/code&gt;&lt;/pre&gt;
-
-            &lt;p&gt;I want to replace &lt;code&gt;helloWorldt&lt;/code&gt; with &lt;code&gt;helloWorld&lt;/code&gt;
-            to get:&lt;/p&gt;
-
-            &lt;pre&gt;&lt;code&gt;{
-            .... &quot;URL&quot;:&quot;www.abc.com/helloWorld/...&quot; .....
-            } &lt;/code&gt;&lt;/pre&gt;
-
-            &lt;p&gt;How can I achieve this for all documents in my collection?&lt;/p&gt;
-
-        </summary>
+        <summary type="html">I have a lot of mongodb documents in a collection</summary>
     </entry>
     <entry>
         <id>https://stackoverflow.com/q/3684463</id>
@@ -61,66 +45,6 @@
             rel="alternate" />
         <published>2010-09-10T12:08:59Z</published>
         <updated>2020-02-22T11:19:38Z</updated>
-        <summary type="html">
-            &lt;p&gt;I have a nested array in which I want to display a subset of results. For
-            example, on the array below I want to loop through all the values in nested array[1].&lt;/p&gt;
-
-            &lt;pre&gt; Array
-            (
-            [0] =&gt; Array
-            (
-            [0] =&gt; one
-            [1] =&gt; Array
-            (
-            [0] =&gt; 1
-            [1] =&gt; 2
-            [2] =&gt; 3
-            )
-            )
-
-            [1] =&gt; Array
-            (
-            [0] =&gt; two
-            [1] =&gt; Array
-            (
-            [0] =&gt; 4
-            [1] =&gt; 5
-            [2] =&gt; 6
-            )
-            )
-
-            [2] =&gt; Array
-            (
-            [0] =&gt; three
-            [1] =&gt; Array
-            (
-            [0] =&gt; 7
-            [1] =&gt; 8
-            [2] =&gt; 9
-            )
-            )
-            ) &lt;/pre&gt;
-
-            &lt;p&gt;I was trying to use the foreach function but I cannot seem to get this to work.
-            This was my original syntax (though I realise it is wrong). &lt;/p&gt;
-
-            &lt;pre&gt; $tmpArray = array(array(&quot;one&quot;,array(1,2,3)),array(&quot;two&quot;,array(4,5,6)),array(&quot;three&quot;,array(7,8,9)));
-
-            foreach ($tmpArray[1] as $value) {
-            echo $value;
-            } &lt;/pre&gt;
-
-            &lt;p&gt;I was trying to avoid a variable compare on whether the key is the same as the
-            key I want to search, i.e.&lt;/p&gt;
-
-            &lt;pre&gt; foreach ($tmpArray as $key =&gt; $value) {
-            if ($key == 1) {
-            echo $value;
-            }
-            } &lt;/pre&gt;
-
-            &lt;p&gt;Any ideas?&lt;/p&gt;
-
-        </summary>
+        <summary type="html">I have a nested array in which I want</summary>
     </entry>
 </feed>

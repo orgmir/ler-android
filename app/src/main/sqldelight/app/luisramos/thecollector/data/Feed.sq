@@ -4,9 +4,12 @@ import java.util.Date;
 CREATE TABLE feed (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
-    url TEXT NOT NULL,
-    updateMode TEXT as FeedUpdateMode,
-    updateTimeInterval INTEGER,
+    link TEXT NOT NULL,
+    description TEXT,
+    updateMode TEXT as FeedUpdateMode NOT NULL,
+    updateTimeInterval INTEGER NOT NULL,
+    publishedAt INTEGER as Date,
+    updatedAt INTEGER as Date,
     createdAt INTEGER as Date NOT NULL
 );
 
@@ -15,7 +18,7 @@ SELECT *
 FROM feed;
 
 insertFeed:
-INSERT INTO feed (title, url, updateMode, updateTimeInterval, createdAt)
+INSERT INTO feed (title, link, updateMode, updateTimeInterval, createdAt)
 VALUES (?, ?, ?, ?, ?);
 
 lastInsertRowId: SELECT last_insert_rowid();

@@ -28,12 +28,19 @@ class DefaultDatabase(context: Context, coroutineContext: CoroutineContext) : Db
         driver = driver,
         feedAdapter = Feed.Adapter(
             updateModeAdapter = EnumColumnAdapter(),
+            createdAtAdapter = dateAdapter,
+            updatedAtAdapter = dateAdapter,
+            publishedAtAdapter = dateAdapter
+        ),
+        feedItemAdapter = FeedItem.Adapter(
+            publishedAtAdapter = dateAdapter,
+            updatedAtAdapter = dateAdapter,
             createdAtAdapter = dateAdapter
         )
     )
 
 
-    override suspend fun insertFeed(title: String, url: String, updateMode: FeedUpdateMode): Long =
+    override suspend fun insertFeed(title: String, link: String, updateMode: FeedUpdateMode): Long =
         withContext(coroutineContext) {
             queryWrapper.feedQueries.insertFeed(
                 title = title,
