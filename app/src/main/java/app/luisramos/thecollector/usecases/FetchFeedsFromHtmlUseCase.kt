@@ -18,8 +18,8 @@ class FetchFeedsFromHtmlUseCase {
         val url = withContext(Dispatchers.IO) { createURL(urlString) }
             ?: return Result.failure(IOException("Could not create URL for $urlString"))
 
-        val inputStreamResult = downloadPage(url)
-        val inputStream = inputStreamResult.getOrElse { return Result.failure(it) }
+        val inputStream = withContext(Dispatchers.IO) { url.download() }
+            ?: return Result.failure(IOException("Url download is empty for $urlString"))
 
         return parseHtml(inputStream, url.baseUrl)
     }
@@ -28,47 +28,16 @@ class FetchFeedsFromHtmlUseCase {
         inputStream: InputStream,
         baseUrl: String
     ): Result<List<Pair<String, String>>> = withContext(Dispatchers.IO) {
-        try {
-            val pairs = HtmlHeadParser().parse(inputStream, baseUrl)
-                .map {
-                    val (title, link) = it
-                    title to link
-                }.fold(mutableMapOf<String, Pair<String, String>>()) { acc, value ->
-                    val (_, link) = value
-                    acc[link] = value
-                    acc
-                }.values.toList()
-            Result.success(pairs)
-        } catch (e: IOException) {
-            Result.failure<List<Pair<String, String>>>(e)
-        }
-    }
-
-    private suspend fun downloadPage(url: URL): Result<InputStream> =
-        withContext(Dispatchers.IO) {
-            try {
-                val inputStream = downloadUrl(url)
-                if (inputStream != null) {
-                    Result.success(inputStream)
-                } else {
-                    Result.failure(IOException("Empty document for $url"))
-                }
-            } catch (e: IOException) {
-                Result.failure<InputStream>(e)
-            }
-        }
-
-
-    @Throws(IOException::class)
-    private fun downloadUrl(url: URL): InputStream? {
-        return (url.openConnection() as? HttpURLConnection)?.run {
-            readTimeout = 10000
-            connectTimeout = 15000
-            requestMethod = "GET"
-            doInput = true
-            connect()
-            inputStream
-        }
+        val pairs = HtmlHeadParser().parse(inputStream, baseUrl)
+            .map {
+                val (title, link) = it
+                title to link
+            }.fold(mutableMapOf<String, Pair<String, String>>()) { acc, value ->
+                val (_, link) = value
+                acc[link] = value
+                acc
+            }.values.toList()
+        Result.success(pairs)
     }
 
     private fun createURL(urlString: String): URL? =
@@ -88,4 +57,20 @@ class FetchFeedsFromHtmlUseCase {
 
 
     private val URL.baseUrl get() = "$protocol://$host"
+}
+
+fun URL.download(): InputStream? {
+    return (openConnection() as? HttpURLConnection)?.run {
+        try {
+            readTimeout = 10000
+            connectTimeout = 15000
+            requestMethod = "GET"
+            doInput = true
+            connect()
+            inputStream
+        } catch (e: Exception) {
+            Timber.e(e)
+            null
+        }
+    }
 }

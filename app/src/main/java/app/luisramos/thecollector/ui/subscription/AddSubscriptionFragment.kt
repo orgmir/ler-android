@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
@@ -52,6 +55,7 @@ class AddSubscriptionFragment : BaseFragment() {
                 else -> false
             }
         }
+        editText.requestFocus()
 
         adapter.onItemClick = { item ->
             val (_, link) = item
@@ -75,4 +79,14 @@ class AddSubscriptionFragment : BaseFragment() {
             activity?.onBackPressed()
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        hideKeyboard(editText)
+    }
+}
+
+fun Fragment.hideKeyboard(textView: TextView) {
+    requireContext().getSystemService(InputMethodManager::class.java)
+        ?.hideSoftInputFromWindow(textView.windowToken, 0)
 }

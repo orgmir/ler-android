@@ -20,7 +20,7 @@ class RssXmlParser {
     }
 
     @Throws(XmlPullParserException::class, IOException::class)
-    private fun readChannel(parser: XmlPullParser): Channel {
+    fun readChannel(parser: XmlPullParser): Channel {
         var title: String? = null
         var link: String? = null
         var description: String? = null

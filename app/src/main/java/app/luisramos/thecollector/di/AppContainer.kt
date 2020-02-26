@@ -8,7 +8,7 @@ interface AppContainer {
 
     val fetchChannelUseCase: FetchChannelUseCase
     val fetchFeedsUseCase: FetchFeedsUseCase
-    val saveChannelUseCase: SaveChannelUseCase
+    val saveFeedUseCase: SaveFeedUseCase
     val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase
     val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase
 

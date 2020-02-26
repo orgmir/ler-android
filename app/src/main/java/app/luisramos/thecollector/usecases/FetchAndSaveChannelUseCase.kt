@@ -2,7 +2,7 @@ package app.luisramos.thecollector.usecases
 
 class FetchAndSaveChannelUseCase(
     private val fetchChannelUseCase: FetchChannelUseCase,
-    private val saveChannelUseCase: SaveChannelUseCase
+    private val saveFeedUseCase: SaveFeedUseCase
 ) {
     suspend fun fetchAndSaveChannel(url: String): Result<Boolean> {
         val channelResult = fetchChannelUseCase.fetchChannel(url)
@@ -11,6 +11,6 @@ class FetchAndSaveChannelUseCase(
             return Result.failure(it)
         }
 
-        return saveChannelUseCase.saveChannel(channel)
+        return saveFeedUseCase.saveFeed(channel)
     }
 }

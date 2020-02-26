@@ -47,6 +47,7 @@ class MainFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        viewModel.loadData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

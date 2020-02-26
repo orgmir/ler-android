@@ -1,0 +1,60 @@
+package app.luisramos.thecollector.data.model
+
+import app.luisramos.thecollector.parsers.AtomXmlParser
+import app.luisramos.thecollector.parsers.RssXmlParser
+import java.text.SimpleDateFormat
+import java.util.*
+
+data class FeedModel(
+    val title: String,
+    val link: String,
+    val description: String? = null,
+    val updated: Date,
+    val items: List<FeedItemModel> = listOf()
+)
+
+val atomFeedDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
+val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ROOT)
+
+fun RssXmlParser.Channel.toFeed() = FeedModel(
+    title = title ?: "",
+    link = link ?: "",
+    description = description,
+    updated = lastBuildDate?.let { rssFeedDateFormatter.parse(it) } ?: Date(),
+    items = items.map { it.toFeedItem() }
+)
+
+fun AtomXmlParser.Feed.toFeed() = FeedModel(
+    title = title ?: "",
+    link = link ?: "",
+    description = subtitle,
+    updated = updated?.let { atomFeedDateFormatter.parse(it) } ?: Date(),
+    items = entries.map { it.toFeedItem() }
+)
+
+data class FeedItemModel(
+    val id: String,
+    val title: String,
+    val description: String?,
+    val link: String,
+    val published: Date,
+    val updated: Date?
+)
+
+fun RssXmlParser.Item.toFeedItem() = FeedItemModel(
+    id = guid ?: "",
+    title = title ?: "",
+    description = description,
+    link = link ?: "",
+    published = pubDate?.let { rssFeedDateFormatter.parse(it) } ?: Date(),
+    updated = null
+)
+
+fun AtomXmlParser.Entry.toFeedItem() = FeedItemModel(
+    id = id ?: "",
+    title = title ?: "",
+    description = summary,
+    link = link ?: "",
+    published = published?.let { atomFeedDateFormatter.parse(it) } ?: Date(),
+    updated = updated?.let { atomFeedDateFormatter.parse(it) } ?: Date()
+)

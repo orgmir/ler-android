@@ -6,13 +6,15 @@
 - [ ] Revamp side menu UI
 - [ ] Add unread count to side menu items
 - [ ] Allow filtering list just showing articles from one subscription
-- [ ] Save all feed items when saving a new subscription
 - [ ] Periodically fetch and update subscriptions, every hour?
 - [ ] Pull the favicon from the website somehow and save it
-- [ ] Fix database for new feed item type and queries
+- [ ] Change settings icon to side menu
+- [ ] Figure out what settings would be cool
 
 - [ ] Setup CI on gitlab?
 
+- [x] Save all feed items when saving a new subscription
+- [x] Fix database for new feed item type and queries
 - [x] Add RSS feed parser
 - [x] Make both feed parsers complete
 - [x] Add FeedItem database table

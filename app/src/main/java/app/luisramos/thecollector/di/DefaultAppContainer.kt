@@ -12,10 +12,10 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val fetchChannelUseCase = FetchChannelUseCase()
     override val fetchFeedsUseCase = FetchFeedsUseCase(db)
-    override val saveChannelUseCase = SaveChannelUseCase(db)
+    override val saveFeedUseCase = SaveFeedUseCase(db)
     override val fetchAndSaveChannelUseCase = FetchAndSaveChannelUseCase(
         fetchChannelUseCase,
-        saveChannelUseCase
+        saveFeedUseCase
     )
     override val fetchFeedsFromHtmlUseCase = FetchFeedsFromHtmlUseCase()
 

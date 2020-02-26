@@ -10,13 +10,20 @@ CREATE TABLE feedItem (
     publishedAt INTEGER as Date,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date,
-    feed_id INTEGER NOT NULL
+    feedId INTEGER NOT NULL
 );
 
 selectAll:
 SELECT *
 FROM feedItem;
 
+selectAllForFeedId:
+SELECT *
+FROM feedItem
+WHERE feedId = ?;
+
 insertFeedItem:
-INSERT INTO feedItem (title, description, link, publishedAt, updatedAt, createdAt, feed_id)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO feedItem (title, description, link, unread, publishedAt, updatedAt, createdAt, feedId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+lastInsertRowId: SELECT last_insert_rowid();

@@ -22,7 +22,7 @@ class AtomXmlParser {
 
 
     @Throws(XmlPullParserException::class, IOException::class)
-    private fun readFeed(parser: XmlPullParser): Feed {
+    fun readFeed(parser: XmlPullParser): Feed {
         var title: String? = null
         var link: String? = null
         var subtitle: String? = null
