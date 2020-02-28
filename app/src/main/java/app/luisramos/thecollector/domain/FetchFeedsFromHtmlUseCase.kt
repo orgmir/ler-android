@@ -1,4 +1,4 @@
-package app.luisramos.thecollector.usecases
+package app.luisramos.thecollector.domain
 
 import app.luisramos.thecollector.parsers.HtmlHeadParser
 import kotlinx.coroutines.Dispatchers

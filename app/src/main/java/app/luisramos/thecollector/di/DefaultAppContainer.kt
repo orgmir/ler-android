@@ -1,9 +1,8 @@
 package app.luisramos.thecollector.di
 
 import android.content.Context
-import app.luisramos.thecollector.data.Db
 import app.luisramos.thecollector.data.DefaultDatabase
-import app.luisramos.thecollector.usecases.*
+import app.luisramos.thecollector.domain.*
 import kotlinx.coroutines.Dispatchers
 
 class DefaultAppContainer(context: Context) : AppContainer {
@@ -18,7 +17,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         saveFeedUseCase
     )
     override val fetchFeedsFromHtmlUseCase = FetchFeedsFromHtmlUseCase()
+    override val fetchFeedItemsUseCase = FetchFeedItemsUseCase(db)
 
-    override val viewModelFactory =
-        ViewModelProviderFactory(this)
+    override val viewModelFactory = ViewModelProviderFactory(this)
 }

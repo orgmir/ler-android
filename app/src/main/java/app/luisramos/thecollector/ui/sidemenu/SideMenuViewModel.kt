@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luisramos.thecollector.data.Feed
-import app.luisramos.thecollector.usecases.FetchFeedsUseCase
+import app.luisramos.thecollector.domain.FetchFeedsUseCase
 import kotlinx.coroutines.launch
 
 class SideMenuViewModel(

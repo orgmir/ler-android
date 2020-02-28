@@ -1,4 +1,4 @@
-package app.luisramos.thecollector.usecases
+package app.luisramos.thecollector.domain
 
 class FetchAndSaveChannelUseCase(
     private val fetchChannelUseCase: FetchChannelUseCase,

@@ -1,6 +1,5 @@
-package app.luisramos.thecollector.usecases
+package app.luisramos.thecollector.domain
 
-import app.luisramos.thecollector.data.Db
 import app.luisramos.thecollector.data.model.FeedModel
 import app.luisramos.thecollector.data.model.FeedUpdateMode
 import java.io.IOException

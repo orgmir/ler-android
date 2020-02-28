@@ -6,7 +6,7 @@ CREATE TABLE feedItem (
     title TEXT NOT NULL,
     description TEXT,
     link TEXT NOT NULL,
-    unread INTEGER as Boolean DEFAULT 1,
+    unread INTEGER as Boolean DEFAULT 1 NOT NULL,
     publishedAt INTEGER as Date,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date,
@@ -14,10 +14,22 @@ CREATE TABLE feedItem (
 );
 
 selectAll:
-SELECT *
-FROM feedItem;
+SELECT
+    feedItem.id,
+    feedItem.title,
+    feedItem.description
+    link,
+    unread,
+    publishedAt,
+    feedItem.updatedAt,
+    feedItem.createdAt,
+    feedId,
+    feed.title AS feedTitle
+FROM feedItem
+INNER JOIN feed ON feed.id = feedItem.feedId
+ORDER BY feedItem.publishedAt DESC;
 
-selectAllForFeedId:
+selectAllWithFeedId:
 SELECT *
 FROM feedItem
 WHERE feedId = ?;

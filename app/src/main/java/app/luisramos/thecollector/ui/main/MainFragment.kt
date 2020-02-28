@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
 import app.luisramos.thecollector.ui.base.BaseFragment
-import app.luisramos.thecollector.ui.sidemenu.FeedAdapter
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -17,7 +16,7 @@ class MainFragment : BaseFragment() {
     }
 
     private val viewModel: MainViewModel by viewModels()
-    private val adapter = FeedAdapter()
+    private val adapter = FeedItemAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

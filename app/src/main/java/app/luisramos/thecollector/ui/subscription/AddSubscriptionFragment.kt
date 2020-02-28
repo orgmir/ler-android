@@ -27,8 +27,7 @@ class AddSubscriptionFragment : BaseFragment() {
     }
 
     private val viewModel: AddSubscriptionViewModel by viewModels()
-    private val adapter =
-        StackedLabelsAdapter()
+    private val adapter = StackedLabelsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luisramos.thecollector.ui.event.EmptyEvent
 import app.luisramos.thecollector.ui.event.postEmptyEvent
-import app.luisramos.thecollector.usecases.FetchAndSaveChannelUseCase
-import app.luisramos.thecollector.usecases.FetchFeedsFromHtmlUseCase
+import app.luisramos.thecollector.domain.FetchAndSaveChannelUseCase
+import app.luisramos.thecollector.domain.FetchFeedsFromHtmlUseCase
 import kotlinx.coroutines.launch
 
 class AddSubscriptionViewModel(
