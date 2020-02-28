@@ -12,7 +12,10 @@ class ViewModelProviderFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         when (modelClass) {
-            MainViewModel::class.java -> MainViewModel(appContainer.fetchFeedItemsUseCase) as T
+            MainViewModel::class.java -> MainViewModel(
+                appContainer.fetchFeedItemsUseCase,
+                appContainer.setFeedItemUnreadUseCase
+            ) as T
             SideMenuViewModel::class.java -> SideMenuViewModel(appContainer.fetchFeedsUseCase) as T
             AddSubscriptionViewModel::class.java -> AddSubscriptionViewModel(
                 appContainer.fetchFeedsFromHtmlUseCase,

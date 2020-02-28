@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +23,9 @@ import kotlinx.android.synthetic.main.main_fragment.recyclerView
 class AddSubscriptionFragment : BaseFragment() {
 
     companion object {
-        fun newInstance() =
-            AddSubscriptionFragment()
+        fun newInstance(url: String? = null) = AddSubscriptionFragment().apply {
+            url?.let { arguments = bundleOf("url" to it) }
+        }
     }
 
     private val viewModel: AddSubscriptionViewModel by viewModels()
@@ -43,6 +45,7 @@ class AddSubscriptionFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        editText.setText(arguments?.getString("url"))
         editText.setOnEditorActionListener { _, actionId, event ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_UNSPECIFIED -> {
@@ -76,6 +79,11 @@ class AddSubscriptionFragment : BaseFragment() {
         viewModel.goBack.observeEvent(this) {
             Toast.makeText(requireContext(), "Subscription added", Toast.LENGTH_SHORT).show()
             activity?.onBackPressed()
+        }
+
+        val text = editText.text
+        if (text?.isNotEmpty() == true) {
+            viewModel.fetchFeeds(text.toString())
         }
     }
 

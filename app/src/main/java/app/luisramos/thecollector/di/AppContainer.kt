@@ -1,6 +1,5 @@
 package app.luisramos.thecollector.di
 
-import app.luisramos.thecollector.domain.Db
 import app.luisramos.thecollector.domain.*
 
 interface AppContainer {
@@ -12,6 +11,7 @@ interface AppContainer {
     val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase
     val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase
     val fetchFeedItemsUseCase: FetchFeedItemsUseCase
+    val setFeedItemUnreadUseCase: SetUnreadFeedItemUseCase
 
     val viewModelFactory: ViewModelProviderFactory
 }

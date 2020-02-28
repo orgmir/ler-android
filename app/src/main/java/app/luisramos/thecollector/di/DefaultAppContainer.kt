@@ -18,6 +18,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
     )
     override val fetchFeedsFromHtmlUseCase = FetchFeedsFromHtmlUseCase()
     override val fetchFeedItemsUseCase = FetchFeedItemsUseCase(db)
+    override val setFeedItemUnreadUseCase = SetUnreadFeedItemUseCase(db)
 
     override val viewModelFactory = ViewModelProviderFactory(this)
 }

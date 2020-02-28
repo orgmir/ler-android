@@ -27,4 +27,6 @@ interface Db {
         updatedAt: Date,
         feedId: Long
     ): Long
+
+    suspend fun setFeedItemUnread(id: Long, unread: Boolean)
 }

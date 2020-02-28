@@ -43,7 +43,13 @@ class RssXmlParser {
             }
         }
 
-        return Channel(title, description, link, lastBuildDate, items)
+        return Channel(
+            title = title,
+            description = description,
+            link = link,
+            lastBuildDate = lastBuildDate,
+            items = items
+        )
     }
 
     @Throws(XmlPullParserException::class, IOException::class)
@@ -69,7 +75,13 @@ class RssXmlParser {
             }
         }
 
-        return Item(title, link, guid, description, pubDate)
+        return Item(
+            title = title,
+            link = link,
+            guid = guid,
+            description = description,
+            pubDate = pubDate
+        )
     }
 
     @Throws(XmlPullParserException::class, IOException::class)

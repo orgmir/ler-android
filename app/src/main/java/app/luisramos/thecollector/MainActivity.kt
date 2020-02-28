@@ -1,9 +1,11 @@
 package app.luisramos.thecollector
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import app.luisramos.thecollector.ui.main.MainFragment
+import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.toolbar.toolbar
 
@@ -27,6 +29,17 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.backStackEntryCount > 0 ->
                     supportFragmentManager.popBackStack()
                 else -> drawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain") {
+            intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                val frag = AddSubscriptionFragment.newInstance(it)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, frag)
+                    .addToBackStack(null)
+                    .commit()
+
             }
         }
     }

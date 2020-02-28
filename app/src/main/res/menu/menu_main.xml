@@ -6,9 +6,16 @@
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/add_subscription"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_settings_white_24dp"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+    <!--        android:id="@+id/filter"-->
+    <!--        android:icon="@drawable/ic_filter_list_white_24dp"-->
+    <!--        android:title="@string/filter_list"-->
+    <!--        app:showAsAction="ifRoom">-->
+    <!--        <menu>-->
+    <!--            <item-->
+    <!--                android:id="@+id/showUnread"-->
+    <!--                android:checkable="true"-->
+    <!--                android:title="@string/hide_read_items" />-->
+    <!--        </menu>-->
+    <!--    </item>-->
 </menu>

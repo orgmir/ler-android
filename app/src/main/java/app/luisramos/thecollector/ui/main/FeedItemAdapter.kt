@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.item_feed_item_stacked.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
 
     var items: List<SelectAll> = emptyList()
@@ -48,13 +49,13 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
             textView1.text = item.title
             textView2.text = item.feedTitle
             textView3.text = item.publishedAt?.let { dateFormatter.format(it) } ?: "--"
-            val textStyle = if (unreadMap[position] == true) {
+            val textStyle = if (item.unread) {
                 Typeface.BOLD
             } else {
                 Typeface.NORMAL
             }
             textView1.setTextStyle(textStyle)
-            val tintRes = if (unreadMap[position] == true) {
+            val tintRes = if (item.unread) {
                 R.color.colorAccent
             } else {
                 R.color.black_54
@@ -64,8 +65,6 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
 
             setOnClickListener {
                 onItemClick?.invoke(position)
-                unreadMap[position] = unreadMap[position]?.not() ?: true
-                notifyItemChanged(position)
             }
         }
     }

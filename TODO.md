@@ -1,8 +1,5 @@
 # TODO
 
-- [ ] List all feed items in main screen, sorted chronologically
-- [ ] Grey out links when user has tapped them (seen them)
-- [ ] Add filter to hide/show read links
 - [ ] Revamp side menu UI
 - [ ] Add unread count to side menu items
 - [ ] Allow filtering list just showing articles from one subscription
@@ -11,8 +8,13 @@
 - [ ] Change settings icon to side menu
 - [ ] Figure out what settings would be cool
 
+- [ ] Add filter to hide/show read links
 - [ ] Setup CI on gitlab?
 
+- [x] Add share to app so it can pick up feeds
+- [x] List all feed items in main screen, sorted chronologically
+- [x] Remove settings icon from main screen
+- [x] Grey out links when user has tapped them (seen them)
 - [x] Save all feed items when saving a new subscription
 - [x] Fix database for new feed item type and queries
 - [x] Add RSS feed parser

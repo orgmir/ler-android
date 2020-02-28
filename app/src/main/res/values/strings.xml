@@ -5,4 +5,8 @@
     <string name="add">Add</string>
     <string name="hint_url">Url</string>
     <string name="blog_icon">blog icon</string>
+    <string name="feed_item_list_empty_msg">All done for now!</string>
+    <string name="no_more_feed_items">no more feed items</string>
+    <string name="filter_list">Filter list</string>
+    <string name="hide_read_items">Hide read items</string>
 </resources>

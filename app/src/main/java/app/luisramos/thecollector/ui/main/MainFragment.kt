@@ -1,11 +1,16 @@
 package app.luisramos.thecollector.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
 import app.luisramos.thecollector.ui.base.BaseFragment
+import app.luisramos.thecollector.ui.event.observeEvent
+import app.luisramos.thecollector.ui.main.MainViewModel.UiState
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -30,17 +35,34 @@ class MainFragment : BaseFragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+        adapter.onItemClick = {
+            viewModel.tappedItem(it)
+        }
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadData()
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            swipeRefreshLayout.isRefreshing = it
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            swipeRefreshLayout.isRefreshing = it == UiState.Loading
+            emptyView.visibility = (it as? UiState.Success)?.data.isNullOrEmpty().toggleGone()
+            when (it) {
+                is UiState.Error ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Something went wrong: ${it.msg}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                is UiState.Success -> adapter.items = it.data
+            }
         })
-        viewModel.data.observe(viewLifecycleOwner, Observer {
-            adapter.items = it
+        viewModel.updateListPosition.observe(viewLifecycleOwner, Observer {
+            adapter.notifyItemChanged(it)
         })
+        viewModel.goToExternalBrowser.observeEvent(viewLifecycleOwner) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
@@ -69,3 +91,5 @@ class MainFragment : BaseFragment() {
             .commit()
     }
 }
+
+fun Boolean.toggleGone(): Int = if (this) View.VISIBLE else View.GONE

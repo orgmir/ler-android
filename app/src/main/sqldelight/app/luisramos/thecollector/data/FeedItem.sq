@@ -17,10 +17,10 @@ selectAll:
 SELECT
     feedItem.id,
     feedItem.title,
-    feedItem.description
-    link,
-    unread,
-    publishedAt,
+    feedItem.description,
+    feedItem.link,
+    feedItem.unread,
+    feedItem.publishedAt,
     feedItem.updatedAt,
     feedItem.createdAt,
     feedId,
@@ -39,3 +39,8 @@ INSERT INTO feedItem (title, description, link, unread, publishedAt, updatedAt, 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 lastInsertRowId: SELECT last_insert_rowid();
+
+toggleUnread:
+UPDATE feedItem
+SET unread = ?
+WHERE id = ?;

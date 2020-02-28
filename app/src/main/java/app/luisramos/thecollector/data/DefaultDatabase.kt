@@ -95,4 +95,8 @@ class DefaultDatabase(
         )
         queryWrapper.feedItemQueries.lastInsertRowId().executeAsOne()
     }
+
+    override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {
+        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
+    }
 }
