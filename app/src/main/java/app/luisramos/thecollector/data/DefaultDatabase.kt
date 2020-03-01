@@ -7,6 +7,9 @@ import app.luisramos.thecollector.domain.Db
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -60,15 +63,15 @@ class DefaultDatabase(
             queryWrapper.feedQueries.lastInsertRowId().executeAsOne()
         }
 
-    override suspend fun selectAllFeeds(): List<Feed> =
-        withContext(dbContext) {
-            queryWrapper.feedQueries.selectAll().executeAsList()
-        }
+    override suspend fun selectAllFeeds(): Flow<List<FeedsWithCount>> =
+        queryWrapper.feedQueries.feedsWithCount().asFlow().mapToList(dbContext)
 
-    override suspend fun selectAllFeedItems(): List<SelectAll> =
-        withContext(dbContext) {
-            queryWrapper.feedItemQueries.selectAll().executeAsList()
-        }
+    override suspend fun selectFeed(id: Long): Feed? = withContext(dbContext) {
+        queryWrapper.feedQueries.selectFeed(id).executeAsOneOrNull()
+    }
+
+    override suspend fun selectAllFeedItems(feedId: Long): Flow<List<SelectAll>> =
+        queryWrapper.feedItemQueries.selectAll(feedId).asFlow().mapToList(dbContext)
 
     override suspend fun selectFeedItemsForFeed(feedId: Long): List<FeedItem> =
         withContext(dbContext) {

@@ -13,8 +13,14 @@ data class FeedModel(
     val items: List<FeedItemModel> = listOf()
 )
 
-val atomFeedDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
+val atomFeedDateFormatter1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
+val atomFeedDateFormatter2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT)
 val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ROOT)
+
+fun parseAtomDateString(dateString: String): Date? = when {
+    dateString.contains("Z", ignoreCase = true) -> atomFeedDateFormatter1.parse(dateString)
+    else -> atomFeedDateFormatter2.parse(dateString)
+}
 
 fun RssXmlParser.Channel.toFeed() = FeedModel(
     title = title ?: "",
@@ -28,7 +34,7 @@ fun AtomXmlParser.Feed.toFeed() = FeedModel(
     title = title ?: "",
     link = link ?: "",
     description = subtitle,
-    updated = updated?.let { atomFeedDateFormatter.parse(it) } ?: Date(),
+    updated = updated?.let { parseAtomDateString(it) } ?: Date(),
     items = entries.map { it.toFeedItem() }
 )
 
@@ -55,6 +61,6 @@ fun AtomXmlParser.Entry.toFeedItem() = FeedItemModel(
     title = title ?: "",
     description = summary,
     link = link ?: "",
-    published = published?.let { atomFeedDateFormatter.parse(it) } ?: Date(),
-    updated = updated?.let { atomFeedDateFormatter.parse(it) } ?: Date()
+    published = published?.let { parseAtomDateString(it) } ?: Date(),
+    updated = updated?.let { parseAtomDateString(it) } ?: Date()
 )

@@ -33,7 +33,7 @@ class AtomXmlParserTest {
                     title = "PHP foreach with Nested Array?",
                     summary = "I have a nested array in which I want",
                     link = "https://stackoverflow.com/questions/3684463/php-foreach-with-nested-array",
-                    published = "2010-09-10T12:08:59Z",
+                    published = "2020-02-27T00:00:00-08:00",
                     updated = "2020-02-22T11:19:38Z"
                 )
             )

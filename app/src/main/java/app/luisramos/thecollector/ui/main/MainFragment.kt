@@ -40,7 +40,8 @@ class MainFragment : BaseFragment() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadData()
+            swipeRefreshLayout.isRefreshing = false
+//            viewModel.loadData()
         }
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
@@ -68,7 +69,6 @@ class MainFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-        viewModel.loadData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

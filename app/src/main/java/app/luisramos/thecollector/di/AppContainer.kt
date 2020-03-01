@@ -1,5 +1,6 @@
 package app.luisramos.thecollector.di
 
+import app.luisramos.thecollector.ParentViewModel
 import app.luisramos.thecollector.domain.*
 
 interface AppContainer {
@@ -12,6 +13,8 @@ interface AppContainer {
     val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase
     val fetchFeedItemsUseCase: FetchFeedItemsUseCase
     val setFeedItemUnreadUseCase: SetUnreadFeedItemUseCase
+    val fetchFeedUseCase: FetchFeedUseCase
 
-    val viewModelFactory: ViewModelProviderFactory
+    val activityViewModelProviderFactory: ActivityViewModelProviderFactory
+    fun getViewModelFactory(parentViewModel: ParentViewModel): ViewModelProviderFactory
 }

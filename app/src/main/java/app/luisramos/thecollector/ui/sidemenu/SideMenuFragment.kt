@@ -32,6 +32,7 @@ class SideMenuFragment : BaseFragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
+        adapter.onItemClick = { viewModel.onItemTapped(it) }
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadData()
@@ -45,6 +46,9 @@ class SideMenuFragment : BaseFragment() {
                 is UiState.Success ->
                     adapter.items = it.items
             }
+        })
+        viewModel.selectedFeed.observe(viewLifecycleOwner, Observer {
+            adapter.selectedFeed = it
         })
     }
 }

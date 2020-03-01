@@ -2,8 +2,10 @@ package app.luisramos.thecollector.domain
 
 import app.luisramos.thecollector.data.Feed
 import app.luisramos.thecollector.data.FeedItem
+import app.luisramos.thecollector.data.FeedsWithCount
 import app.luisramos.thecollector.data.SelectAll
 import app.luisramos.thecollector.data.model.FeedUpdateMode
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 interface Db {
@@ -15,9 +17,10 @@ interface Db {
         updatedAt: Date
     ): Long
 
-    suspend fun selectAllFeeds(): List<Feed>
+    suspend fun selectAllFeeds(): Flow<List<FeedsWithCount>>
+    suspend fun selectFeed(id: Long): Feed?
 
-    suspend fun selectAllFeedItems(): List<SelectAll>
+    suspend fun selectAllFeedItems(feedId: Long): Flow<List<SelectAll>>
     suspend fun selectFeedItemsForFeed(feedId: Long): List<FeedItem>
     suspend fun insertFeedItem(
         title: String,

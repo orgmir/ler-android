@@ -27,6 +27,7 @@ SELECT
     feed.title AS feedTitle
 FROM feedItem
 INNER JOIN feed ON feed.id = feedItem.feedId
+WHERE :feedId = -1 OR feed.id = :feedId
 ORDER BY feedItem.publishedAt DESC;
 
 selectAllWithFeedId:

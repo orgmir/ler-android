@@ -2,8 +2,11 @@ package app.luisramos.thecollector
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import app.luisramos.thecollector.di.AppContainer
 import app.luisramos.thecollector.ui.main.MainFragment
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
 import kotlinx.android.synthetic.main.main_activity.*
@@ -11,8 +14,11 @@ import kotlinx.android.synthetic.main.toolbar.toolbar
 
 class MainActivity : AppCompatActivity() {
 
-    private val mainFragment
-        get() = supportFragmentManager.findFragmentByTag("main_frag") as MainFragment
+    val appContainer: AppContainer
+        get() = (application as App).appContainer
+    val parentViewModel: ParentViewModel by viewModels {
+        appContainer.activityViewModelProviderFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +45,15 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.container, frag)
                     .addToBackStack(null)
                     .commit()
-
             }
         }
+
+        parentViewModel.selectedFeed.observe(this, Observer {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        })
+        parentViewModel.title.observe(this, Observer {
+            toolbar.title = it
+        })
     }
 
     override fun onBackPressed() {
