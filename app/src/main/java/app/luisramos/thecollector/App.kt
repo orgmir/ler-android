@@ -39,9 +39,10 @@ class App : Application() {
             .setRequiresStorageNotLow(true)
             .build()
 
-        val updateRequest = PeriodicWorkRequestBuilder<FeedUpdateWorker>(1, TimeUnit.HOURS)
-            .setConstraints(constraints)
-            .build()
+        val updateRequest =
+            PeriodicWorkRequestBuilder<FeedUpdateWorker>(1, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build()
 
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
