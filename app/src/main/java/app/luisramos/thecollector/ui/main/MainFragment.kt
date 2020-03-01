@@ -12,7 +12,7 @@ import app.luisramos.thecollector.ui.base.BaseFragment
 import app.luisramos.thecollector.ui.event.observeEvent
 import app.luisramos.thecollector.ui.main.MainViewModel.UiState
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
-import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : BaseFragment() {
 
@@ -27,7 +27,7 @@ class MainFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,7 +68,7 @@ class MainFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+        toolbar?.setNavigationIcon(R.drawable.ic_menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

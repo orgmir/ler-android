@@ -1,10 +1,13 @@
 package app.luisramos.thecollector.di
 
+import androidx.work.WorkerFactory
 import app.luisramos.thecollector.ParentViewModel
 import app.luisramos.thecollector.domain.*
 
 interface AppContainer {
     val db: Db
+
+    val workerFactory: WorkerFactory
 
     val fetchChannelUseCase: FetchChannelUseCase
     val fetchFeedsUseCase: FetchFeedsUseCase

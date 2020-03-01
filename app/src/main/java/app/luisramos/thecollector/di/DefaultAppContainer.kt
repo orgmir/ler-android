@@ -1,6 +1,7 @@
 package app.luisramos.thecollector.di
 
 import android.content.Context
+import androidx.work.WorkerFactory
 import app.luisramos.thecollector.ParentViewModel
 import app.luisramos.thecollector.data.DefaultDatabase
 import app.luisramos.thecollector.domain.*
@@ -9,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 class DefaultAppContainer(context: Context) : AppContainer {
 
     override val db: Db = DefaultDatabase(context, Dispatchers.IO)
+
+    override val workerFactory: WorkerFactory = DefaultWorkerFactory(db)
 
     override val fetchChannelUseCase = FetchChannelUseCase()
     override val fetchFeedsUseCase = FetchFeedsUseCase(db)

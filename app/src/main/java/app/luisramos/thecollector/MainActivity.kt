@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import app.luisramos.thecollector.di.AppContainer
 import app.luisramos.thecollector.ui.main.MainFragment
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionFragment
-import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.toolbar
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MainFragment.newInstance(), "main_frag")

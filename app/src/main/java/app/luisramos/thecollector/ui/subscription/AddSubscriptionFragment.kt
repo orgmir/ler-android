@@ -18,7 +18,7 @@ import app.luisramos.thecollector.ui.base.BaseFragment
 import app.luisramos.thecollector.ui.event.observeEvent
 import app.luisramos.thecollector.ui.subscription.AddSubscriptionViewModel.UiState
 import kotlinx.android.synthetic.main.fragment_add_subscription.*
-import kotlinx.android.synthetic.main.main_fragment.recyclerView
+import kotlinx.android.synthetic.main.fragment_main.recyclerView
 
 class AddSubscriptionFragment : BaseFragment() {
 
@@ -40,7 +40,7 @@ class AddSubscriptionFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        toolbar?.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbar?.setNavigationIcon(R.drawable.ic_arrow_back)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter

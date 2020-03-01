@@ -4,9 +4,9 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorPrimary"
+    android:background="@drawable/background_toolbar"
     android:elevation="4dp"
     android:minHeight="?actionBarSize"
-    android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
-    app:navigationIcon="@drawable/ic_menu_white_24dp"
+    android:theme="@android:style/ThemeOverlay.Material.ActionBar"
+    app:navigationIcon="@drawable/ic_menu"
     app:title="@string/app_name" />

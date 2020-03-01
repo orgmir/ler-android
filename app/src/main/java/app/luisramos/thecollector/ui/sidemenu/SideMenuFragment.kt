@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.luisramos.thecollector.R
 import app.luisramos.thecollector.ui.base.BaseFragment
 import app.luisramos.thecollector.ui.sidemenu.SideMenuViewModel.UiState
-import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class SideMenuFragment : BaseFragment() {
 
