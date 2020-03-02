@@ -1,7 +1,6 @@
 package app.luisramos.thecollector.domain
 
 import app.luisramos.thecollector.data.Feed
-import app.luisramos.thecollector.data.FeedItem
 import app.luisramos.thecollector.data.FeedsWithCount
 import app.luisramos.thecollector.data.SelectAll
 import app.luisramos.thecollector.data.model.FeedUpdateMode
@@ -20,8 +19,7 @@ interface Db {
     suspend fun selectAllFeeds(): Flow<List<FeedsWithCount>>
     suspend fun selectFeed(id: Long): Feed?
 
-    suspend fun selectAllFeedItems(feedId: Long): Flow<List<SelectAll>>
-    suspend fun selectFeedItemsForFeed(feedId: Long): List<FeedItem>
+    suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>>
     suspend fun insertFeedItem(
         title: String,
         description: String?,

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import app.luisramos.thecollector.ParentViewModel
 import app.luisramos.thecollector.data.SelectAll
 import app.luisramos.thecollector.domain.FetchFeedItemsUseCase
+import app.luisramos.thecollector.domain.Preferences
 import app.luisramos.thecollector.domain.SetUnreadFeedItemUseCase
 import app.luisramos.thecollector.ui.event.Event
 import app.luisramos.thecollector.ui.event.postEvent
@@ -17,13 +18,15 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     val parentViewModel: ParentViewModel,
     private val fetchFeedsUseCase: FetchFeedItemsUseCase,
-    private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase
+    private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState>()
 
     val goToExternalBrowser = MutableLiveData<Event<String>>()
     val updateListPosition = MutableLiveData<Int>()
+    val showReadFeedItems = MutableLiveData(preferences.showReadFeedItems)
 
     private var fetchJob: Job? = null
 
@@ -38,25 +41,36 @@ class MainViewModel(
         super.onCleared()
     }
 
-    private fun loadData(feedId: Long) {
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            uiState.value = UiState.Loading
-            fetchFeedsUseCase.fetch(feedId).collect { result ->
-                uiState.value = result.fold(
-                    onFailure = { UiState.Error("Failed loading feeds") },
-                    onSuccess = { UiState.Success(it) }
-                )
-            }
-        }
-    }
-
     fun tappedItem(position: Int) = viewModelScope.launch {
         val data = (uiState.value as? UiState.Success)?.data
         data?.getOrNull(position)?.let {
             setUnreadFeedItemUseCase.setUnread(it.id, false)
             updateListPosition.value = position
             goToExternalBrowser.postEvent(it.link)
+        }
+    }
+
+    fun toggleUnreadFilter() {
+        preferences.showReadFeedItems = !preferences.showReadFeedItems
+        showReadFeedItems.value = preferences.showReadFeedItems
+        reloadData()
+    }
+
+    private fun reloadData() {
+        loadData(parentViewModel.selectedFeed.value ?: -1)
+    }
+
+    private fun loadData(feedId: Long) {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
+            uiState.value = UiState.Loading
+            val showRead = if (preferences.showReadFeedItems) 1L else 0L
+            fetchFeedsUseCase.fetch(feedId, showRead).collect { result ->
+                uiState.value = result.fold(
+                    onFailure = { UiState.Error("Failed loading feeds") },
+                    onSuccess = { UiState.Success(it) }
+                )
+            }
         }
     }
 

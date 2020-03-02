@@ -57,6 +57,9 @@ class MainFragment : BaseFragment() {
                 is UiState.Success -> adapter.items = it.data
             }
         })
+        viewModel.showReadFeedItems.observe(viewLifecycleOwner, Observer {
+            activity?.invalidateOptionsMenu()
+        })
         viewModel.updateListPosition.observe(viewLifecycleOwner, Observer {
             adapter.notifyItemChanged(it)
         })
@@ -74,11 +77,18 @@ class MainFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
+
+        val showRead = viewModel.showReadFeedItems.value ?: false
+        menu.findItem(R.id.hide_read)?.isChecked = !showRead
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.add_subscription -> {
             showAddSubscriptionDialog()
+            true
+        }
+        R.id.hide_read -> {
+            viewModel.toggleUnreadFilter()
             true
         }
         else -> super.onOptionsItemSelected(item)

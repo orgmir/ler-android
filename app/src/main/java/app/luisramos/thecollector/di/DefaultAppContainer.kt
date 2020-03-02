@@ -13,6 +13,9 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(db)
 
+    override val preferences: Preferences =
+        DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE))
+
     override val fetchChannelUseCase = FetchChannelUseCase()
     override val fetchFeedsUseCase = FetchFeedsUseCase(db)
     override val saveFeedUseCase = SaveFeedUseCase(db)

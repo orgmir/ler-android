@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.map
 class FetchFeedItemsUseCase(
     private val db: Db
 ) {
-    suspend fun fetch(feedId: Long): Flow<Result<List<SelectAll>>> =
-        db.selectAllFeedItems(feedId).map { Result.success(it) }
+    suspend fun fetch(feedId: Long, showRead: Long): Flow<Result<List<SelectAll>>> =
+        db.selectAllFeedItems(feedId, showRead).map { Result.success(it) }
 }

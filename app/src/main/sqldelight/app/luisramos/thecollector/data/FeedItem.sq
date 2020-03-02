@@ -27,13 +27,11 @@ SELECT
     feed.title AS feedTitle
 FROM feedItem
 INNER JOIN feed ON feed.id = feedItem.feedId
-WHERE :feedId = -1 OR feed.id = :feedId
+WHERE
+    (:feedId = -1 OR feed.id = :feedId)
+    AND
+    (:showRead = 1 OR feedItem.unread = 1)
 ORDER BY feedItem.publishedAt DESC;
-
-selectAllWithFeedId:
-SELECT *
-FROM feedItem
-WHERE feedId = ?;
 
 insertFeedItem:
 INSERT INTO feedItem (title, description, link, unread, publishedAt, updatedAt, createdAt, feedId)

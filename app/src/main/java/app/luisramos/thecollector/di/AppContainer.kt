@@ -9,6 +9,8 @@ interface AppContainer {
 
     val workerFactory: WorkerFactory
 
+    val preferences: Preferences
+
     val fetchChannelUseCase: FetchChannelUseCase
     val fetchFeedsUseCase: FetchFeedsUseCase
     val saveFeedUseCase: SaveFeedUseCase

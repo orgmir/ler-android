@@ -17,7 +17,8 @@ class ViewModelProviderFactory(
             MainViewModel::class.java -> MainViewModel(
                 parentViewModel,
                 appContainer.fetchFeedItemsUseCase,
-                appContainer.setFeedItemUnreadUseCase
+                appContainer.setFeedItemUnreadUseCase,
+                appContainer.preferences
             ) as T
             SideMenuViewModel::class.java -> SideMenuViewModel(
                 parentViewModel,

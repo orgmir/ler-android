@@ -12,10 +12,12 @@ const val UPDATE_WORK_ID = "sync"
 
 class App : Application() {
 
-    val appContainer: AppContainer = DefaultAppContainer(this)
+    lateinit var appContainer: AppContainer
 
     override fun onCreate() {
         super.onCreate()
+
+        appContainer = DefaultAppContainer(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

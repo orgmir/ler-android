@@ -70,14 +70,9 @@ class DefaultDatabase(
         queryWrapper.feedQueries.selectFeed(id).executeAsOneOrNull()
     }
 
-    override suspend fun selectAllFeedItems(feedId: Long): Flow<List<SelectAll>> =
-        queryWrapper.feedItemQueries.selectAll(feedId).asFlow().mapToList(dbContext)
-
-    override suspend fun selectFeedItemsForFeed(feedId: Long): List<FeedItem> =
-        withContext(dbContext) {
-            queryWrapper.feedItemQueries.selectAllWithFeedId(feedId).executeAsList()
-        }
-
+    override suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>> =
+        queryWrapper.feedItemQueries.selectAll(feedId, showRead).asFlow().mapToList(dbContext)
+    
     override suspend fun insertFeedItem(
         title: String,
         description: String?,
