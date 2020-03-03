@@ -1,0 +1,53 @@
+import app.luisramos.ler.data.model.FeedUpdateMode;
+import java.util.Date;
+
+CREATE TABLE feed (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    link TEXT NOT NULL,
+    updateLink TEXT NOT NULL DEFAULT '',
+    description TEXT,
+    updateMode TEXT as FeedUpdateMode NOT NULL,
+    updateTimeInterval INTEGER NOT NULL,
+    updatedAt INTEGER as Date,
+    createdAt INTEGER as Date NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM feed;
+
+feedsWithCount:
+SELECT
+	feed.id,
+	feed.title,
+	COUNT(feedItem.feedId) AS itemsCount
+FROM feed
+INNER JOIN feedItem ON feed.id = feedItem.feedId WHERE feedItem.unread = 1
+GROUP BY feed.id
+UNION
+	SELECT -1 AS id, "All" AS title, COUNT(*) AS itemsCount FROM feedItem WHERE feedItem.unread = 1
+ORDER BY title COLLATE NOCASE;
+
+insertFeed:
+INSERT INTO feed (title, link, description, updateLink, updateMode, updateTimeInterval, updatedAt, createdAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateFeed:
+UPDATE feed SET
+    title = ?,
+    link = ?,
+    description = ?,
+    updateLink = ?,
+    updateMode = ?,
+    updateTimeInterval = ?,
+    updatedAt = ?
+WHERE id = :id;
+
+lastInsertRowId: SELECT last_insert_rowid();
+
+findFeedById:
+SELECT * FROM feed WHERE id = :id;
+
+findFeedByUpdateLink:
+SELECT * FROM feed WHERE updateLink = :update_link;

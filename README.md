@@ -1,3 +1,3 @@
-# The Collector
+# Ler - A feed aggregator app
 
-An app to collect RSS/Atom feeds and allow for quickly opening the articles in the browser.
+This app allows you to subscribe to any RSS or Atom feed and open the links in the browser.

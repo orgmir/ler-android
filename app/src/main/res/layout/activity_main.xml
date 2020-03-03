@@ -35,7 +35,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/sideMenuFragment"
-        android:name="app.luisramos.thecollector.ui.sidemenu.SideMenuFragment"
+        android:name="app.luisramos.ler.ui.sidemenu.SideMenuFragment"
         android:layout_width="340dp"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
