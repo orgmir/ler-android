@@ -8,5 +8,5 @@ class FetchFeedsUseCase(
     val db: Db
 ) {
     suspend fun fetchFeeds(): Flow<Result<List<FeedsWithCount>>> =
-        db.selectAllFeeds().map { Result.success(it) }
+        db.selectAllFeedsWithCount().map { Result.success(it) }
 }

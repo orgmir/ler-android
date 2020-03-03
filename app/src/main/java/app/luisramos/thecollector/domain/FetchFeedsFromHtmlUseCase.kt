@@ -1,12 +1,12 @@
 package app.luisramos.thecollector.domain
 
+import app.luisramos.thecollector.data.download
 import app.luisramos.thecollector.parsers.HtmlHeadParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
-import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -57,20 +57,4 @@ class FetchFeedsFromHtmlUseCase {
 
 
     private val URL.baseUrl get() = "$protocol://$host"
-}
-
-fun URL.download(): InputStream? {
-    return (openConnection() as? HttpURLConnection)?.run {
-        try {
-            readTimeout = 10000
-            connectTimeout = 15000
-            requestMethod = "GET"
-            doInput = true
-            connect()
-            inputStream
-        } catch (e: Exception) {
-            Timber.e(e)
-            null
-        }
-    }
 }

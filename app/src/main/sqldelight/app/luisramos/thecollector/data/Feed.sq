@@ -5,6 +5,7 @@ CREATE TABLE feed (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
     link TEXT NOT NULL,
+    updateLink TEXT NOT NULL DEFAULT '',
     description TEXT,
     updateMode TEXT as FeedUpdateMode NOT NULL,
     updateTimeInterval INTEGER NOT NULL,
@@ -29,10 +30,24 @@ UNION
 ORDER BY title COLLATE NOCASE;
 
 insertFeed:
-INSERT INTO feed (title, link, description, updateMode, updateTimeInterval, updatedAt, createdAt)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO feed (title, link, description, updateLink, updateMode, updateTimeInterval, updatedAt, createdAt)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+updateFeed:
+UPDATE feed SET
+    title = ?,
+    link = ?,
+    description = ?,
+    updateLink = ?,
+    updateMode = ?,
+    updateTimeInterval = ?,
+    updatedAt = ?
+WHERE id = :id;
 
 lastInsertRowId: SELECT last_insert_rowid();
 
-selectFeed:
+findFeedById:
 SELECT * FROM feed WHERE id = :id;
+
+findFeedByUpdateLink:
+SELECT * FROM feed WHERE updateLink = :update_link;

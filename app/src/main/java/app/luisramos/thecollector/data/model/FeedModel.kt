@@ -8,6 +8,7 @@ import java.util.*
 data class FeedModel(
     val title: String,
     val link: String,
+    val feedLink: String = "",
     val description: String? = null,
     val updated: Date,
     val items: List<FeedItemModel> = listOf()

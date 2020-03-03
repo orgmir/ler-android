@@ -1,14 +1,16 @@
 # TODO
 
+- [ ] Find out how to keep the feed url so we can update it
 - [ ] Actually implement fetching and updating subscriptions in worker
 - [ ] Add sync animation in toolbar while work is running
 - [ ] Pull the favicon from the website somehow and save it
-- [ ] Change settings icon to side menu
-- [ ] Figure out what settings would be nice to have
+- [ ] Change name of app to Ler, package name as well
 
-- [ ] Add filter to hide/show read links
+- [ ] Figure out what settings would be nice to have
+- [ ] Change settings icon to side menu
 - [ ] Setup CI on gitlab?
 
+- [x] Add filter to hide/show read links
 - [x] Call update task when app runs
 - [x] Add periodic task to update all the feeds
 - [x] Change app theme colors

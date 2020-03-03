@@ -33,11 +33,24 @@ WHERE
     (:showRead = 1 OR feedItem.unread = 1)
 ORDER BY feedItem.publishedAt DESC;
 
+findAllIdsByFeedId:
+SELECT id, link FROM feedItem
+WHERE feedId = ?;
+
 insertFeedItem:
 INSERT INTO feedItem (title, description, link, unread, publishedAt, updatedAt, createdAt, feedId)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 lastInsertRowId: SELECT last_insert_rowid();
+
+updateFeedItem:
+UPDATE feedItem SET
+    title=?,
+    description=?,
+    link=?,
+    publishedAt=?,
+    updatedAt=?
+WHERE id = :id;
 
 toggleUnread:
 UPDATE feedItem

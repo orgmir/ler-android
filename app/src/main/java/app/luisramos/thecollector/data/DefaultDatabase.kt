@@ -47,6 +47,7 @@ class DefaultDatabase(
         title: String,
         link: String,
         description: String?,
+        updateLink: String,
         updateMode: FeedUpdateMode,
         updatedAt: Date
     ): Long =
@@ -55,6 +56,7 @@ class DefaultDatabase(
                 title = title,
                 link = link,
                 description = description,
+                updateLink = updateLink,
                 updateMode = updateMode,
                 updateTimeInterval = 3600,
                 updatedAt = updatedAt,
@@ -63,16 +65,45 @@ class DefaultDatabase(
             queryWrapper.feedQueries.lastInsertRowId().executeAsOne()
         }
 
-    override suspend fun selectAllFeeds(): Flow<List<FeedsWithCount>> =
+    override suspend fun updateFeed(
+        id: Long,
+        title: String,
+        link: String,
+        description: String?,
+        updateLink: String,
+        updateMode: FeedUpdateMode
+    ): Long = withContext(dbContext) {
+        queryWrapper.feedQueries.updateFeed(
+            id = id,
+            title = title,
+            link = link,
+            description = description,
+            updateLink = updateLink,
+            updateMode = updateMode,
+            updateTimeInterval = 3600,
+            updatedAt = Date()
+        )
+        id
+    }
+
+    override suspend fun selectAllFeeds(): List<Feed> = withContext(dbContext) {
+        queryWrapper.feedQueries.selectAll().executeAsList()
+    }
+
+    override suspend fun selectAllFeedsWithCount(): Flow<List<FeedsWithCount>> =
         queryWrapper.feedQueries.feedsWithCount().asFlow().mapToList(dbContext)
 
-    override suspend fun selectFeed(id: Long): Feed? = withContext(dbContext) {
-        queryWrapper.feedQueries.selectFeed(id).executeAsOneOrNull()
+    override suspend fun findFeedById(id: Long): Feed? = withContext(dbContext) {
+        queryWrapper.feedQueries.findFeedById(id).executeAsOneOrNull()
+    }
+
+    override suspend fun findFeedByUpdateLink(updateLink: String): Feed? = withContext(dbContext) {
+        queryWrapper.feedQueries.findFeedByUpdateLink(updateLink).executeAsOneOrNull()
     }
 
     override suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>> =
         queryWrapper.feedItemQueries.selectAll(feedId, showRead).asFlow().mapToList(dbContext)
-    
+
     override suspend fun insertFeedItem(
         title: String,
         description: String?,
@@ -94,7 +125,30 @@ class DefaultDatabase(
         queryWrapper.feedItemQueries.lastInsertRowId().executeAsOne()
     }
 
+    override suspend fun updateFeedItem(
+        id: Long,
+        title: String,
+        description: String?,
+        link: String,
+        publishedAt: Date,
+        updatedAt: Date
+    ) = withContext(dbContext) {
+        queryWrapper.feedItemQueries.updateFeedItem(
+            id = id,
+            title = title,
+            description = description,
+            link = link,
+            publishedAt = publishedAt,
+            updatedAt = updatedAt
+        )
+    }
+
     override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {
         queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
     }
+
+    override suspend fun findFeedItemsIdsByFeedId(feedId: Long): List<FindAllIdsByFeedId> =
+        withContext(dbContext) {
+            queryWrapper.feedItemQueries.findAllIdsByFeedId(feedId).executeAsList()
+        }
 }

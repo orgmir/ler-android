@@ -11,7 +11,6 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val db: Db = DefaultDatabase(context, Dispatchers.IO)
 
-    override val workerFactory: WorkerFactory = DefaultWorkerFactory(db)
 
     override val preferences: Preferences =
         DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE))
@@ -27,6 +26,9 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val fetchFeedItemsUseCase = FetchFeedItemsUseCase(db)
     override val setFeedItemUnreadUseCase = SetUnreadFeedItemUseCase(db)
     override val fetchFeedUseCase = FetchFeedUseCase(db)
+    override val refreshFeedsUseCase = RefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
+
+    override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 
     private var _viewModelFactory: ViewModelProviderFactory? = null
     override fun getViewModelFactory(parentViewModel: ParentViewModel): ViewModelProviderFactory {
