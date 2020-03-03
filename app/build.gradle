@@ -15,14 +15,17 @@ android {
         freeCompilerArgs = ["-Xallow-result-return-type"]
     }
 
-    compileSdkVersion 29
+    compileSdkVersion buildConfig.compileSdk
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "app.luisramos.ler"
-        minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+
+        minSdkVersion buildConfig.minSdk
+        targetSdkVersion buildConfig.targetSdk
+
+        versionCode buildConfig.version.code
+        versionName buildConfig.version.name
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,6 +37,16 @@ android {
 
     packagingOptions {
         pickFirst 'META-INF/kotlinx-coroutines-core.kotlin_module'
+        exclude 'kotlin/**'
+        exclude '**/*.kotlin_metadata'
+        exclude 'META-INF/*.kotlin_module'
+        exclude 'META-INF/*.version'
+    }
+
+    bundle {
+        language {
+            enableSplit = false // We currently only have one language.
+        }
     }
 }
 
