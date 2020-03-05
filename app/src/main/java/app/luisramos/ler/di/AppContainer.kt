@@ -20,6 +20,7 @@ interface AppContainer {
     val setFeedItemUnreadUseCase: SetUnreadFeedItemUseCase
     val fetchFeedUseCase: FetchFeedUseCase
     val refreshFeedsUseCase: RefreshFeedsUseCase
+    val deleteFeedUseCase: DeleteFeedUseCase
 
     val activityViewModelProviderFactory: ActivityViewModelProviderFactory
     fun getViewModelFactory(parentViewModel: ParentViewModel): ViewModelProviderFactory

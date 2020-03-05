@@ -1,11 +1,10 @@
 package app.luisramos.ler.ui.main
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import app.luisramos.ler.ParentViewModel
 import app.luisramos.ler.data.SelectAll
+import app.luisramos.ler.data.toBoolean
+import app.luisramos.ler.domain.DeleteFeedUseCase
 import app.luisramos.ler.domain.FetchFeedItemsUseCase
 import app.luisramos.ler.domain.Preferences
 import app.luisramos.ler.domain.SetUnreadFeedItemUseCase
@@ -19,6 +18,7 @@ class MainViewModel(
     val parentViewModel: ParentViewModel,
     private val fetchFeedsUseCase: FetchFeedItemsUseCase,
     private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase,
+    private val deleteFeedUseCase: DeleteFeedUseCase,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -27,6 +27,8 @@ class MainViewModel(
     val goToExternalBrowser = MutableLiveData<Event<String>>()
     val updateListPosition = MutableLiveData<Int>()
     val showReadFeedItems = MutableLiveData(preferences.showReadFeedItems)
+    val isDeleteMenuOptionVisible = parentViewModel.selectedFeed.map { it != -1L }
+    val showDeleteConfirmation = MutableLiveData<Event<String>>()
 
     private var fetchJob: Job? = null
 
@@ -42,8 +44,7 @@ class MainViewModel(
     }
 
     fun tappedItem(position: Int) = viewModelScope.launch {
-        val data = (uiState.value as? UiState.Success)?.data
-        data?.getOrNull(position)?.let {
+        getItem(position)?.let {
             setUnreadFeedItemUseCase.setUnread(it.id, false)
             updateListPosition.value = position
             goToExternalBrowser.postEvent(it.link)
@@ -79,6 +80,30 @@ class MainViewModel(
             setUnreadFeedItemUseCase.setUnreadForFeedId(it, false)
         }
     }
+
+    fun toggleUnread(position: Int) = viewModelScope.launch {
+        getItem(position)?.let {
+            setUnreadFeedItemUseCase.setUnread(it.id, !it.unread.toBoolean())
+//            updateListPosition.value = position
+        }
+    }
+
+    private fun getItem(position: Int): SelectAll? =
+        (uiState.value as? UiState.Success)?.data?.getOrNull(position)
+
+    fun tapDeleteFeed() {
+        val title = parentViewModel.title.value ?: return
+        if (title == "All") return
+
+        showDeleteConfirmation.postEvent(title)
+    }
+
+    fun deleteSelectedFeed() = viewModelScope.launch {
+        val id = parentViewModel.selectedFeed.value
+        id?.let { deleteFeedUseCase.deleteFeed(id) }
+        parentViewModel.selectedFeed.value = -1 // reset to "All" filter
+    }
+
 
     sealed class UiState {
         object Loading : UiState()

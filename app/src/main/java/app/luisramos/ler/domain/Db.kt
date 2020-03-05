@@ -27,6 +27,8 @@ interface Db {
         updateMode: FeedUpdateMode
     ): Long
 
+    suspend fun deleteFeed(id: Long)
+
     suspend fun selectAllFeeds(): List<Feed>
     suspend fun selectAllFeedsWithCount(): Flow<List<FeedsWithCount>>
     suspend fun findFeedById(id: Long): Feed?
@@ -49,6 +51,8 @@ interface Db {
         publishedAt: Date,
         updatedAt: Date
     )
+
+    suspend fun deleteFeedItemWithFeedId(feedId: Long)
 
     suspend fun setFeedItemUnread(id: Long, unread: Boolean)
     suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean)

@@ -18,6 +18,7 @@ class ViewModelProviderFactory(
                 parentViewModel,
                 appContainer.fetchFeedItemsUseCase,
                 appContainer.setFeedItemUnreadUseCase,
+                appContainer.deleteFeedUseCase,
                 appContainer.preferences
             ) as T
             SideMenuViewModel::class.java -> SideMenuViewModel(

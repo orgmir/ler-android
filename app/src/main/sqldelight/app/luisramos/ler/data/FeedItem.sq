@@ -61,3 +61,7 @@ updateFeedItemUnreadWithFeedId:
 UPDATE feedItem SET
     unread = ?
 WHERE :feedId = -1 OR feedId = :feedId;
+
+deleteFeedItemsByFeedId:
+DELETE FROM feedItem
+WHERE feedId = ?;

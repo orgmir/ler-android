@@ -86,6 +86,10 @@ class DefaultDatabase(
         id
     }
 
+    override suspend fun deleteFeed(id: Long) = withContext(dbContext) {
+        queryWrapper.feedQueries.deleteFeedById(id)
+    }
+
     override suspend fun selectAllFeeds(): List<Feed> = withContext(dbContext) {
         queryWrapper.feedQueries.selectAll().executeAsList()
     }
@@ -141,6 +145,10 @@ class DefaultDatabase(
             publishedAt = publishedAt,
             updatedAt = updatedAt
         )
+    }
+
+    override suspend fun deleteFeedItemWithFeedId(feedId: Long) = withContext(dbContext) {
+        queryWrapper.feedItemQueries.deleteFeedItemsByFeedId(feedId)
     }
 
     override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {

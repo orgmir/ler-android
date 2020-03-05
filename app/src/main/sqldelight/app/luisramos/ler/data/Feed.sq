@@ -51,6 +51,10 @@ WHERE id = :id;
 
 lastInsertRowId: SELECT last_insert_rowid();
 
+deleteFeedById:
+DELETE FROM feed
+WHERE id = ?;
+
 findFeedById:
 SELECT * FROM feed WHERE id = :id;
 

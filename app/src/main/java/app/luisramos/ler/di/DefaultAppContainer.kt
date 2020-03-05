@@ -27,6 +27,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val setFeedItemUnreadUseCase = SetUnreadFeedItemUseCase(db)
     override val fetchFeedUseCase = FetchFeedUseCase(db)
     override val refreshFeedsUseCase = RefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
+    override val deleteFeedUseCase = DeleteFeedUseCase(db)
 
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 

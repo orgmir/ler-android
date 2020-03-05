@@ -6,5 +6,7 @@
 
     <color name="white">#fff</color>
     <color name="black_54">#89000000</color>
-    <color name="very_light_grey">#F2F2F2</color>
+    <color name="swipe_action_background">#fff9f2</color>
+    <color name="delete_button_background">#f9e0e0</color>
+    <color name="delete_button_text_color">#e05050</color>
 </resources>

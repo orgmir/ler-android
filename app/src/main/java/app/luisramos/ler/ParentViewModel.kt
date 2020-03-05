@@ -11,7 +11,7 @@ class ParentViewModel(
     private val fetchFeedUseCase: FetchFeedUseCase
 ) : ViewModel() {
     val selectedFeed = MutableLiveData<Long>(-1)
-    val title = MutableLiveData<String>("All")
+    val title = MutableLiveData("All")
 
     private val feedObserver = Observer<Long> { updateTitle(it) }
 

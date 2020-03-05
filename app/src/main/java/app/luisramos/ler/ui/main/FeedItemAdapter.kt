@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import app.luisramos.ler.R
 import app.luisramos.ler.data.SelectAll
@@ -22,12 +23,14 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
 
     var items: List<SelectAll> = emptyList()
         set(value) {
+            val oldItems = field
             field = value
             unreadMap = value.foldIndexed(mutableMapOf()) { index, acc, item ->
                 acc[index] = item.unread.toBoolean()
                 acc
             }
-            notifyDataSetChanged()
+            val diff = DiffUtil.calculateDiff(DiffUtilCallback(oldItems, value), false)
+            diff.dispatchUpdatesTo(this)
         }
 
     var unreadMap = mutableMapOf<Int, Boolean>()
@@ -71,6 +74,27 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    class DiffUtilCallback(
+        private val oldData: List<SelectAll>,
+        private val newData: List<SelectAll>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldData.size
+
+        override fun getNewListSize(): Int = newData.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            oldData[oldItemPosition].id == newData[newItemPosition].id
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val newItem = newData[newItemPosition]
+            val oldItem = oldData[oldItemPosition]
+            return oldItem.title == newItem.title &&
+                    oldItem.feedTitle == newItem.feedTitle &&
+                    oldItem.publishedAt == newItem.publishedAt &&
+                    oldItem.unread == newItem.unread
+        }
+    }
 }
 
 fun TextView.setTextStyle(textStyle: Int) {

@@ -18,8 +18,10 @@
                 android:title="@string/hide_read_items" />
             <item
                 android:id="@+id/mark_as_read"
-                android:icon="@drawable/ic_check"
                 android:title="@string/mark_all_as_read" />
+            <item
+                android:id="@+id/delete_feed"
+                android:title="@string/delete_feed" />
         </menu>
     </item>
 </menu>

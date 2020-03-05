@@ -8,7 +8,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,8 +43,11 @@ class MainFragment : BaseFragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-//        val itemTouchHelper = ItemTouchHelper(SwipeActionsCallback(requireContext(), adapter))
-//        itemTouchHelper.attachToRecyclerView(recyclerView)
+        val swipeActionCallback = SwipeActionsCallback(requireContext(), adapter) {
+            viewModel.toggleUnread(it)
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeActionCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
         adapter.onItemClick = {
             viewModel.tappedItem(it)
         }
@@ -75,6 +80,12 @@ class MainFragment : BaseFragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
             startActivity(intent)
         }
+        viewModel.isDeleteMenuOptionVisible.observe(viewLifecycleOwner, Observer {
+            activity?.invalidateOptionsMenu()
+        })
+        viewModel.showDeleteConfirmation.observeEvent(viewLifecycleOwner) {
+            showDeleteConfirmationDialog(it)
+        }
     }
 
     override fun onResume() {
@@ -88,6 +99,9 @@ class MainFragment : BaseFragment() {
 
         val showRead = viewModel.showReadFeedItems.value ?: false
         menu.findItem(R.id.hide_read)?.isChecked = !showRead
+
+        val showDelete = viewModel.isDeleteMenuOptionVisible.value ?: false
+        menu.findItem(R.id.delete_feed).isVisible = showDelete
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -103,6 +117,10 @@ class MainFragment : BaseFragment() {
             viewModel.markAllAsRead()
             true
         }
+        R.id.delete_feed -> {
+            viewModel.tapDeleteFeed()
+            true
+        }
         else -> super.onOptionsItemSelected(item)
     }
 
@@ -112,19 +130,39 @@ class MainFragment : BaseFragment() {
             .addToBackStack(null)
             .commit()
     }
+
+    private fun showDeleteConfirmationDialog(title: String) {
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setTitle("Delete $title?")
+            .setMessage(R.string.delete_confirmation_msg)
+            .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deleteSelectedFeed()
+            }
+            .show()
+
+        val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        positiveButton?.setBackgroundResource(R.color.delete_button_background)
+        val buttonColor =
+            ResourcesCompat.getColor(resources, R.color.delete_button_text_color, null)
+        positiveButton?.setTextColor(buttonColor)
+    }
 }
 
 fun Boolean.toggleGone(): Int = if (this) View.VISIBLE else View.GONE
 
 class SwipeActionsCallback(
     context: Context,
-    val adapter: FeedItemAdapter
+    val adapter: FeedItemAdapter,
+    val onItemSwipedCallback: (Int) -> Unit
 ) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
 
     val markReadIcon = ContextCompat.getDrawable(context, R.drawable.ic_check)
     val paint = Paint().apply {
-        color = ContextCompat.getColor(context, R.color.very_light_grey)
+        color = ContextCompat.getColor(context, R.color.swipe_action_background)
     }
 
     override fun onMove(
@@ -136,8 +174,8 @@ class SwipeActionsCallback(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // do something
-        adapter.notifyItemChanged(viewHolder.adapterPosition)
+        val position = viewHolder.adapterPosition
+        onItemSwipedCallback(position)
     }
 
     override fun onChildDraw(

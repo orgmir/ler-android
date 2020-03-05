@@ -10,4 +10,7 @@
     <string name="filter_list">Filter list</string>
     <string name="hide_read_items">Hide read items</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="delete_feed">Remove feed</string>
+    <string name="delete_confirmation_msg">Are you sure you want to delete this feed? You can always subscribe to it again.</string>
+    <string name="delete">Delete</string>
 </resources>
