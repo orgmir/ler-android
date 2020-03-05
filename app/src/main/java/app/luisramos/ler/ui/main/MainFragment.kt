@@ -99,6 +99,10 @@ class MainFragment : BaseFragment() {
             viewModel.toggleUnreadFilter()
             true
         }
+        R.id.mark_as_read -> {
+            viewModel.markAllAsRead()
+            true
+        }
         else -> super.onOptionsItemSelected(item)
     }
 

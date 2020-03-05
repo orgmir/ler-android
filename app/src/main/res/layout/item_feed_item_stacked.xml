@@ -59,7 +59,6 @@
         android:layout_marginBottom="16dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="#000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -116,7 +116,7 @@ class DefaultDatabase(
             title = title,
             description = description,
             link = link,
-            unread = true,
+            unread = 1,
             publishedAt = publishedAt,
             updatedAt = updatedAt,
             createdAt = Date(),
@@ -144,11 +144,19 @@ class DefaultDatabase(
     }
 
     override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {
-        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
+        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread.toLong())
     }
+
+    override suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean) =
+        withContext(dbContext) {
+            queryWrapper.feedItemQueries.updateFeedItemUnreadWithFeedId(unread.toLong(), feedId)
+        }
 
     override suspend fun findFeedItemsIdsByFeedId(feedId: Long): List<FindAllIdsByFeedId> =
         withContext(dbContext) {
             queryWrapper.feedItemQueries.findAllIdsByFeedId(feedId).executeAsList()
         }
 }
+
+fun Boolean.toLong(): Long = if (this) 1L else 0L
+fun Long.toBoolean(): Boolean = this != 0L

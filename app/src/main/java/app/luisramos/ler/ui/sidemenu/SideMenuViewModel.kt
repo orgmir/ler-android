@@ -44,8 +44,11 @@ class SideMenuViewModel(
         }
     }
 
-    private fun List<FeedsWithCount>.toSideMenuItems() = map {
-        SideMenuItem(it.id, it.title, it.itemsCount.toString())
+    private fun List<FeedsWithCount>.toSideMenuItems() = map { item ->
+        SideMenuItem(
+            item.id,
+            item.title,
+            item.itemsCount.toString().let { if (it == "0") "" else it })
     }
 
     sealed class UiState {

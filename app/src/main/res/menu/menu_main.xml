@@ -16,6 +16,10 @@
                 android:id="@+id/hide_read"
                 android:checkable="true"
                 android:title="@string/hide_read_items" />
+            <item
+                android:id="@+id/mark_as_read"
+                android:icon="@drawable/ic_check"
+                android:title="@string/mark_all_as_read" />
         </menu>
     </item>
 </menu>

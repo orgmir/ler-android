@@ -6,7 +6,7 @@ CREATE TABLE feedItem (
     title TEXT NOT NULL,
     description TEXT,
     link TEXT NOT NULL,
-    unread INTEGER as Boolean DEFAULT 1 NOT NULL,
+    unread INTEGER DEFAULT 1 NOT NULL,
     publishedAt INTEGER as Date,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date,
@@ -56,3 +56,8 @@ toggleUnread:
 UPDATE feedItem
 SET unread = ?
 WHERE id = ?;
+
+updateFeedItemUnreadWithFeedId:
+UPDATE feedItem SET
+    unread = ?
+WHERE :feedId = -1 OR feedId = :feedId;

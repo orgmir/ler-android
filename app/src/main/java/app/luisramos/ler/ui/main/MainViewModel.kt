@@ -74,16 +74,15 @@ class MainViewModel(
         }
     }
 
+    fun markAllAsRead() = viewModelScope.launch {
+        parentViewModel.selectedFeed.value?.let {
+            setUnreadFeedItemUseCase.setUnreadForFeedId(it, false)
+        }
+    }
+
     sealed class UiState {
         object Loading : UiState()
         data class Error(val msg: String) : UiState()
         data class Success(val data: List<SelectAll>) : UiState()
     }
-}
-
-suspend fun <R> toggling(liveData: MutableLiveData<Boolean>, block: suspend () -> R): R {
-    liveData.value = true
-    val result = block()
-    liveData.value = false
-    return result
 }

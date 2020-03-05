@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.luisramos.ler.R
 import app.luisramos.ler.data.SelectAll
+import app.luisramos.ler.data.toBoolean
 import kotlinx.android.synthetic.main.item_feed.view.textView1
 import kotlinx.android.synthetic.main.item_feed.view.textView2
 import kotlinx.android.synthetic.main.item_feed_item_stacked.view.*
@@ -23,7 +24,7 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
         set(value) {
             field = value
             unreadMap = value.foldIndexed(mutableMapOf()) { index, acc, item ->
-                acc[index] = item.unread
+                acc[index] = item.unread.toBoolean()
                 acc
             }
             notifyDataSetChanged()
@@ -49,13 +50,13 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
             textView1.text = item.title
             textView2.text = item.feedTitle
             textView3.text = item.publishedAt?.let { dateFormatter.format(it) } ?: "--"
-            val textStyle = if (item.unread) {
+            val textStyle = if (item.unread.toBoolean()) {
                 Typeface.BOLD
             } else {
                 Typeface.NORMAL
             }
             textView1.setTextStyle(textStyle)
-            val tintRes = if (item.unread) {
+            val tintRes = if (item.unread.toBoolean()) {
                 R.color.colorAccent
             } else {
                 R.color.black_54

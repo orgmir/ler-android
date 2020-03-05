@@ -6,4 +6,8 @@ class SetUnreadFeedItemUseCase(
     suspend fun setUnread(id: Long, unread: Boolean) {
         db.setFeedItemUnread(id, unread)
     }
+
+    suspend fun setUnreadForFeedId(feedId: Long, unread: Boolean) {
+        db.setFeedItemsUnreadForFeedId(feedId, unread)
+    }
 }

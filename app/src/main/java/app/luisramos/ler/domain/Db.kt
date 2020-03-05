@@ -51,6 +51,7 @@ interface Db {
     )
 
     suspend fun setFeedItemUnread(id: Long, unread: Boolean)
+    suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean)
     suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>>
     suspend fun findFeedItemsIdsByFeedId(feedId: Long): List<FindAllIdsByFeedId>
 }
