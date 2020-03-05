@@ -20,5 +20,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Assemble release version
+        run: ./gradlew assembleRelease
+
+      - name: Upload apk to AppCenter
+        uses: zackify/AppCenter-Github-Action@1.0.0
+          with:
+            appName: Orgmir/Ler
+            token: ${{secrets.APP_CENTER_TOKEN}}
+            group: beta%20testers
+            file: app/build/outputs/apk/release/app-release-unsigned.apk
+
+
+    
