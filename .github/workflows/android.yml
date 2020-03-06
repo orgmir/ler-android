@@ -36,6 +36,6 @@ jobs:
         uses: zackify/AppCenter-Github-Action@1.0.0
         with:
           appName: Orgmir/Ler
-          token: ${{secrets.APP_CENTER_TOKEN}}
+          token: ${{ secrets.APP_CENTER_TOKEN }}
           group: beta%20testers
-          file: $SIGNED_RELEASE_FILE
+          file: ${{ env.SIGNED_RELEASE_FILE }}
