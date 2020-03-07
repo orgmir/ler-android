@@ -15,7 +15,7 @@ buildscript {
         ],
     ]
 
-    ext.buildConfig.version['build'] = project.findProperty("buildNumber")?.toInt() ?: 0
+    ext.buildConfig.version['build'] = project.findProperty("buildNumber")?.toInteger() ?: 0
     ext.buildConfig.version['name'] = "${buildConfig.version.major}.${buildConfig.version.minor}.${buildConfig.version.patch}"
     ext.buildConfig.version['fullName'] = "${buildConfig.version.name}.${buildConfig.version.build}"
     ext.buildConfig.version['code'] = buildConfig.version.major * 1000000 + buildConfig.version.minor * 10000 + buildConfig.version.patch * 100 + buildConfig.version.build
