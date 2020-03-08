@@ -1,0 +1,39 @@
+<opml version="2.0">
+    <head>
+        <title>Feeds</title>
+    </head>
+    <body>
+        <outline htmlUrl="https://tughi.github.io/aggregator-android" text="Aggregator News"
+            title="Aggregator News" type="rss" updateMode="EVERY_12_HOURS"
+            xmlUrl="http://tughi.github.io/aggregator-android/news.rss" />
+        <outline htmlUrl="https://overreacted.io" text="Dan Abramov's Overreacted Blog RSS Feed"
+            title="Dan Abramov's Overreacted Blog RSS Feed" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://overreacted.io/rss.xml" />
+        <outline htmlUrl="https://www.ardanlabs.com/blog/"
+            text="Go (Golang) Programming Blog - Ardan Labs on"
+            title="Go (Golang) Programming Blog - Ardan Labs on" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://www.ardanlabs.com/blog/index.xml" />
+        <outline htmlUrl="https://nshipster.com/" text="NSHipster" title="NSHipster" type="rss"
+            updateMode="DEFAULT" xmlUrl="https://nshipster.com/feed.xml" />
+        <outline htmlUrl="https://www.robinwieruch.de" text="RWieruch - RSS Feed"
+            title="RWieruch - RSS Feed" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://www.robinwieruch.de/index.xml" />
+        <outline htmlUrl="https://blog.jessfraz.com/" text="Ramblings from Jessie"
+            title="Ramblings from Jessie" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://blog.jessfraz.com/index.xml" />
+        <outline htmlUrl="https://stackoverflow.blog" text="Stack Overflow Blog"
+            title="Stack Overflow Blog" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://stackoverflow.blog/feed/" />
+        <outline htmlUrl="https://www.taniarascia.com/" text="Tania Rascia" title="Tania Rascia"
+            type="rss" updateMode="DEFAULT" xmlUrl="https://www.taniarascia.com/rss.xml" />
+        <outline htmlUrl="https://cutlefish.substack.com" text="The Beautiful Mess"
+            title="The Beautiful Mess" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://cutlefish.substack.com/feed.xml" />
+        <outline htmlUrl="https://orgmir.com/" text="The Working Directory"
+            title="The Working Directory" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://orgmir.com/index.xml" />
+        <outline htmlUrl="http://qualitytesting.tech/" text="qualitytesting.tech » Feed"
+            title="qualitytesting.tech » Feed" type="rss" updateMode="DEFAULT"
+            xmlUrl="https://qualitytesting.tech/feed/" />
+    </body>
+</opml>
