@@ -1,5 +1,6 @@
 package app.luisramos.ler.ui.sidemenu
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.luisramos.ler.BuildConfig
 import app.luisramos.ler.R
 import app.luisramos.ler.ui.base.BaseFragment
 import app.luisramos.ler.ui.sidemenu.SideMenuViewModel.UiState
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_main.recyclerView
+import kotlinx.android.synthetic.main.fragment_side_menu.*
 
 class SideMenuFragment : BaseFragment() {
 
@@ -27,6 +30,7 @@ class SideMenuFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_side_menu, container, false)
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,12 +38,9 @@ class SideMenuFragment : BaseFragment() {
         recyclerView.adapter = adapter
         adapter.onItemClick = { viewModel.onItemTapped(it) }
 
-        swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadData()
-        }
+        versionTextView.text = "${BuildConfig.VERSION_NAME}.${BuildConfig.VERSION_CODE}"
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            swipeRefreshLayout.isRefreshing = it == UiState.Loading
             when (it) {
                 is UiState.Error ->
                     Toast.makeText(requireContext(), it.msg, Toast.LENGTH_SHORT).show()
