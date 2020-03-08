@@ -1,16 +1,18 @@
 # TODO
 
-- [ ] Add sync animation in toolbar while work is running
-- [ ] Add version to bottom of side menu
-- [ ] Deploy to play store
-- [ ] Make sure of app is already running we don't push another fragment to add subscription
-- [x] Fix tap selecting wrong view
-- [x] Add build number to github action
+- [ ] Figure out menu not closing in one plus
+- [ ] Figure out title no updating in one plus
 
 - [ ] Pull the favicon from the website somehow and save it
 - [ ] Figure out what settings would be nice to have
 - [ ] Change settings icon to side menu
 
+- [x] Add sync animation in toolbar while work is running
+- [x] Add version to bottom of side menu
+- [x] Deploy to play store
+- [x] Make sure of app is already running we don't push another fragment to add subscription
+- [x] Fix tap selecting wrong view
+- [x] Add build number to github action
 - [x] Setup CI on github
 - [x] Change name of app to Ler, package name as well
 - [x] Find out how to keep the feed url so we can update it

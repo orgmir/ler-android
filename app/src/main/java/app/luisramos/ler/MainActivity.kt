@@ -6,17 +6,24 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.ui.main.MainFragment
 import app.luisramos.ler.ui.subscription.AddSubscriptionFragment
+import app.luisramos.ler.work.FeedUpdateWorker
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar.toolbar
+import kotlinx.android.synthetic.main.toolbar.*
 
 class MainActivity : AppCompatActivity() {
 
-    val appContainer: AppContainer
+    companion object {
+        private const val ADD_FRAG_TAG = "ADD_FRAG_TAG"
+    }
+
+    private val appContainer: AppContainer
         get() = (application as App).appContainer
-    val parentViewModel: ParentViewModel by viewModels {
+    private val parentViewModel: ParentViewModel by viewModels {
         appContainer.activityViewModelProviderFactory
     }
 
@@ -30,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(toolbar)
-        toolbar?.setNavigationOnClickListener {
+        toolbar.setNavigationOnClickListener {
             when {
                 supportFragmentManager.backStackEntryCount > 0 ->
                     supportFragmentManager.popBackStack()
@@ -39,13 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain") {
-            intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                val frag = AddSubscriptionFragment.newInstance(it)
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, frag)
-                    .addToBackStack(null)
-                    .commit()
-            }
+            handleIntentSend()
         }
 
         parentViewModel.selectedFeed.observe(this, Observer {
@@ -54,6 +55,25 @@ class MainActivity : AppCompatActivity() {
         parentViewModel.title.observe(this, Observer {
             toolbar.title = it
         })
+
+        toolbarProgress.pivotX = 0f
+        WorkManager.getInstance(this)
+            .getWorkInfosForUniqueWorkLiveData(UPDATE_WORK_ID)
+            .observe(this, Observer {
+                val workInfo = it.firstOrNull()
+                val percent = when (workInfo?.state) {
+                    WorkInfo.State.RUNNING -> workInfo.progress.getFloat(
+                        FeedUpdateWorker.Progress,
+                        0.10f
+                    )
+                    else -> 1f
+                }
+
+                toolbarProgress.animate()
+                    .scaleX(percent)
+                    .setDuration(150)
+                    .start()
+            })
     }
 
     override fun onBackPressed() {
@@ -63,4 +83,22 @@ class MainActivity : AppCompatActivity() {
             else -> super.onBackPressed()
         }
     }
+
+    private fun handleIntentSend() {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+            val oldFrag = supportFragmentManager.findFragmentByTag(ADD_FRAG_TAG)
+            oldFrag?.let {
+                supportFragmentManager.beginTransaction()
+                    .remove(oldFrag)
+                    .commitAllowingStateLoss()
+            }
+
+            val frag = AddSubscriptionFragment.newInstance(it)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, frag, ADD_FRAG_TAG)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
 }
+

@@ -6,17 +6,25 @@ class RefreshFeedsUseCase(
     private val db: Db,
     private val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase
 ) {
-    suspend fun refreshFeedsUseCase(): Result<Boolean> {
+    suspend fun refreshFeedsUseCase(updateProgressCallback: suspend (Float) -> Unit): Result<Boolean> {
         val feeds = db.selectAllFeeds()
-        Timber.d("Updating ${feeds.size} feeds...")
+        val feedCount = feeds.size.toFloat()
+        Timber.d("Updating $feedCount feeds...")
 
-        feeds.map { feed ->
+        var feedUpdated = 0f
+        val sendProgressUpdate = suspend {
+            feedUpdated++
+            updateProgressCallback(feedUpdated / feedCount)
+        }
+
+        feeds.forEach { feed ->
             fetchAndSaveChannelUseCase.fetchAndSaveChannel(feed.updateLink)
                 .onFailure {
                     Timber.e("  failure fetching ${feed.link}")
                     Timber.e(it)
                 }
                 .onSuccess { Timber.d("  done with ${feed.link}") }
+            sendProgressUpdate()
         }
 
         Timber.d("Done updating feeds.")

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/add_subscription"
+        android:id="@+id/menu_add_subscription"
         android:icon="@drawable/ic_add"
         android:title="@string/add_subscription"
         app:showAsAction="ifRoom" />
@@ -13,15 +13,19 @@
         app:showAsAction="ifRoom">
         <menu>
             <item
-                android:id="@+id/hide_read"
+                android:id="@+id/menu_hide_read"
                 android:checkable="true"
                 android:title="@string/hide_read_items" />
             <item
-                android:id="@+id/mark_as_read"
+                android:id="@+id/menu_mark_as_read"
                 android:title="@string/mark_all_as_read" />
             <item
-                android:id="@+id/delete_feed"
+                android:id="@+id/menu_delete_feed"
                 android:title="@string/delete_feed" />
+            <item
+                android:id="@+id/menu_refresh"
+                android:title="@string/menu_refresh"
+                app:showAsAction="never" />
         </menu>
     </item>
 </menu>

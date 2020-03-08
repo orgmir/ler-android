@@ -10,7 +10,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import app.luisramos.ler.R
+import app.luisramos.ler.UPDATE_WORK_ID
+import app.luisramos.ler.enqueueFeedSyncWork
 import app.luisramos.ler.ui.base.BaseFragment
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.main.MainViewModel.UiState
@@ -48,12 +52,24 @@ class MainFragment : BaseFragment() {
         }
 
         swipeRefreshLayout.setOnRefreshListener {
-            swipeRefreshLayout.isRefreshing = false
-            // TODO reload feed data
+            requireContext().enqueueFeedSyncWork()
         }
 
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData(UPDATE_WORK_ID)
+            .observe(viewLifecycleOwner, Observer {
+                val workInfo = it.firstOrNull()
+                when (workInfo?.state) {
+                    WorkInfo.State.RUNNING -> if (!swipeRefreshLayout.isRefreshing) {
+                        swipeRefreshLayout.isRefreshing = true
+                    }
+                    else -> if (swipeRefreshLayout.isRefreshing) {
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                }
+            })
+
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            swipeRefreshLayout.isRefreshing = it == UiState.Loading
             emptyView.visibility = (it as? UiState.Success)?.data.isNullOrEmpty().toggleGone()
             when (it) {
                 is UiState.Error ->
@@ -93,27 +109,31 @@ class MainFragment : BaseFragment() {
         inflater.inflate(R.menu.menu_main, menu)
 
         val showRead = viewModel.showReadFeedItems.value ?: false
-        menu.findItem(R.id.hide_read)?.isChecked = !showRead
+        menu.findItem(R.id.menu_hide_read)?.isChecked = !showRead
 
         val showDelete = viewModel.isDeleteMenuOptionVisible.value ?: false
-        menu.findItem(R.id.delete_feed).isVisible = showDelete
+        menu.findItem(R.id.menu_delete_feed).isVisible = showDelete
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.add_subscription -> {
+        R.id.menu_add_subscription -> {
             showAddSubscriptionDialog()
             true
         }
-        R.id.hide_read -> {
+        R.id.menu_hide_read -> {
             viewModel.toggleUnreadFilter()
             true
         }
-        R.id.mark_as_read -> {
+        R.id.menu_mark_as_read -> {
             viewModel.markAllAsRead()
             true
         }
-        R.id.delete_feed -> {
+        R.id.menu_delete_feed -> {
             viewModel.tapDeleteFeed()
+            true
+        }
+        R.id.menu_refresh -> {
+            requireContext().enqueueFeedSyncWork()
             true
         }
         else -> super.onOptionsItemSelected(item)

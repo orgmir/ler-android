@@ -13,4 +13,5 @@
     <string name="delete_feed">Remove feed</string>
     <string name="delete_confirmation_msg">Are you sure you want to delete this feed? You can always subscribe to it again.</string>
     <string name="delete">Delete</string>
+    <string name="menu_refresh">Refresh feeds</string>
 </resources>

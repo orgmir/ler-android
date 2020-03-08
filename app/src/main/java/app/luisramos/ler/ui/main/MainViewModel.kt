@@ -57,6 +57,32 @@ class MainViewModel(
         reloadData()
     }
 
+    fun markAllAsRead() = viewModelScope.launch {
+        parentViewModel.selectedFeed.value?.let {
+            setUnreadFeedItemUseCase.setUnreadForFeedId(it, false)
+        }
+    }
+
+    fun toggleUnread(position: Int) = viewModelScope.launch {
+        getItem(position)?.let {
+            setUnreadFeedItemUseCase.setUnread(it.id, !it.unread.toBoolean())
+//            updateListPosition.value = position
+        }
+    }
+
+    fun tapDeleteFeed() {
+        val title = parentViewModel.title.value ?: return
+        if (title == "All") return
+
+        showDeleteConfirmation.postEvent(title)
+    }
+
+    fun deleteSelectedFeed() = viewModelScope.launch {
+        val id = parentViewModel.selectedFeed.value
+        id?.let { deleteFeedUseCase.deleteFeed(id) }
+        parentViewModel.selectedFeed.value = -1 // reset to "All" filter
+    }
+
     private fun reloadData() {
         loadData(parentViewModel.selectedFeed.value ?: -1)
     }
@@ -75,35 +101,8 @@ class MainViewModel(
         }
     }
 
-    fun markAllAsRead() = viewModelScope.launch {
-        parentViewModel.selectedFeed.value?.let {
-            setUnreadFeedItemUseCase.setUnreadForFeedId(it, false)
-        }
-    }
-
-    fun toggleUnread(position: Int) = viewModelScope.launch {
-        getItem(position)?.let {
-            setUnreadFeedItemUseCase.setUnread(it.id, !it.unread.toBoolean())
-//            updateListPosition.value = position
-        }
-    }
-
     private fun getItem(position: Int): SelectAll? =
         (uiState.value as? UiState.Success)?.data?.getOrNull(position)
-
-    fun tapDeleteFeed() {
-        val title = parentViewModel.title.value ?: return
-        if (title == "All") return
-
-        showDeleteConfirmation.postEvent(title)
-    }
-
-    fun deleteSelectedFeed() = viewModelScope.launch {
-        val id = parentViewModel.selectedFeed.value
-        id?.let { deleteFeedUseCase.deleteFeed(id) }
-        parentViewModel.selectedFeed.value = -1 // reset to "All" filter
-    }
-
 
     sealed class UiState {
         object Loading : UiState()
