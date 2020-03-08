@@ -68,7 +68,10 @@ class FeedItemAdapter : RecyclerView.Adapter<FeedItemAdapter.ViewHolder>() {
             imageView.setColorFilter(tintColor, PorterDuff.Mode.MULTIPLY)
 
             setOnClickListener {
-                onItemClick?.invoke(position)
+                // Since we are diffing the updates, if we use "position"
+                // here it might be out of date. binding only happens for
+                // new items
+                onItemClick?.invoke(holder.adapterPosition)
             }
         }
     }

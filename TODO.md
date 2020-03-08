@@ -4,6 +4,8 @@
 - [ ] Add version to bottom of side menu
 - [ ] Deploy to play store
 - [ ] Make sure of app is already running we don't push another fragment to add subscription
+- [x] Fix tap selecting wrong view
+- [x] Add build number to github action
 
 - [ ] Pull the favicon from the website somehow and save it
 - [ ] Figure out what settings would be nice to have

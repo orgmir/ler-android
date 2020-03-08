@@ -46,7 +46,7 @@ class MainViewModel(
     fun tappedItem(position: Int) = viewModelScope.launch {
         getItem(position)?.let {
             setUnreadFeedItemUseCase.setUnread(it.id, false)
-            updateListPosition.value = position
+//            updateListPosition.value = position
             goToExternalBrowser.postEvent(it.link)
         }
     }

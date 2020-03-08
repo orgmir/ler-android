@@ -48,7 +48,7 @@ class SideMenuViewModel(
         SideMenuItem(
             item.id,
             item.title,
-            item.itemsCount.toString().let { if (it == "0") "" else it })
+            item.itemsCount.toString().let { if (it == "0" || it == "null") "" else it })
     }
 
     sealed class UiState {
