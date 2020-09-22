@@ -1,4 +1,4 @@
-package app.luisramos.ler.parsers
+package app.luisramos.ler.domain.parsers
 
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser

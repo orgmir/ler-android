@@ -1,7 +1,7 @@
-package app.luisramos.ler.parsers
+package app.luisramos.ler.domain.parsers
 
-import app.luisramos.ler.parsers.models.Opml
-import app.luisramos.ler.parsers.models.Opml.Outline
+import app.luisramos.ler.domain.parsers.models.Opml
+import app.luisramos.ler.domain.parsers.models.Opml.Outline
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

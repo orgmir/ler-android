@@ -1,4 +1,4 @@
-package app.luisramos.ler.work
+package app.luisramos.ler.domain.work
 
 import android.app.DownloadManager
 import android.content.ContentValues
@@ -8,8 +8,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
-import app.luisramos.ler.parsers.OpmlWriter
-import app.luisramos.ler.parsers.models.Opml
+import app.luisramos.ler.domain.parsers.OpmlWriter
+import app.luisramos.ler.domain.parsers.models.Opml
 import okhttp3.internal.closeQuietly
 import java.io.File
 import java.io.IOException

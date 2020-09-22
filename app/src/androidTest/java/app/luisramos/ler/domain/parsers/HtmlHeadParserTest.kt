@@ -1,4 +1,4 @@
-package app.luisramos.ler.parsers
+package app.luisramos.ler.domain.parsers
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

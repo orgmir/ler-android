@@ -2,7 +2,7 @@ package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.download
 import app.luisramos.ler.data.model.FeedModel
-import app.luisramos.ler.parsers.RssAtomCombinedParser
+import app.luisramos.ler.domain.parsers.RssAtomCombinedParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber

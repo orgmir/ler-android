@@ -1,7 +1,7 @@
 package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.download
-import app.luisramos.ler.parsers.HtmlHeadParser
+import app.luisramos.ler.domain.parsers.HtmlHeadParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber

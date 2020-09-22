@@ -1,6 +1,6 @@
 package app.luisramos.ler.data.model
 
-import app.luisramos.ler.parsers.AtomXmlParser
+import app.luisramos.ler.domain.parsers.AtomXmlParser
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

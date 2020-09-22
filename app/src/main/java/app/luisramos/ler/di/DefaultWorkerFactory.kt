@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import app.luisramos.ler.work.FeedUpdateWorker
+import app.luisramos.ler.domain.work.FeedUpdateWorker
 
 class DefaultWorkerFactory(
     private val appContainer: AppContainer

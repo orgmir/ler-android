@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.work.*
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.di.DefaultAppContainer
-import app.luisramos.ler.work.FeedUpdateWorker
+import app.luisramos.ler.domain.work.FeedUpdateWorker
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.crashes.Crashes
 import timber.log.Timber

@@ -1,7 +1,7 @@
-package app.luisramos.ler.parsers
+package app.luisramos.ler.domain.parsers
 
 import android.util.Xml
-import app.luisramos.ler.parsers.models.Opml
+import app.luisramos.ler.domain.parsers.models.Opml
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException

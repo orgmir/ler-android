@@ -1,7 +1,9 @@
 # TODO
 
-- [ ] Figure out menu not closing in one plus
-- [ ] Figure out title no updating in one plus
+- [ ] Add notification in the morning with the new feed updates
+- [ ] Figure out issue www.jessesquires.com
+- [ ] Support .xml files when adding subscription
+- [ ] Add opml export/import
 
 - [ ] Pull the favicon from the website somehow and save it
 - [ ] Figure out what settings would be nice to have

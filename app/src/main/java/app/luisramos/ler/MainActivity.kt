@@ -11,7 +11,7 @@ import androidx.work.WorkManager
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.ui.main.MainFragment
 import app.luisramos.ler.ui.subscription.AddSubscriptionFragment
-import app.luisramos.ler.work.FeedUpdateWorker
+import app.luisramos.ler.domain.work.FeedUpdateWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 

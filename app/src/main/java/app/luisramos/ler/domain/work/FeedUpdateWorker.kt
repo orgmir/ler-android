@@ -1,4 +1,4 @@
-package app.luisramos.ler.work
+package app.luisramos.ler.domain.work
 
 import android.content.Context
 import androidx.work.CoroutineWorker

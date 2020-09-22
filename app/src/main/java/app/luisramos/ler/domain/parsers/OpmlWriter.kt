@@ -1,6 +1,6 @@
-package app.luisramos.ler.parsers
+package app.luisramos.ler.domain.parsers
 
-import app.luisramos.ler.parsers.models.Opml
+import app.luisramos.ler.domain.parsers.models.Opml
 import java.io.OutputStream
 import java.io.Writer
 

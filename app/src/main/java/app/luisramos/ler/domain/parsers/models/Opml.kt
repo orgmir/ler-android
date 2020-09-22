@@ -1,4 +1,4 @@
-package app.luisramos.ler.parsers.models
+package app.luisramos.ler.domain.parsers.models
 
 data class Opml(
     val title: String,
