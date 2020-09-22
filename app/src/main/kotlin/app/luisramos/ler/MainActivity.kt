@@ -49,17 +49,17 @@ class MainActivity : AppCompatActivity() {
             handleIntentSend()
         }
 
-        parentViewModel.selectedFeed.observe(this, Observer {
+        parentViewModel.selectedFeed.observe(this, {
             drawerLayout.closeDrawer(GravityCompat.START)
         })
-        parentViewModel.title.observe(this, Observer {
+        parentViewModel.title.observe(this, {
             toolbar.title = it
         })
 
         toolbarProgress.pivotX = 0f
         WorkManager.getInstance(this)
             .getWorkInfosForUniqueWorkLiveData(UPDATE_WORK_ID)
-            .observe(this, Observer {
+            .observe(this, {
                 val workInfo = it.firstOrNull()
                 val percent = when (workInfo?.state) {
                     WorkInfo.State.RUNNING -> workInfo.progress.getFloat(

@@ -2,10 +2,11 @@ package app.luisramos.ler.data.model
 
 import app.luisramos.ler.domain.parsers.AtomXmlParser
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
-class FeedModelKtTest {
+class FeedModelTest {
 
     @Test
     fun testAtomFeedToFeedModelWorks() {
@@ -41,5 +42,17 @@ class FeedModelKtTest {
         )
 
         assertThat(feedModel, `is`(expected))
+    }
+
+    @Test
+    fun testRssFeedDateFormatter() {
+        assertThat(
+            rssFeedDateFormatter.parse("Thu, 17 Sep 2020 00:51:19 GMT"),
+            `is`(notNullValue())
+        )
+        assertThat(
+            rssFeedDateFormatter.parse("Sat, 04 May 2019 08:10:56 +0000"),
+            `is`(notNullValue())
+        )
     }
 }

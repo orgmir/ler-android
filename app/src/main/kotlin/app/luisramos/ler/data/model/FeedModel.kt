@@ -14,9 +14,9 @@ data class FeedModel(
     val items: List<FeedItemModel> = listOf()
 )
 
-val atomFeedDateFormatter1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
-val atomFeedDateFormatter2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT)
-val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ROOT)
+val atomFeedDateFormatter1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
+val atomFeedDateFormatter2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
+val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
 
 fun parseAtomDateString(dateString: String): Date? = when {
     dateString.contains("Z", ignoreCase = true) -> atomFeedDateFormatter1.parse(dateString)
