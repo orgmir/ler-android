@@ -3,19 +3,20 @@ package app.luisramos.ler.ui.sidemenu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.luisramos.ler.ParentViewModel
 import app.luisramos.ler.data.FeedsWithCount
 import app.luisramos.ler.domain.FetchFeedsUseCase
+import app.luisramos.ler.ui.ScaffoldViewModel
+import app.luisramos.ler.ui.views.UiState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SideMenuViewModel(
-    parentViewModel: ParentViewModel,
+    parentViewModel: ScaffoldViewModel,
     private val fetchFeedsUseCase: FetchFeedsUseCase
 ) : ViewModel() {
 
-    val uiState = MutableLiveData<UiState>()
+    val uiState = MutableLiveData<UiState<SideMenuItem>>()
     val selectedFeed = parentViewModel.selectedFeed
 
     private var fetchJob: Job? = null
@@ -38,28 +39,31 @@ class SideMenuViewModel(
     }
 
     fun onItemTapped(position: Int) {
-        val item = (uiState.value as? UiState.Success)?.items?.getOrNull(position)
+        val state = uiState.value as? UiState.Success ?: return
+        val item = state.data.getOrNull(position)
         item?.let {
             selectedFeed.value = item.id
+            uiState.value = state.copy(
+                data = state.data.map {
+                    it.copy(isSelected = it.id == item.id)
+                }
+            )
         }
     }
 
     private fun List<FeedsWithCount>.toSideMenuItems() = map { item ->
         SideMenuItem(
-            item.id,
-            item.title,
-            item.itemsCount.toString().let { if (it == "0" || it == "null") "" else it })
-    }
-
-    sealed class UiState {
-        object Loading : UiState()
-        data class Error(val msg: String) : UiState()
-        data class Success(val items: List<SideMenuItem>) : UiState()
+            id = item.id,
+            title = item.title,
+            count = item.itemsCount.toString().let { if (it == "0" || it == "null") "" else it },
+            isSelected = (selectedFeed.value ?: -1L) == item.id
+        )
     }
 
     data class SideMenuItem(
         val id: Long,
         val title: String,
-        val count: String
+        val count: String,
+        val isSelected: Boolean = false
     )
 }

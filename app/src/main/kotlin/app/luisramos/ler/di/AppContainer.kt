@@ -1,7 +1,7 @@
 package app.luisramos.ler.di
 
 import androidx.work.WorkerFactory
-import app.luisramos.ler.ParentViewModel
+import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.domain.*
 
 interface AppContainer {
@@ -23,5 +23,5 @@ interface AppContainer {
     val deleteFeedUseCase: DeleteFeedUseCase
 
     val activityViewModelProviderFactory: ActivityViewModelProviderFactory
-    fun getViewModelFactory(parentViewModel: ParentViewModel): ViewModelProviderFactory
+    fun getViewModelFactory(parentViewModel: ScaffoldViewModel): ViewModelProviderFactory
 }

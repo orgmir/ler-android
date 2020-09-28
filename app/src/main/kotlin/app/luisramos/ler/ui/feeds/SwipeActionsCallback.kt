@@ -1,4 +1,4 @@
-package app.luisramos.ler.ui.main
+package app.luisramos.ler.ui.feeds
 
 import android.content.Context
 import android.graphics.Canvas

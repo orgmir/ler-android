@@ -1,28 +1,30 @@
-package app.luisramos.ler.ui.main
+package app.luisramos.ler.ui.feeds
 
 import androidx.lifecycle.*
-import app.luisramos.ler.ParentViewModel
 import app.luisramos.ler.data.SelectAll
 import app.luisramos.ler.data.toBoolean
 import app.luisramos.ler.domain.DeleteFeedUseCase
 import app.luisramos.ler.domain.FetchFeedItemsUseCase
 import app.luisramos.ler.domain.Preferences
 import app.luisramos.ler.domain.SetUnreadFeedItemUseCase
+import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.event.Event
 import app.luisramos.ler.ui.event.postEvent
+import app.luisramos.ler.ui.views.UiState
+import app.luisramos.ler.ui.views.data
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class MainViewModel(
-    val parentViewModel: ParentViewModel,
+class FeedItemsListViewModel(
+    val parentViewModel: ScaffoldViewModel,
     private val fetchFeedsUseCase: FetchFeedItemsUseCase,
     private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val preferences: Preferences
 ) : ViewModel() {
 
-    val uiState = MutableLiveData<UiState>()
+    val uiState = MutableLiveData<UiState<SelectAll>>()
 
     val goToExternalBrowser = MutableLiveData<Event<String>>()
     val updateListPosition = MutableLiveData<Int>()
@@ -101,12 +103,5 @@ class MainViewModel(
         }
     }
 
-    private fun getItem(position: Int): SelectAll? =
-        (uiState.value as? UiState.Success)?.data?.getOrNull(position)
-
-    sealed class UiState {
-        object Loading : UiState()
-        data class Error(val msg: String) : UiState()
-        data class Success(val data: List<SelectAll>) : UiState()
-    }
+    private fun getItem(position: Int): SelectAll? = uiState.value?.data?.getOrNull(position)
 }

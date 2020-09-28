@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="toolbar" type="id" />
+    <item name="notification_on_screen_exit" type="id" />
+    <item name="scaffoldView" type="id" />
+</resources>

@@ -1,4 +1,4 @@
-package app.luisramos.ler
+package app.luisramos.ler.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import app.luisramos.ler.domain.FetchFeedUseCase
 import kotlinx.coroutines.launch
 
-class ParentViewModel(
+class ScaffoldViewModel(
     private val fetchFeedUseCase: FetchFeedUseCase
 ) : ViewModel() {
     val selectedFeed = MutableLiveData<Long>(-1)
@@ -24,10 +24,14 @@ class ParentViewModel(
         super.onCleared()
     }
 
-    private fun updateTitle(id: Long) = viewModelScope.launch {
+    fun updateTitle(id: Long) = viewModelScope.launch {
         title.value = when (id) {
             -1L -> "All"
             else -> fetchFeedUseCase.fetch(id)?.title ?: "Items"
         }
+    }
+
+    fun updateTitle(text: String) {
+        title.value = text
     }
 }

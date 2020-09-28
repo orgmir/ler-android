@@ -1,4 +1,4 @@
-package app.luisramos.ler.ui.main
+package app.luisramos.ler.ui.views
 
 import android.widget.TextView
 import androidx.annotation.StringRes

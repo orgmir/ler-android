@@ -1,8 +1,9 @@
 package app.luisramos.ler.ui.event
 
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import app.luisramos.ler.di.observe
 
 typealias EmptyEvent = Event<Any>
 
@@ -27,5 +28,9 @@ fun MutableLiveData<EmptyEvent>.postEmptyEvent() {
 }
 
 fun <T> MutableLiveData<Event<T>>.observeEvent(owner: LifecycleOwner, observer: (T) -> Unit) {
-    observe(owner, Observer { event -> event.consume()?.let { observer.invoke(it) } })
+    observe(owner, { event -> event.consume()?.let { observer.invoke(it) } })
+}
+
+fun <T> MutableLiveData<Event<T>>.observeEvent(view: View, observer: (T) -> Unit) {
+    observe(view) { event -> event.consume()?.let { observer.invoke(it) } }
 }

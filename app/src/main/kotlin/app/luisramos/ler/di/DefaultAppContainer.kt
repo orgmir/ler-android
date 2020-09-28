@@ -2,7 +2,7 @@ package app.luisramos.ler.di
 
 import android.content.Context
 import androidx.work.WorkerFactory
-import app.luisramos.ler.ParentViewModel
+import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 
     private var _viewModelFactory: ViewModelProviderFactory? = null
-    override fun getViewModelFactory(parentViewModel: ParentViewModel): ViewModelProviderFactory {
+    override fun getViewModelFactory(parentViewModel: ScaffoldViewModel): ViewModelProviderFactory {
         if (_viewModelFactory == null) {
             _viewModelFactory = ViewModelProviderFactory(this, parentViewModel)
         }
