@@ -2,31 +2,32 @@ package app.luisramos.ler.di
 
 import android.content.Context
 import androidx.work.WorkerFactory
-import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
+import app.luisramos.ler.ui.ScaffoldViewModel
 import kotlinx.coroutines.Dispatchers
 
 class DefaultAppContainer(context: Context) : AppContainer {
 
     override val db: Db = DefaultDatabase(context, Dispatchers.IO)
 
-
     override val preferences: Preferences =
         DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE))
 
-    override val fetchChannelUseCase = FetchChannelUseCase()
-    override val fetchFeedsUseCase = FetchFeedsUseCase(db)
-    override val saveFeedUseCase = SaveFeedUseCase(db)
-    override val fetchAndSaveChannelUseCase = FetchAndSaveChannelUseCase(
+    override val fetchChannelUseCase: FetchChannelUseCase = DefaultFetchChannelUseCase()
+    override val fetchFeedsUseCase: FetchFeedsUseCase = DefaultFetchFeedsUseCase(db)
+    override val saveFeedUseCase: SaveFeedUseCase = DefaultSaveFeedUseCase(db)
+    override val fetchAndSaveChannelUseCase = DefaultFetchAndSaveChannelUseCase(
         fetchChannelUseCase,
         saveFeedUseCase
     )
-    override val fetchFeedsFromHtmlUseCase = FetchFeedsFromHtmlUseCase()
+    override val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase =
+        DefaultFetchFeedsFromHtmlUseCase()
     override val fetchFeedItemsUseCase = FetchFeedItemsUseCase(db)
     override val setFeedItemUnreadUseCase = SetUnreadFeedItemUseCase(db)
-    override val fetchFeedUseCase = FetchFeedUseCase(db)
-    override val refreshFeedsUseCase = RefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
+    override val fetchFeedUseCase: FetchFeedUseCase = DefaultFetchFeedUseCase(db)
+    override val refreshFeedsUseCase: RefreshFeedsUseCase =
+        DefaultRefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
     override val deleteFeedUseCase = DeleteFeedUseCase(db)
 
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)

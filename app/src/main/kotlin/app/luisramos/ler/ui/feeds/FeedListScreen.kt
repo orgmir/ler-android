@@ -54,7 +54,7 @@ class FeedListScreen : Screen() {
                 }
 
                 menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
-                    context.enqueueFeedSyncWork()
+                    context.enqueueFeedSyncWork(refreshData = true)
                     true
                 }
             }

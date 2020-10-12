@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luisramos.ler.data.FeedsWithCount
 import app.luisramos.ler.domain.FetchFeedsUseCase
+import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.views.UiState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -17,17 +17,10 @@ class SideMenuViewModel(
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState<SideMenuItem>>()
-    val selectedFeed = parentViewModel.selectedFeed
-
-    private var fetchJob: Job? = null
+    private val selectedFeed = parentViewModel.selectedFeed
 
     init {
-        loadData()
-    }
-
-    fun loadData() {
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
+        viewModelScope.launch {
             uiState.value = UiState.Loading
             fetchFeedsUseCase.fetchFeeds().collect { result ->
                 uiState.value = result.fold(

@@ -15,7 +15,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="app.luisramos.ler.ui.MainActivity">
+        <activity
+            android:name="app.luisramos.ler.ui.MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

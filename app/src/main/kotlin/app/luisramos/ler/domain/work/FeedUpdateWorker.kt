@@ -5,7 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.luisramos.ler.domain.RefreshFeedsUseCase
-import kotlinx.coroutines.coroutineScope
 
 class FeedUpdateWorker(
     private val refreshFeedsUseCase: RefreshFeedsUseCase,
@@ -17,10 +16,10 @@ class FeedUpdateWorker(
         const val Progress = "Progress"
     }
 
-    override suspend fun doWork(): Result = coroutineScope {
+    override suspend fun doWork(): Result {
         refreshFeedsUseCase.refreshFeedsUseCase {
             setProgress(workDataOf(Progress to it))
         }
-        Result.success()
+        return Result.success()
     }
 }

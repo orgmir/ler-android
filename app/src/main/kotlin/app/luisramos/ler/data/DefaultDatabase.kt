@@ -147,7 +147,7 @@ class DefaultDatabase(
         )
     }
 
-    override suspend fun deleteFeedItemWithFeedId(feedId: Long) = withContext(dbContext) {
+    override suspend fun deleteFeedItemsByFeedId(feedId: Long) = withContext(dbContext) {
         queryWrapper.feedItemQueries.deleteFeedItemsByFeedId(feedId)
     }
 

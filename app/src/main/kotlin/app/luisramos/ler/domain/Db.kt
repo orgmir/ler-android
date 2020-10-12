@@ -52,7 +52,7 @@ interface Db {
         updatedAt: Date
     )
 
-    suspend fun deleteFeedItemWithFeedId(feedId: Long)
+    suspend fun deleteFeedItemsByFeedId(feedId: Long)
 
     suspend fun setFeedItemUnread(id: Long, unread: Boolean)
     suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean)

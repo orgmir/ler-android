@@ -25,7 +25,7 @@ class FeedItemsListView(
 
     val swipeRefreshLayout = SwipeRefreshLayout(context).apply {
         setOnRefreshListener {
-            context.enqueueFeedSyncWork()
+            context.enqueueFeedSyncWork(refreshData = true)
         }
 
         WorkManager.getInstance(context)

@@ -12,7 +12,7 @@ class HtmlHeadParser {
                 val document = Jsoup.parse(inputStream, null, baseUri)
                 readDocument(document, baseUri)
             } catch (e: Exception) {
-                emptyList<FeedLink>()
+                emptyList()
             }
         }
 
@@ -27,8 +27,6 @@ class HtmlHeadParser {
                 var link = it.attr("href")
                 if (!link.contains("http")) {
                     link = "$baseUri$link"
-                } else if (link.contains("http://")) {
-                    link = link.replace("http://", "https://")
                 }
                 FeedLink(title, link)
             }

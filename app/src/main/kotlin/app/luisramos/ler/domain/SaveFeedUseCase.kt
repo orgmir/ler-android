@@ -5,10 +5,14 @@ import app.luisramos.ler.data.model.FeedUpdateMode
 import java.io.IOException
 import java.util.*
 
-class SaveFeedUseCase(
+interface SaveFeedUseCase {
+    suspend fun saveFeed(feedModel: FeedModel): Result<Boolean>
+}
+
+class DefaultSaveFeedUseCase(
     private val db: Db
-) {
-    suspend fun saveFeed(feedModel: FeedModel): Result<Boolean> {
+) : SaveFeedUseCase {
+    override suspend fun saveFeed(feedModel: FeedModel): Result<Boolean> {
         val (title, link) = feedModel
 
         if (title.isEmpty() || link.isEmpty()) {
@@ -72,4 +76,9 @@ class SaveFeedUseCase(
 
         return Result.success(true)
     }
+}
+
+class FakeSaveFeedUseCase: SaveFeedUseCase {
+    var mockResult = Result.success(true)
+    override suspend fun saveFeed(feedModel: FeedModel): Result<Boolean> = mockResult
 }

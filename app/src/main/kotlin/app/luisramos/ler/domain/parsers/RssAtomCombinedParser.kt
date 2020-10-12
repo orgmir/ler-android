@@ -8,9 +8,13 @@ import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
 
-class RssAtomCombinedParser {
+interface FeedParser {
+    fun parse(inputStream: InputStream): FeedModel?
+}
+
+class RssAtomCombinedParser : FeedParser {
     @Throws(XmlPullParserException::class, IOException::class)
-    fun parse(inputStream: InputStream): FeedModel? {
+    override fun parse(inputStream: InputStream): FeedModel? {
         inputStream.use {
             val parser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)

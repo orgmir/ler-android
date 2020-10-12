@@ -3,10 +3,7 @@ package app.luisramos.ler.ui.feeds
 import androidx.lifecycle.*
 import app.luisramos.ler.data.SelectAll
 import app.luisramos.ler.data.toBoolean
-import app.luisramos.ler.domain.DeleteFeedUseCase
-import app.luisramos.ler.domain.FetchFeedItemsUseCase
-import app.luisramos.ler.domain.Preferences
-import app.luisramos.ler.domain.SetUnreadFeedItemUseCase
+import app.luisramos.ler.domain.*
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.event.Event
 import app.luisramos.ler.ui.event.postEvent

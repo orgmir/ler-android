@@ -2,7 +2,10 @@ package app.luisramos.ler
 
 import android.app.Application
 import android.content.Context
-import androidx.work.*
+import androidx.work.Configuration
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.di.DefaultAppContainer
 import app.luisramos.ler.domain.work.FeedUpdateWorker
@@ -41,21 +44,16 @@ class App : Application() {
     }
 }
 
-fun Context.enqueueFeedSyncWork() {
-    val constraints = Constraints.Builder()
-        .setRequiresBatteryNotLow(true)
-        .setRequiresStorageNotLow(true)
-        .build()
-
-    val updateRequest =
-        PeriodicWorkRequestBuilder<FeedUpdateWorker>(1, TimeUnit.HOURS)
-            .setConstraints(constraints)
-            .build()
-
+fun Context.enqueueFeedSyncWork(refreshData: Boolean = false) {
+    val policy = if (refreshData) {
+        ExistingPeriodicWorkPolicy.REPLACE
+    } else {
+        ExistingPeriodicWorkPolicy.KEEP
+    }
     WorkManager.getInstance(this)
         .enqueueUniquePeriodicWork(
             UPDATE_WORK_ID,
-            ExistingPeriodicWorkPolicy.REPLACE,
-            updateRequest
+            policy,
+            PeriodicWorkRequestBuilder<FeedUpdateWorker>(15, TimeUnit.MINUTES).build()
         )
 }

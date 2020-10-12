@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luisramos.ler.domain.FetchAndSaveChannelUseCase
 import app.luisramos.ler.domain.FetchFeedsFromHtmlUseCase
+import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.event.EmptyEvent
 import app.luisramos.ler.ui.event.postEmptyEvent
 import kotlinx.coroutines.launch

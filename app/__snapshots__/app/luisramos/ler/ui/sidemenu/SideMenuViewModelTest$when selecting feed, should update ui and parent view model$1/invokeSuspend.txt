@@ -1,0 +1,1 @@
+[SideMenuItem(id=-1, title=All, count=, isSelected=false), SideMenuItem(id=1, title=Feed #1, count=, isSelected=true), SideMenuItem(id=2, title=Feed #2, count=32, isSelected=false)]

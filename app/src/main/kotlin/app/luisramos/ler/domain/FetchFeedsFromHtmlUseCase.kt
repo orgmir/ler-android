@@ -9,26 +9,31 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.MalformedURLException
 import java.net.URL
+import kotlin.coroutines.CoroutineContext
 
-class FetchFeedsFromHtmlUseCase {
+interface FetchFeedsFromHtmlUseCase {
+    suspend fun fetch(urlString: String): Result<List<Pair<String, String>>>
+}
 
-    suspend fun fetch(urlString: String): Result<List<Pair<String, String>>> {
-        Timber.d("Loading page $urlString")
+class DefaultFetchFeedsFromHtmlUseCase(
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
+) : FetchFeedsFromHtmlUseCase {
 
-        val url = withContext(Dispatchers.IO) { createURL(urlString) }
-            ?: return Result.failure(IOException("Could not create URL for $urlString"))
+    override suspend fun fetch(urlString: String): Result<List<Pair<String, String>>> =
+        withContext(coroutineContext) {
+            Timber.d("Loading page $urlString")
 
-        val inputStream = withContext(Dispatchers.IO) { url.download() }
-            ?: return Result.failure(IOException("Url download is empty for $urlString"))
+            val url = createURL(urlString)
+                ?: return@withContext Result.failure(IOException("Could not create URL for $urlString"))
+            url.download {
+                val feeds = parseHtml(it, url.baseUrl)
+                Result.success(feeds)
+            }
+                ?: Result.failure(IOException("Url download is empty for $urlString"))
+        }
 
-        return parseHtml(inputStream, url.baseUrl)
-    }
-
-    private suspend fun parseHtml(
-        inputStream: InputStream,
-        baseUrl: String
-    ): Result<List<Pair<String, String>>> = withContext(Dispatchers.IO) {
-        val pairs = HtmlHeadParser().parse(inputStream, baseUrl)
+    private fun parseHtml(inputStream: InputStream, baseUrl: String): List<Pair<String, String>> =
+        HtmlHeadParser().parse(inputStream, baseUrl)
             .map {
                 val (title, link) = it
                 title to link
@@ -37,8 +42,6 @@ class FetchFeedsFromHtmlUseCase {
                 acc[link] = value
                 acc
             }.values.toList()
-        Result.success(pairs)
-    }
 
     private fun createURL(urlString: String): URL? =
         try {
@@ -46,7 +49,7 @@ class FetchFeedsFromHtmlUseCase {
         } catch (e: MalformedURLException) {
             if (e.message?.contains("no protocol", ignoreCase = true) == true) {
                 try {
-                    URL("https://$urlString")
+                    URL("http://$urlString")
                 } catch (e: Exception) {
                     null
                 }
