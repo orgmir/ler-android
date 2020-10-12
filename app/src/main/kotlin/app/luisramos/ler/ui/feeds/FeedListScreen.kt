@@ -10,8 +10,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import app.luisramos.ler.R
+import app.luisramos.ler.UPDATE_WORK_ID
 import app.luisramos.ler.di.observe
+import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.enqueueFeedSyncWork
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.navigation.Screen
@@ -25,27 +29,31 @@ import app.luisramos.ler.ui.views.toggleGone
 class FeedListScreen : Screen() {
     override fun createView(container: ViewGroup): View =
         FeedItemsListView(container.context).apply {
+            val viewModel: FeedItemsListViewModel by viewModels()
 
             onCreateOptionsMenu { menu ->
                 activity.menuInflater.inflate(R.menu.menu_main, menu)
 
                 menu.findItem(R.id.menu_hide_read).apply {
                     isChecked = viewModel.showReadFeedItems.value ?: false
+                    val iconRes = if (isChecked) {
+                        R.drawable.ic_baseline_visibility_24
+                    } else {
+                        R.drawable.ic_baseline_visibility_off_24
+                    }
+                    icon = ContextCompat.getDrawable(context, iconRes)
+
                     setOnMenuItemClickListener {
                         viewModel.toggleUnreadFilter()
                         true
                     }
                 }
                 menu.findItem(R.id.menu_delete_feed).apply {
-                    isVisible = viewModel.isDeleteMenuOptionVisible.value?.not() ?: false
+                    isVisible = viewModel.isDeleteMenuOptionVisible.value ?: false
                     setOnMenuItemClickListener {
                         viewModel.tapDeleteFeed()
                         true
                     }
-                }
-                menu.findItem(R.id.menu_add_subscription).setOnMenuItemClickListener {
-                    showAddSubscriptionDialog()
-                    true
                 }
 
                 menu.findItem(R.id.menu_mark_as_read).setOnMenuItemClickListener {
@@ -59,11 +67,11 @@ class FeedListScreen : Screen() {
                 }
             }
 
-            setupView()
-            setupViewModel()
+            setupView(viewModel)
+            setupViewModel(viewModel)
         }
 
-    private fun FeedItemsListView.setupView() {
+    private fun FeedItemsListView.setupView(viewModel: FeedItemsListViewModel) {
         val swipeActionCallback = SwipeActionsCallback(context, adapter) {
             viewModel.toggleUnread(it)
         }
@@ -72,9 +80,30 @@ class FeedListScreen : Screen() {
         adapter.onItemClick = {
             viewModel.tappedItem(it)
         }
+
+        swipeRefreshLayout.apply {
+            setOnRefreshListener {
+                context.enqueueFeedSyncWork(refreshData = true)
+            }
+
+            WorkManager.getInstance(context)
+                .getWorkInfosForUniqueWorkLiveData(UPDATE_WORK_ID)
+                .observe(this) {
+                    val workInfo = it.firstOrNull()
+                    when (workInfo?.state) {
+                        WorkInfo.State.RUNNING -> if (!isRefreshing) {
+                            isRefreshing = true
+                        }
+                        else -> if (isRefreshing) {
+                            isRefreshing = false
+                        }
+                    }
+                }
+        }
+
     }
 
-    private fun FeedItemsListView.setupViewModel() {
+    private fun FeedItemsListView.setupViewModel(viewModel: FeedItemsListViewModel) {
         viewModel.uiState.observe(this) {
             emptyView.visibility =
                 (it as? UiState.Success)?.data.isNullOrEmpty()
@@ -105,7 +134,7 @@ class FeedListScreen : Screen() {
             ContextCompat.startActivity(context, intent, null)
         }
         viewModel.showDeleteConfirmation.observeEvent(this) {
-            showDeleteConfirmationDialog(it)
+            showDeleteConfirmationDialog(it, viewModel)
         }
     }
 
@@ -113,7 +142,10 @@ class FeedListScreen : Screen() {
         goTo(AddSubscriptionScreen())
     }
 
-    private fun FeedItemsListView.showDeleteConfirmationDialog(title: String) {
+    private fun FeedItemsListView.showDeleteConfirmationDialog(
+        title: String,
+        viewModel: FeedItemsListViewModel
+    ) {
         val alertDialog = AlertDialog.Builder(context)
             .setTitle("Delete $title?")
             .setMessage(R.string.delete_confirmation_msg)

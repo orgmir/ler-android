@@ -2,30 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_add_subscription"
-        android:icon="@drawable/ic_add"
-        android:title="@string/add_subscription"
+        android:id="@+id/menu_hide_read"
+        android:checkable="true"
+        android:icon="@drawable/ic_baseline_visibility_24"
+        android:title="@string/hide_read_items"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/filter"
-        android:icon="@drawable/ic_filter_list"
-        android:title="@string/filter_list"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/menu_hide_read"
-                android:checkable="true"
-                android:title="@string/hide_read_items" />
-            <item
-                android:id="@+id/menu_mark_as_read"
-                android:title="@string/mark_all_as_read" />
-            <item
-                android:id="@+id/menu_delete_feed"
-                android:title="@string/delete_feed" />
-            <item
-                android:id="@+id/menu_refresh"
-                android:title="@string/menu_refresh"
-                app:showAsAction="never" />
-        </menu>
-    </item>
+        android:id="@+id/menu_refresh"
+        android:title="@string/menu_refresh"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_mark_as_read"
+        android:title="@string/mark_all_as_read"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_delete_feed"
+        android:title="@string/delete_feed"
+        app:showAsAction="never" />
 </menu>

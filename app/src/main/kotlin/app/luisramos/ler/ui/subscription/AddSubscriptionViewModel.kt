@@ -41,6 +41,10 @@ class AddSubscriptionViewModel(
         }
     }
 
+    fun resetState() {
+        uiState.value = UiState.Loaded(emptyList())
+    }
+
     sealed class UiState {
         object Loading : UiState()
         data class ShowError(val errorMsg: String) : UiState()

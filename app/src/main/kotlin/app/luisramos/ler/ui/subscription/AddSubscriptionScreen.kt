@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import app.luisramos.ler.R
 import app.luisramos.ler.di.observe
+import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.navigation.Screen
 import app.luisramos.ler.ui.navigation.activity
@@ -20,15 +21,18 @@ class AddSubscriptionScreen(
 ) : Screen() {
     override fun createView(container: ViewGroup): View =
         AddSubscriptionView(container.context).apply {
-            setupView()
-            setupViewModel()
+            val viewModel: AddSubscriptionViewModel by viewModels()
+
+            setupView(viewModel)
+            setupViewModel(viewModel)
 
             onScreenExiting {
+                viewModel.resetState()
                 hideKeyboard()
             }
         }
 
-    private fun AddSubscriptionView.setupView() {
+    private fun AddSubscriptionView.setupView(viewModel: AddSubscriptionViewModel) {
         activity.title = resources.getString(R.string.add_subscription)
 
         editTextView.setText(url)
@@ -57,7 +61,7 @@ class AddSubscriptionScreen(
         editTextView.focusAndShowKeyboard()
     }
 
-    private fun AddSubscriptionView.setupViewModel() {
+    private fun AddSubscriptionView.setupViewModel(viewModel: AddSubscriptionViewModel) {
         viewModel.uiState.observe(this) {
             swipeRefreshLayout.isRefreshing = it is AddSubscriptionViewModel.UiState.Loading
             when (it) {

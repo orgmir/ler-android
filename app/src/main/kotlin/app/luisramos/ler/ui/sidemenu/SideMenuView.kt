@@ -3,22 +3,23 @@ package app.luisramos.ler.ui.sidemenu
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.setPadding
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.luisramos.ler.BuildConfig
 import app.luisramos.ler.R
-import app.luisramos.ler.di.observe
-import app.luisramos.ler.di.viewModels
-import app.luisramos.ler.ui.views.UiState
+import app.luisramos.ler.ui.views.getDrawable
 import com.squareup.contour.ContourLayout
 
-class SideMenuView(context: Context, attrs: AttributeSet? = null) : ContourLayout(context, attrs) {
+class SideMenuView(
+    context: Context,
+    attrs: AttributeSet? = null
+) : ContourLayout(context, attrs) {
 
-    val textView = TextView(context).apply {
+    private val titleTextView = TextView(context).apply {
         updatePadding(
             left = 16.dip,
             right = 16.dip,
@@ -29,6 +30,16 @@ class SideMenuView(context: Context, attrs: AttributeSet? = null) : ContourLayou
         setBackgroundResource(R.color.colorPrimary)
         text = resources.getString(R.string.app_name)
     }
+
+    val addSubscriptionButton = Button(context).apply {
+        background = getDrawable(R.attr.selectableItemBackground)
+        isAllCaps = false
+        textAlignment = TEXT_ALIGNMENT_TEXT_START
+        setText(R.string.add_subscription)
+        setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_add, 0)
+        setPadding(16.dip)
+    }
+
     private val accentView = View(context).apply {
         setBackgroundResource(R.color.colorAccent)
     }
@@ -36,8 +47,8 @@ class SideMenuView(context: Context, attrs: AttributeSet? = null) : ContourLayou
         setBackgroundResource(R.drawable.shadow)
     }
 
-    private val adapter get() = recyclerView.adapter as FeedAdapter
-    val recyclerView = RecyclerView(context).apply {
+    val adapter get() = recyclerView.adapter as FeedAdapter
+    private val recyclerView = RecyclerView(context).apply {
         updatePadding(
             top = 8.dip,
             bottom = 8.dip
@@ -45,35 +56,43 @@ class SideMenuView(context: Context, attrs: AttributeSet? = null) : ContourLayou
         clipChildren = false
         clipToPadding = false
 
-        adapter = FeedAdapter().apply {
-            onItemClick = { viewModel.onItemTapped(it) }
-        }
+        adapter = FeedAdapter()
         layoutManager = LinearLayoutManager(context)
     }
 
-    val versionTextView = TextView(context).apply {
+    private val versionTextView = TextView(context).apply {
         setTextAppearance(R.style.TextAppearance_MaterialComponents_Caption)
         setPadding(16.dip)
         setBackgroundResource(R.color.white)
         textAlignment = TEXT_ALIGNMENT_TEXT_END
-    }
 
-    private val viewModel: SideMenuViewModel by viewModels()
+        text = BuildConfig.VERSION_NAME
+    }
 
     init {
         setBackgroundResource(R.color.white)
 
-        textView.layoutBy(
-            x = matchParentX(),
+        titleTextView.layoutBy(
+            x = leftTo { parent.left() },
             y = topTo { 0.ydip }
+        )
+        addSubscriptionButton.layoutBy(
+            x = rightTo { parent.right() }
+                .widthOf {
+                    minOf(
+                        addSubscriptionButton.preferredWidth(),
+                        parent.width() - (titleTextView.right() + 4.xdip)
+                    )
+                },
+            y = baselineTo { titleTextView.baseline() }
         )
         accentView.layoutBy(
             x = matchParentX(),
-            y = bottomTo { textView.bottom() }.heightOf { 2.ydip }
+            y = bottomTo { titleTextView.bottom() }.heightOf { 2.ydip }
         )
         recyclerView.layoutBy(
             x = matchParentX(),
-            y = topTo { textView.bottom() }.bottomTo { parent.height() }
+            y = topTo { titleTextView.bottom() }.bottomTo { parent.height() }
         )
         shadowView.layoutBy(
             x = matchParentX(),
@@ -86,22 +105,6 @@ class SideMenuView(context: Context, attrs: AttributeSet? = null) : ContourLayou
 
         if (isInEditMode) {
             versionTextView.text = "1.0.1.10"
-        }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        val versionText = "${BuildConfig.VERSION_NAME}.${BuildConfig.VERSION_CODE}"
-        versionTextView.text = versionText
-
-        viewModel.uiState.observe(this) {
-            when (it) {
-                is UiState.Error ->
-                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
-                is UiState.Success ->
-                    adapter.submitList(it.data)
-            }
         }
     }
 }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import app.luisramos.ler.R
-import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.ui.views.getDrawable
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -21,8 +20,6 @@ class AddSubscriptionView(
     context: Context,
     attrs: AttributeSet? = null
 ) : ContourLayout(context, attrs) {
-
-    val viewModel: AddSubscriptionViewModel by viewModels()
 
     val editTextView = TextInputEditText(context).apply {
         imeOptions = EditorInfo.IME_ACTION_DONE
