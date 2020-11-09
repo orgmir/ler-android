@@ -1,0 +1,1 @@
+Ler is a RSS aggregator app that allows you to keep up with your favorite feeds

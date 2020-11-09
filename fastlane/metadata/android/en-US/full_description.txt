@@ -1,0 +1,5 @@
+Ler is a RSS + Atom feed aggregator that allows you to subscribe to your favorite feeds and keep up to date with them.
+
+You can share a link with the app to subscribe to it. You can also filter the articles to only show unread ones, or only show ones from a particular subscription.
+
+I mostly built this app to keep me away from Twitter, so hope you enjoy it as well!

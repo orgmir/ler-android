@@ -15,3 +15,4 @@
 *.apk
 *.aab
 /app/release
+google-services.json

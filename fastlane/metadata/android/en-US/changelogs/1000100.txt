@@ -1,0 +1,1 @@
+Fix issue where some feeds where crashing the app! Happy reading!
