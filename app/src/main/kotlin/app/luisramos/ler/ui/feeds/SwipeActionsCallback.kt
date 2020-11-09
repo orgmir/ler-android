@@ -38,7 +38,7 @@ class SwipeActionsCallback(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
+        val position = viewHolder.bindingAdapterPosition
         onItemSwipedCallback(position)
     }
 

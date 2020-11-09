@@ -134,21 +134,21 @@ class AtomXmlParser {
             }
         }
     }
-
-    data class Feed(
-        val title: String? = null,
-        val link: String? = null,
-        val subtitle: String? = null,
-        val updated: String? = null,
-        val entries: List<Entry> = listOf()
-    )
-
-    data class Entry(
-        val id: String?,
-        val title: String?,
-        val summary: String?,
-        val link: String?,
-        val published: String?,
-        val updated: String?
-    )
 }
+
+data class Feed(
+    val title: String? = null,
+    val link: String? = null,
+    val subtitle: String? = null,
+    val updated: String? = null,
+    val entries: List<Entry> = listOf()
+)
+
+data class Entry(
+    val id: String?,
+    val title: String?,
+    val summary: String?,
+    val link: String?,
+    val published: String?,
+    val updated: String?
+)

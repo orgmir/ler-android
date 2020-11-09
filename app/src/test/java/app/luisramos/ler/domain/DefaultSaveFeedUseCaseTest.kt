@@ -2,7 +2,7 @@ package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.model.FeedItemModel
 import app.luisramos.ler.data.model.FeedModel
-import app.luisramos.ler.data.model.parseAtomDateString
+import app.luisramos.ler.data.model.parseAtomDate
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
@@ -32,23 +32,23 @@ class DefaultSaveFeedUseCaseTest {
             link = "https://stackoverflow.com/questions",
             description = "most recent 30 from stackoverflow.com",
             feedLink = "https://stackoverflow.com/questions",
-            updated = parseAtomDateString("2020-02-22T11:20:03Z")!!,
+            updated = parseAtomDate("2020-02-22T11:20:03Z")!!,
             items = listOf(
                 FeedItemModel(
                     id = "https://stackoverflow.com/q/12589792",
                     title = "How to replace substring in mongodb document",
                     description = "I have a lot of mongodb documents in a collection",
                     link = "https://stackoverflow.com/questions/12589792/how-to-replace-substring-in-mongodb-document",
-                    published = parseAtomDateString("2012-09-25T19:29:14Z")!!,
-                    updated = parseAtomDateString("2020-02-22T11:18:48Z")!!
+                    published = parseAtomDate("2012-09-25T19:29:14Z")!!,
+                    updated = parseAtomDate("2020-02-22T11:18:48Z")!!
                 ),
                 FeedItemModel(
                     id = "https://stackoverflow.com/q/3684463",
                     title = "PHP foreach with Nested Array?",
                     description = "I have a nested array in which I want",
                     link = "https://stackoverflow.com/questions/3684463/php-foreach-with-nested-array",
-                    published = parseAtomDateString("2020-02-27T00:00:00Z")!!,
-                    updated = parseAtomDateString("2020-02-22T11:19:38Z")!!
+                    published = parseAtomDate("2020-02-27T00:00:00Z")!!,
+                    updated = parseAtomDate("2020-02-22T11:19:38Z")!!
                 )
             )
         )
@@ -69,15 +69,15 @@ class DefaultSaveFeedUseCaseTest {
             link = "https://stackoverflow.com/questions",
             description = "most recent 30 from stackoverflow.com",
             feedLink = "https://stackoverflow.com/questions",
-            updated = parseAtomDateString("2020-02-22T11:20:03Z")!!,
+            updated = parseAtomDate("2020-02-22T11:20:03Z")!!,
             items = listOf(
                 FeedItemModel(
                     id = "https://stackoverflow.com/q/3684463",
                     title = "PHP foreach with Nested Array?",
                     description = "I have a nested array in which I want",
                     link = "https://stackoverflow.com/questions/3684463/php-foreach-with-nested-array",
-                    published = parseAtomDateString("2020-02-27T00:00:00Z")!!,
-                    updated = parseAtomDateString("2020-02-22T11:19:38Z")!!
+                    published = parseAtomDate("2020-02-27T00:00:00Z")!!,
+                    updated = parseAtomDate("2020-02-22T11:19:38Z")!!
                 )
             )
         )
@@ -86,23 +86,23 @@ class DefaultSaveFeedUseCaseTest {
             link = "https://stackoverflow.com/questions",
             description = "most recent 30 from stackoverflow.com",
             feedLink = "https://stackoverflow.com/questions",
-            updated = parseAtomDateString("2020-02-22T11:20:03Z")!!,
+            updated = parseAtomDate("2020-02-22T11:20:03Z")!!,
             items = listOf(
                 FeedItemModel(
                     id = "https://stackoverflow.com/q/12589792",
                     title = "How to replace substring in mongodb document",
                     description = "I have a lot of mongodb documents in a collection",
                     link = "https://stackoverflow.com/questions/12589792/how-to-replace-substring-in-mongodb-document",
-                    published = parseAtomDateString("2012-09-25T19:29:14Z")!!,
-                    updated = parseAtomDateString("2020-02-22T11:18:48Z")!!
+                    published = parseAtomDate("2012-09-25T19:29:14Z")!!,
+                    updated = parseAtomDate("2020-02-22T11:18:48Z")!!
                 ),
                 FeedItemModel(
                     id = "https://stackoverflow.com/q/3684463",
                     title = "PHP foreach with Nested Array?",
                     description = "I have a nested array in which I want",
                     link = "https://stackoverflow.com/questions/3684463/php-foreach-with-nested-array",
-                    published = parseAtomDateString("2020-02-27T00:00:00Z")!!,
-                    updated = parseAtomDateString("2020-02-22T11:19:38Z")!!
+                    published = parseAtomDate("2020-02-27T00:00:00Z")!!,
+                    updated = parseAtomDate("2020-02-22T11:19:38Z")!!
                 )
             )
         )

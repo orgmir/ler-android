@@ -1,7 +1,10 @@
 package app.luisramos.ler.data.model
 
-import app.luisramos.ler.domain.parsers.AtomXmlParser
+import app.luisramos.ler.domain.parsers.Entry
+import app.luisramos.ler.domain.parsers.Feed
 import app.luisramos.ler.domain.parsers.RssXmlParser
+import timber.log.Timber
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,12 +21,20 @@ val atomFeedDateFormatter1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale
 val atomFeedDateFormatter2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
 val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
 
-fun parseAtomDateString(dateString: String): Date? = when {
-    dateString.contains("Z", ignoreCase = true) -> atomFeedDateFormatter1.parse(dateString)
-    else -> atomFeedDateFormatter2.parse(dateString)
+fun parseAtomDate(dateString: String?): Date? {
+    dateString ?: return null
+    return try {
+        when {
+            dateString.contains("Z", ignoreCase = true) -> atomFeedDateFormatter1.parse(dateString)
+            else -> atomFeedDateFormatter2.parse(dateString)
+        }
+    } catch (e: ParseException) {
+        Timber.e(e)
+        null
+    }
 }
 
-fun RssXmlParser.Channel.toFeed() = FeedModel(
+fun RssXmlParser.Channel.toFeedModel() = FeedModel(
     title = title ?: "",
     link = link ?: "",
     description = description,
@@ -31,11 +42,11 @@ fun RssXmlParser.Channel.toFeed() = FeedModel(
     items = items.map { it.toFeedItem() }
 )
 
-fun AtomXmlParser.Feed.toFeed() = FeedModel(
+fun Feed.toFeedModel() = FeedModel(
     title = title ?: "",
     link = link ?: "",
     description = subtitle,
-    updated = updated?.let { parseAtomDateString(it) } ?: Date(),
+    updated = parseAtomDate(updated) ?: Date(),
     items = entries.map { it.toFeedItem() }
 )
 
@@ -57,11 +68,11 @@ fun RssXmlParser.Item.toFeedItem() = FeedItemModel(
     updated = null
 )
 
-fun AtomXmlParser.Entry.toFeedItem() = FeedItemModel(
+fun Entry.toFeedItem() = FeedItemModel(
     id = id ?: "",
     title = title ?: "",
     description = summary,
     link = link ?: "",
-    published = published?.let { parseAtomDateString(it) } ?: Date(),
-    updated = updated?.let { parseAtomDateString(it) } ?: Date()
+    published = parseAtomDate(published) ?: Date(),
+    updated = parseAtomDate(updated) ?: Date()
 )
