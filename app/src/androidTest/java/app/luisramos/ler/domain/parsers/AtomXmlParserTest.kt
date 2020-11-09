@@ -1,7 +1,6 @@
 package app.luisramos.ler.domain.parsers
 
-import org.hamcrest.CoreMatchers.`is`
-import org.junit.Assert.assertThat
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class AtomXmlParserTest {
@@ -14,13 +13,13 @@ class AtomXmlParserTest {
 
         val feed = parser.parse(stream!!)
 
-        val expected = AtomXmlParser.Feed(
+        val expected = Feed(
             title = "Recent Questions - Stack Overflow",
             link = "https://stackoverflow.com/questions",
             subtitle = "most recent 30 from stackoverflow.com",
             updated = "2020-02-22T11:20:03Z",
             entries = listOf(
-                AtomXmlParser.Entry(
+                Entry(
                     id = "https://stackoverflow.com/q/12589792",
                     title = "How to replace substring in mongodb document",
                     summary = "I have a lot of mongodb documents in a collection",
@@ -28,7 +27,7 @@ class AtomXmlParserTest {
                     published = "2012-09-25T19:29:14Z",
                     updated = "2020-02-22T11:18:48Z"
                 ),
-                AtomXmlParser.Entry(
+                Entry(
                     id = "https://stackoverflow.com/q/3684463",
                     title = "PHP foreach with Nested Array?",
                     summary = "I have a nested array in which I want",
@@ -38,6 +37,6 @@ class AtomXmlParserTest {
                 )
             )
         )
-        assertThat(feed, `is`(expected))
+        assertThat(feed).isEqualTo(expected)
     }
 }

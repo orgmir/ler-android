@@ -10,8 +10,7 @@ import java.util.*
 
 class DefaultFetchChannelUseCaseTest {
 
-    val parser = StubFeedParser()
-
+    private val parser = StubFeedParser()
 
     @Test
     fun `given a successful parsing, when fetching channel, should return feed model`() =
