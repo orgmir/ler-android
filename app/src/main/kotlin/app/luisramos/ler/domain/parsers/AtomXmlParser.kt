@@ -101,7 +101,7 @@ object AtomXmlParser {
         parser.require(XmlPullParser.START_TAG, ns, "link")
         val tag = parser.name
         val relType = parser.getAttributeValue(null, "rel")
-        if (tag == "link" && relType == "alternate") {
+        if (tag == "link" && (relType == "alternate" || relType != "self")) {
             link = parser.getAttributeValue(null, "href")
             parser.nextTag()
         } else if (parser.eventType != XmlPullParser.END_TAG) {
