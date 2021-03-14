@@ -1,9 +1,10 @@
 package app.luisramos.ler.domain
 
-import app.luisramos.ler.data.download
+import app.luisramos.ler.data.Api
 import app.luisramos.ler.domain.parsers.HtmlHeadParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
@@ -19,21 +20,30 @@ class DefaultFetchFeedsFromHtmlUseCase(
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : FetchFeedsFromHtmlUseCase {
 
+    private val client = OkHttpClient.Builder().build()
+
     override suspend fun fetch(urlString: String): Result<List<Pair<String, String>>> =
         withContext(coroutineContext) {
             Timber.d("Loading page $urlString")
 
             val url = createURL(urlString)
                 ?: return@withContext Result.failure(IOException("Could not create URL for $urlString"))
-            url.download {
-                val feeds = parseHtml(it, url.baseUrl)
-                Result.success(feeds)
+
+            try {
+                Api.download(url).use { response ->
+                    val body = response.body
+                        ?: return@withContext Result.failure(IOException("Empty feeds"))
+                    val feeds = parseHtml(body.byteStream(), url.baseUrl)
+                    Result.success(feeds)
+                }
+            } catch (exception: IOException) {
+                Timber.e(exception)
+                Result.failure(exception)
             }
-                ?: Result.failure(IOException("Url download is empty for $urlString"))
         }
 
     private fun parseHtml(inputStream: InputStream, baseUrl: String): List<Pair<String, String>> =
-        HtmlHeadParser().parse(inputStream, baseUrl)
+        HtmlHeadParser.parse(inputStream, baseUrl)
             .map {
                 val (title, link) = it
                 title to link

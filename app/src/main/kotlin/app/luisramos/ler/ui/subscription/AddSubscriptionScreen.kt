@@ -47,6 +47,9 @@ class AddSubscriptionScreen(
                 else -> false
             }
         }
+        imageButton.setOnClickListener {
+            viewModel.fetchFeeds(editTextView.text.toString())
+        }
 
 
         adapter.onItemClick = { item ->

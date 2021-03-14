@@ -22,11 +22,10 @@ class AddSubscriptionView(
 ) : ContourLayout(context, attrs) {
 
     val editTextView = TextInputEditText(context).apply {
+        id = R.id.editText
         imeOptions = EditorInfo.IME_ACTION_DONE
         inputType = InputType.TYPE_CLASS_TEXT
         maxLines = 1
-
-        isInEditMode
     }
     val editTextInputLayout = TextInputLayout(context).apply {
         clipToPadding = false
@@ -38,6 +37,7 @@ class AddSubscriptionView(
 
     val adapter get() = recyclerView.adapter as StackedLabelsAdapter
     val recyclerView = RecyclerView(context).apply {
+        id = R.id.subscriptionRecyclerView
         layoutManager = LinearLayoutManager(context)
         adapter = StackedLabelsAdapter()
     }
@@ -47,6 +47,7 @@ class AddSubscriptionView(
     }
 
     val imageButton = ImageButton(context).apply {
+        id = R.id.searchButton
         background = getDrawable(R.attr.selectableItemBackground)
         setImageResource(R.drawable.ic_baseline_search_24)
     }

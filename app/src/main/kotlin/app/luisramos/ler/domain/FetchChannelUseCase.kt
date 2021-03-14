@@ -1,6 +1,6 @@
 package app.luisramos.ler.domain
 
-import app.luisramos.ler.data.download
+import app.luisramos.ler.data.Api
 import app.luisramos.ler.data.model.FeedModel
 import app.luisramos.ler.domain.parsers.FeedParser
 import app.luisramos.ler.domain.parsers.RssAtomCombinedParser
@@ -17,7 +17,7 @@ interface FetchChannelUseCase {
 }
 
 class DefaultFetchChannelUseCase(
-    private val parser: FeedParser = RssAtomCombinedParser(),
+    private val parser: FeedParser = RssAtomCombinedParser,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : FetchChannelUseCase {
     @Suppress("BlockingMethodInNonBlockingContext")
@@ -26,14 +26,15 @@ class DefaultFetchChannelUseCase(
             try {
                 Timber.d("Fetching channel for $urlString")
 
-                val url = URL(urlString)
-                url.download {
-                    val feed = parser.parse(it)
-                        ?: return@download Result.failure(IOException("Feed parsing failed for $urlString"))
+                Api.download(urlString).use { response ->
+                    val body = response.body
+                        ?: return@use Result.failure(IOException("$urlString response is empty body"))
+                    val feed = parser.parse(body.byteStream())
+                    feed
+                        ?: return@use Result.failure(IOException("Feed parsing failed for $urlString"))
                     Timber.d("Got feed ${feed.title}")
                     Result.success(feed.copy(feedLink = urlString))
                 }
-                    ?: Result.failure(IOException("Download failed for $urlString"))
             } catch (e: Exception) {
                 Timber.e(e)
                 Result.failure(e)

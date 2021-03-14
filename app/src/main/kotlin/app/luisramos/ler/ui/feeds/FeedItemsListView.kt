@@ -19,6 +19,7 @@ class FeedItemsListView(
 
     val adapter get() = recyclerView.adapter as FeedItemAdapter
     val recyclerView = RecyclerView(context).apply {
+        id = R.id.feedItemsRecyclerView
         setBackgroundResource(R.color.swipe_action_background)
         layoutManager = LinearLayoutManager(context)
         this.adapter = FeedItemAdapter()

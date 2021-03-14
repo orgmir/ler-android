@@ -3,4 +3,8 @@
     <item name="toolbar" type="id" />
     <item name="notification_on_screen_exit" type="id" />
     <item name="scaffoldView" type="id" />
+    <item name="editText" type="id" />
+    <item name="searchButton" type="id" />
+    <item name="subscriptionRecyclerView" type="id" />
+    <item name="feedItemsRecyclerView" type="id" />
 </resources>
