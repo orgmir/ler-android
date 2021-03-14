@@ -5,7 +5,7 @@ import org.junit.Test
 
 class AtomXmlParserTest {
 
-    private val parser = AtomXmlParser()
+    private val parser = AtomXmlParser
 
     @Test
     fun testParserWorks() {

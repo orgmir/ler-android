@@ -29,6 +29,8 @@ android {
 
         versionCode(AppVersion.Code)
         versionName(AppVersion.Name)
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -99,4 +101,5 @@ dependencies {
     androidTestImplementation(Dependencies.Test.AndroidX.JUnit)
     androidTestImplementation(Dependencies.Test.AndroidX.Espresso)
     androidTestImplementation(Dependencies.Test.Screengrab)
+    androidTestImplementation(Dependencies.Test.Radiography)
 }

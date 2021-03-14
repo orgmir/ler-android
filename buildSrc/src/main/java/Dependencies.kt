@@ -5,7 +5,7 @@ object Versions {
         const val TargetSdk = 30
     }
 
-    const val Kotlin = "1.4.30"
+    const val Kotlin = "1.4.31"
     const val Sqldelight = "1.4.4"
     const val Coroutines = "1.4.3"
 }
@@ -37,7 +37,7 @@ object Dependencies {
     const val Timber = "com.jakewharton.timber:timber:4.7.1"
     const val Jsoup = "org.jsoup:jsoup:1.12.2"
     const val AppCenter = "com.microsoft.appcenter:appcenter-crashes:3.0.0"
-    const val Contour = "app.cash.contour:contour:1.0.0"
+    const val Contour = "app.cash.contour:contour:1.1.0"
 
     object AndroidX {
         const val Core = "androidx.core:core-ktx:1.3.2"
@@ -64,8 +64,9 @@ object Dependencies {
         const val Kroclin = "dev.luisramos.kroclin:snapshot:0.2.0"
         const val Truth = "com.google.truth:truth:1.0.1"
         const val Mockito = "org.mockito:mockito-core:3.5.13"
-        const val Barista = "com.schibsted.spain:barista:3.7.0"
+        const val Barista = "com.schibsted.spain:barista:3.8.0"
         const val Screengrab = "tools.fastlane:screengrab:2.0.0"
+        const val Radiography = "com.squareup.radiography:radiography:2.3.0"
 
         object AndroidX {
             const val Core = "androidx.test:core-ktx:1.3.0"

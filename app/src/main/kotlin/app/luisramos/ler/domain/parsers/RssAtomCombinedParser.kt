@@ -8,22 +8,21 @@ import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
 
-class RssAtomCombinedParser : FeedParser {
-
-    private val nameParser = Xml.newPullParser()
-    private val rssParser = RssXmlParser()
-    private val atomParser = AtomXmlParser()
+object RssAtomCombinedParser : FeedParser {
 
     @Throws(XmlPullParserException::class, IOException::class)
     override fun parse(inputStream: InputStream): FeedModel? {
-        nameParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-        nameParser.setInput(inputStream, null)
-        nameParser.nextTag()
-        return when (nameParser.name) {
-            "rss" -> rssParser.parse(inputStream).toFeedModel()
-            "feed" -> atomParser.parse(inputStream).toFeedModel()
+        val parser = Xml.newPullParser()
+        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+        parser.setInput(inputStream, null)
+        parser.nextTag()
+        return when (parser.name) {
+            "rss" -> {
+                parser.nextTag() // skip rss tag
+                RssXmlParser.readChannel(parser).toFeedModel()
+            }
+            "feed" -> AtomXmlParser.readFeed(parser).toFeedModel()
             else -> null
         }
-
     }
 }

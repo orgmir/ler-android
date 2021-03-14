@@ -7,7 +7,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class OpmlParserTest {
-    private val parser = OpmlParser()
+    private val parser = OpmlParser
 
     @Test
     fun testParserWorks() {

@@ -8,7 +8,7 @@ import java.io.InputStream
 
 private val ns: String? = null
 
-class AtomXmlParser {
+object AtomXmlParser {
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): Feed {
         inputStream.use {

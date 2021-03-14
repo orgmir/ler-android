@@ -4,16 +4,12 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.InputStream
 
-class HtmlHeadParser {
+object HtmlHeadParser {
 
     fun parse(inputStream: InputStream, baseUri: String): List<FeedLink> =
         inputStream.use {
-            try {
-                val document = Jsoup.parse(inputStream, null, baseUri)
-                readDocument(document, baseUri)
-            } catch (e: Exception) {
-                emptyList()
-            }
+            val document = Jsoup.parse(inputStream, null, baseUri)
+            readDocument(document, baseUri)
         }
 
     private fun readDocument(document: Document, baseUri: String): List<FeedLink> =

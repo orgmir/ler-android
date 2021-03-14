@@ -1,12 +1,13 @@
 package app.luisramos.ler.domain.parsers
 
 import org.hamcrest.CoreMatchers.`is`
-import org.junit.Assert.assertThat
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class RssXmlParserTest {
 
-    private val parser = RssXmlParser()
+    private val parser = RssXmlParser
 
     @Test
     fun testParserWorks() {
@@ -44,5 +45,14 @@ class RssXmlParserTest {
             )
         )
         assertThat(channel, `is`(expected))
+    }
+
+    @Test
+    fun anotherParserTest() {
+        val stream = javaClass.classLoader?.getResourceAsStream("luisramosdev.xml")
+
+        val channel = parser.parse(stream!!)
+
+        assertThat(channel, `is`(notNullValue()))
     }
 }

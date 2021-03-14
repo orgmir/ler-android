@@ -11,7 +11,7 @@ class OpmlWriterTest {
     @Test
     fun writerShouldWriteToFileProperly() {
         val inputStream = javaClass.classLoader?.getResourceAsStream("opml.xml")
-        val opml = OpmlParser().parse(inputStream!!)
+        val opml = OpmlParser.parse(inputStream!!)
 
         val outputStream = ByteArrayOutputStream()
         OpmlWriter().write(outputStream, opml)

@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class HtmlHeadParserTest {
-    private val parser = HtmlHeadParser()
+    private val parser = HtmlHeadParser
 
     @Test
     fun testParserWorks() {

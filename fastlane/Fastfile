@@ -21,6 +21,22 @@ platform :android do
     gradle(task: "test")
   end
 
+  desc "Build debug and test APK for screenshots"
+  lane :build_for_screenshots do
+  	build_android_app(task: 'assemble', build_type: 'Debug')
+  	build_android_app(task: 'assemble', build_type: 'AndroidTest')
+  end
+
+  desc "Take screenshots"
+  lane :take_screenshots do
+  	screengrab(
+  		clear_previous_screenshots: true,
+  		app_apk_path: 'app/build/outputs/apk/debug/app-debug.apk',
+  		tests_apk_path: 'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
+  		use_tests_in_classes: ['app.luisramos.ler.screenshots.ScreenshotTest']
+  	)
+  end
+
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean assembleRelease")
