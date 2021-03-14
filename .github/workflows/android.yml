@@ -21,7 +21,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Assemble release version
-        run: ./gradlew --build-cache -PbuildNumber=${{ github.run_number }} check assembleRelease
+        run: ./gradlew --build-cache -PbuildNumber=${{ github.run_number }} clean check assembleRelease
 
       - uses: r0adkll/sign-android-release@v1
         with:

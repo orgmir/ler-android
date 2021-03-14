@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
@@ -16,10 +17,6 @@ val keystoreProperties = File("keystore.properties").run {
 }
 
 android {
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -70,6 +67,15 @@ android {
                 "META-INF/*.kotlin_module",
                 "META-INF/*.version"
             )
+        )
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOfNotNull(
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }
 }

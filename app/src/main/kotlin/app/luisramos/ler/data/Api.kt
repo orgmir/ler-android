@@ -6,19 +6,26 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.net.URL
+import kotlin.coroutines.CoroutineContext
 
-object Api {
-    val coroutineContext = Dispatchers.IO
+interface Api {
+    suspend fun download(url: URL): Response
+    suspend fun download(url: String): Response
+}
+
+class DefaultApi(
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
+) : Api {
     private val client = OkHttpClient.Builder().build()
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun download(url: URL): Response = withContext(coroutineContext) {
+    override suspend fun download(url: URL): Response = withContext(coroutineContext) {
         val request = Request.Builder().url(url).build()
         client.newCall(request).execute()
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun download(url: String): Response = withContext(coroutineContext) {
+    override suspend fun download(url: String): Response = withContext(coroutineContext) {
         val request = Request.Builder().url(url).build()
         client.newCall(request).execute()
     }

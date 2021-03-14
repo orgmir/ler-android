@@ -1,6 +1,7 @@
 package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.Api
+import app.luisramos.ler.data.DefaultApi
 import app.luisramos.ler.data.model.FeedModel
 import app.luisramos.ler.domain.parsers.FeedParser
 import app.luisramos.ler.domain.parsers.RssAtomCombinedParser
@@ -18,7 +19,8 @@ interface FetchChannelUseCase {
 
 class DefaultFetchChannelUseCase(
     private val parser: FeedParser = RssAtomCombinedParser,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
+    private val coroutineContext: CoroutineContext = Dispatchers.IO,
+    private val api: Api = DefaultApi()
 ) : FetchChannelUseCase {
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun fetchChannel(urlString: String): Result<FeedModel> =
@@ -26,7 +28,7 @@ class DefaultFetchChannelUseCase(
             try {
                 Timber.d("Fetching channel for $urlString")
 
-                Api.download(urlString).use { response ->
+                api.download(urlString).use { response ->
                     val body = response.body
                         ?: return@use Result.failure(IOException("$urlString response is empty body"))
                     val feed = parser.parse(body.byteStream())

@@ -12,7 +12,7 @@ class FeedModelTest {
 
     @Test
     fun testAtomFeedToFeedModelWorks() {
-        val parser = AtomXmlParser()
+        val parser = AtomXmlParser
         val stream = javaClass.classLoader?.getResourceAsStream("feeds.xml")
         val feedModel = parser.parse(stream!!)
 

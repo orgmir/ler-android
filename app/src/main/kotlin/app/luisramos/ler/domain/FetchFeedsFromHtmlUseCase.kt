@@ -1,10 +1,10 @@
 package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.Api
+import app.luisramos.ler.data.DefaultApi
 import app.luisramos.ler.domain.parsers.HtmlHeadParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
@@ -17,10 +17,9 @@ interface FetchFeedsFromHtmlUseCase {
 }
 
 class DefaultFetchFeedsFromHtmlUseCase(
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
+    private val coroutineContext: CoroutineContext = Dispatchers.IO,
+    private val api: Api = DefaultApi()
 ) : FetchFeedsFromHtmlUseCase {
-
-    private val client = OkHttpClient.Builder().build()
 
     override suspend fun fetch(urlString: String): Result<List<Pair<String, String>>> =
         withContext(coroutineContext) {
@@ -30,7 +29,7 @@ class DefaultFetchFeedsFromHtmlUseCase(
                 ?: return@withContext Result.failure(IOException("Could not create URL for $urlString"))
 
             try {
-                Api.download(url).use { response ->
+                api.download(url).use { response ->
                     val body = response.body
                         ?: return@withContext Result.failure(IOException("Empty feeds"))
                     val feeds = parseHtml(body.byteStream(), url.baseUrl)
