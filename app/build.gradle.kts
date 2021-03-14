@@ -7,7 +7,13 @@ plugins {
     id("com.squareup.sqldelight")
 }
 
-val keystoreProperties = loadProperties("keystore.properties")
+val keystoreProperties = File("keystore.properties").run {
+    if (exists()) {
+        loadProperties("keystore.properties")
+    } else {
+        Properties()
+    }
+}
 
 android {
 

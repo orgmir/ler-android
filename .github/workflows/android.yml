@@ -1,6 +1,6 @@
 name: Android CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: set up JDK 1.8
+      - name: set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
@@ -21,7 +21,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Assemble release version
-        run: ./gradlew -PbuildNumber=${{ github.run_number }} assembleRelease
+        run: ./gradlew --build-cache -PbuildNumber=${{ github.run_number }} check assembleRelease
 
       - uses: r0adkll/sign-android-release@v1
         with:
