@@ -18,7 +18,6 @@ class StackedLabelsView(context: Context, attrs: AttributeSet? = null) :
 
     val textView1 = TextView(context).apply {
         setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
-
     }
 
     val textView2 = TextView(context).apply {

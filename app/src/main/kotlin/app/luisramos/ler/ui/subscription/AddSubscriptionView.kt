@@ -3,9 +3,12 @@ package app.luisramos.ler.ui.subscription
 import android.content.Context
 import android.text.InputType
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +55,12 @@ class AddSubscriptionView(
         setImageResource(R.drawable.ic_baseline_search_24)
     }
 
+    val emptyTextView = TextView(context).apply {
+        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        gravity = Gravity.CENTER
+        isVisible = false
+    }
+
     init {
         swipeRefreshLayout.layoutBy(
             x = matchParentX(),
@@ -78,6 +87,11 @@ class AddSubscriptionView(
         shadow.layoutBy(
             x = matchParentX(),
             y = topTo { swipeRefreshLayout.top() }.heightOf { 4.ydip }
+        )
+
+        emptyTextView.layoutBy(
+            x = matchParentX(marginLeft = 24.dip, marginRight = 24.dip),
+            y = topTo { swipeRefreshLayout.top() + 24.ydip }
         )
     }
 }

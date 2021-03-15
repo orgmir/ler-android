@@ -3,11 +3,13 @@ package app.luisramos.ler.ui.subscription
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.luisramos.ler.R
 import app.luisramos.ler.domain.FetchAndSaveChannelUseCase
 import app.luisramos.ler.domain.FetchFeedsFromHtmlUseCase
 import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.event.EmptyEvent
 import app.luisramos.ler.ui.event.postEmptyEvent
+import app.luisramos.ler.ui.subscription.AddSubscriptionViewModel.UiState.*
 import kotlinx.coroutines.launch
 
 class AddSubscriptionViewModel(
@@ -19,35 +21,47 @@ class AddSubscriptionViewModel(
     val goBack = MutableLiveData<EmptyEvent>()
 
     fun fetchFeeds(url: String) = viewModelScope.launch {
-        uiState.value = UiState.Loading
+        uiState.value = Loading
         val resultFeeds = fetchFeedsFromHtmlUseCase.fetch(url)
         uiState.value = resultFeeds.fold(
             onFailure = {
-                UiState.ShowError("Error loading pages for this url.")
+                ShowError(R.string.error_fetching_feeds_add_subscription)
             },
             onSuccess = {
-                UiState.Loaded(it)
+                if (it.isEmpty()) {
+                    Empty(R.string.add_subscription_empty_message)
+                } else {
+                    Loaded(it.map { item -> SubscriptionUiModel(item.first, item.second) })
+                }
             }
         )
     }
 
-    fun addSubscription(url: String) = viewModelScope.launch {
-        uiState.value = UiState.Loading
-        val result = fetchAndSaveChannelUseCase.fetchAndSaveChannel(url)
+    fun onItemClicked(position: Int) = viewModelScope.launch {
+        val item = (uiState.value as Loaded).items.getOrNull(position) ?: return@launch
+        uiState.value = Loading
+        val result = fetchAndSaveChannelUseCase.fetchAndSaveChannel(item.url)
         if (result.isFailure) {
-            uiState.value = UiState.ShowError("Failed adding subscription. Please try again")
+            uiState.value = ShowError(R.string.error_adding_subscription)
         } else {
             goBack.postEmptyEvent()
         }
     }
 
     fun resetState() {
-        uiState.value = UiState.Loaded(emptyList())
+        uiState.value = Loaded(emptyList())
     }
+
 
     sealed class UiState {
         object Loading : UiState()
-        data class ShowError(val errorMsg: String) : UiState()
-        data class Loaded(val items: List<Pair<String, String>>) : UiState()
+        data class ShowError(val message: Int) : UiState()
+        data class Empty(val message: Int) : UiState()
+        data class Loaded(val items: List<SubscriptionUiModel>) : UiState()
     }
+
+    data class SubscriptionUiModel(
+        val title: String,
+        val url: String
+    )
 }

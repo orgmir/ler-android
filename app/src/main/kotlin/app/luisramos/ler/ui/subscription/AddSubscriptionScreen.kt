@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.view.isVisible
 import app.luisramos.ler.R
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.di.viewModels
@@ -52,9 +53,8 @@ class AddSubscriptionScreen(
         }
 
 
-        adapter.onItemClick = { item ->
-            val (_, link) = item
-            viewModel.addSubscription(link)
+        adapter.onItemClick = { position ->
+            viewModel.onItemClicked(position)
         }
 
         val text = editTextView.text
@@ -67,19 +67,24 @@ class AddSubscriptionScreen(
     private fun AddSubscriptionView.setupViewModel(viewModel: AddSubscriptionViewModel) {
         viewModel.uiState.observe(this) {
             swipeRefreshLayout.isRefreshing = it is AddSubscriptionViewModel.UiState.Loading
+            emptyTextView.isVisible = it is AddSubscriptionViewModel.UiState.Empty
             when (it) {
-                is AddSubscriptionViewModel.UiState.ShowError -> Toast.makeText(
-                    context,
-                    it.errorMsg,
-                    Toast.LENGTH_SHORT
-                ).show()
-                is AddSubscriptionViewModel.UiState.Loaded -> adapter.items = it.items
+                is AddSubscriptionViewModel.UiState.ShowError -> showToast(it.message)
+                is AddSubscriptionViewModel.UiState.Loaded -> adapter.submitList(it.items)
+                is AddSubscriptionViewModel.UiState.Empty -> emptyTextView.setText(it.message)
+                else -> {
+                }
             }
         }
 
         viewModel.goBack.observeEvent(this) {
-            Toast.makeText(context, "Subscription added", Toast.LENGTH_SHORT).show()
+            showToast(R.string.add_subscription_success)
             goBack()
         }
+    }
+
+    private fun AddSubscriptionView.showToast(textRes: Int) {
+        val text = resources.getString(textRes)
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }
