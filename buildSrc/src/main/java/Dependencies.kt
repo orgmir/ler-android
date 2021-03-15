@@ -1,7 +1,7 @@
 object Versions {
     object Build {
         const val CompileSdk = 30
-        const val MinSdk = 23
+        const val MinSdk = 26
         const val TargetSdk = 30
     }
 

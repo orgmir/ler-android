@@ -4,8 +4,11 @@ import app.luisramos.ler.domain.parsers.Entry
 import app.luisramos.ler.domain.parsers.Feed
 import app.luisramos.ler.domain.parsers.RssXmlParser
 import timber.log.Timber
-import java.text.ParseException
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 data class FeedModel(
@@ -17,18 +20,23 @@ data class FeedModel(
     val items: List<FeedItemModel> = listOf()
 )
 
-val atomFeedDateFormatter1 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
-val atomFeedDateFormatter2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH)
-val rssFeedDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+fun parseRssDate(dateString: String?): Date? {
+    dateString ?: return null
+    return try {
+        val localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.RFC_1123_DATE_TIME)
+        Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
+    } catch (e: DateTimeParseException) {
+        Timber.e(e)
+        null
+    }
+}
 
 fun parseAtomDate(dateString: String?): Date? {
     dateString ?: return null
     return try {
-        when {
-            dateString.contains("Z", ignoreCase = true) -> atomFeedDateFormatter1.parse(dateString)
-            else -> atomFeedDateFormatter2.parse(dateString)
-        }
-    } catch (e: ParseException) {
+        val localDateTime = OffsetDateTime.parse(dateString).toLocalDateTime()
+        Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
+    } catch (e: DateTimeParseException) {
         Timber.e(e)
         null
     }
@@ -38,7 +46,7 @@ fun RssXmlParser.Channel.toFeedModel() = FeedModel(
     title = title ?: "",
     link = link ?: "",
     description = description,
-    updated = lastBuildDate?.let { rssFeedDateFormatter.parse(it) } ?: Date(),
+    updated = lastBuildDate?.let { parseRssDate(it) } ?: Date(),
     items = items.map { it.toFeedItem() }
 )
 
@@ -64,15 +72,21 @@ fun RssXmlParser.Item.toFeedItem() = FeedItemModel(
     title = title ?: "",
     description = description,
     link = link ?: "",
-    published = pubDate?.let { rssFeedDateFormatter.parse(it) } ?: Date(),
+    published = pubDate?.let { parseRssDate(it) } ?: Date(),
     updated = null
 )
 
-fun Entry.toFeedItem() = FeedItemModel(
-    id = id ?: "",
-    title = title ?: "",
-    description = summary,
-    link = link ?: "",
-    published = parseAtomDate(published) ?: Date(),
-    updated = parseAtomDate(updated) ?: Date()
-)
+fun Entry.toFeedItem(): FeedItemModel {
+    // If there is no published date, we want the published date
+    // to be the updated date
+    val updated = parseAtomDate(updated) ?: Date()
+    val published = parseAtomDate(published) ?: updated
+    return FeedItemModel(
+        id = id ?: "",
+        title = title ?: "",
+        description = summary,
+        link = link ?: "",
+        published = published,
+        updated = updated
+    )
+}

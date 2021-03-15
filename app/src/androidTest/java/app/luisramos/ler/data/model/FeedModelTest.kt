@@ -43,16 +43,4 @@ class FeedModelTest {
 
         assertThat(feedModel, `is`(expected))
     }
-
-    @Test
-    fun testRssFeedDateFormatter() {
-        assertThat(
-            rssFeedDateFormatter.parse("Thu, 17 Sep 2020 00:51:19 GMT"),
-            `is`(notNullValue())
-        )
-        assertThat(
-            rssFeedDateFormatter.parse("Sat, 04 May 2019 08:10:56 +0000"),
-            `is`(notNullValue())
-        )
-    }
 }
