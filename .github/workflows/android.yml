@@ -21,10 +21,13 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Write signing.jks
-        run: echo ${{ secrets.SIGNING_KEY }} | base64 -d > signing.jks
+        run: echo "${{ secrets.SIGNING_KEY }}" | base64 -d > signing.jks
 
       - name: Write keystore.properties
         run: echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}\nkeyPassword=${{ secrets.KEY_PASSWORD }}\nkeyAlias=${{ secrets.ALIAS }}\nstoreFile=signing.jks" > keystore.properties
+
+      - name: Check keystore is working
+        run: ./gradlew checkPreCI
 
       - name: Assemble release version
         run: ./gradlew --build-cache -PbuildNumber=${{ github.run_number }} clean check assembleRelease
