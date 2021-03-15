@@ -34,10 +34,15 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           ALIAS: ${{ secrets.ALIAS }}
         run: |
-          echo "storePassword=$KEY_STORE_PASSWORD\nkeyPassword=$KEY_PASSWORD\nkeyAlias=$ALIAS\nstoreFile=signing.jks\n" > keystore.properties
+          cat > keystore.properties<< EOF
+          storePassword=$KEY_STORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$ALIAS
+          storeFile=signing.jks
+          EOF
 
       - name: Assemble release version
-        run: ./gradlew --build-cache -PbuildNumber=${{ github.run_number }} checkPreCI clean check assembleRelease
+        run: ./gradlew --no-daemon --build-cache -PbuildNumber=${{ github.run_number }} checkPreCI clean check assembleRelease
 
       - name: Upload apk to AppCenter
         uses: zackify/AppCenter-Github-Action@1.0.0

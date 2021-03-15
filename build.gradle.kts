@@ -28,13 +28,15 @@ tasks.register("checkPreCI") {
     if (keystorePropsFile.exists()) {
         println("> keystore.properties found")
         val keystore = loadProperties("keystore.properties")
-        val signingFile = File(keystore["storeFile"].toString())
+        val signingPath = keystore.getProperty("storeFile")
+        println("keystore.properties $signingPath $keystore signing.jks exists:${File("signing.jks").exists()}")
+        val signingFile = File(signingPath)
         if (signingFile.exists()) {
-            println("> signing file found")
+            println("> Signing file found")
         } else {
-            println("Error: signing file not found")
+            throw GradleException("Signing file not found at path ${keystore["storeFile"]}")
         }
     } else {
-        println("Error: keystore.properties not found")
+        throw GradleException("File not found keystore.properties at $projectDir")
     }
 }
