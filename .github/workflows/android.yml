@@ -38,7 +38,7 @@ jobs:
           storePassword=$KEY_STORE_PASSWORD
           keyPassword=$KEY_PASSWORD
           keyAlias=$ALIAS
-          storeFile=signing.jks
+          storeFile=$GITHUB_WORKSPACE/signing.jks
           EOF
 
       - name: Assemble release version

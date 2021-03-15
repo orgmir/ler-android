@@ -29,7 +29,6 @@ tasks.register("checkPreCI") {
         println("> keystore.properties found")
         val keystore = loadProperties("keystore.properties")
         val signingPath = keystore.getProperty("storeFile")
-        println("keystore.properties $signingPath $keystore signing.jks exists:${File("signing.jks").exists()}")
         val signingFile = File(signingPath)
         if (signingFile.exists()) {
             println("> Signing file found")
