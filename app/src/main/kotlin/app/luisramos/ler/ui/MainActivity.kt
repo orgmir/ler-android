@@ -9,9 +9,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.luisramos.ler.App
 import app.luisramos.ler.R
-import app.luisramos.ler.UPDATE_WORK_ID
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.domain.work.FeedUpdateWorker
+import app.luisramos.ler.domain.work.UPDATE_WORK_ID
 import app.luisramos.ler.ui.feeds.FeedListScreen
 import app.luisramos.ler.ui.navigation.NavigatingActivity
 import app.luisramos.ler.ui.navigation.Screen

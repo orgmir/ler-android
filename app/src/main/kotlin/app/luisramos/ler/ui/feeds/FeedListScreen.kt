@@ -13,16 +13,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.luisramos.ler.R
-import app.luisramos.ler.UPDATE_WORK_ID
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.di.viewModels
-import app.luisramos.ler.enqueueFeedSyncWork
+import app.luisramos.ler.domain.work.UPDATE_WORK_ID
+import app.luisramos.ler.domain.work.enqueueFeedSyncWork
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.navigation.Screen
 import app.luisramos.ler.ui.navigation.activity
-import app.luisramos.ler.ui.navigation.goTo
 import app.luisramos.ler.ui.navigation.onCreateOptionsMenu
-import app.luisramos.ler.ui.subscription.AddSubscriptionScreen
 import app.luisramos.ler.ui.views.UiState
 import app.luisramos.ler.ui.views.toggleGone
 
@@ -136,10 +134,6 @@ class FeedListScreen : Screen() {
         viewModel.showDeleteConfirmation.observeEvent(this) {
             showDeleteConfirmationDialog(it, viewModel)
         }
-    }
-
-    private fun View.showAddSubscriptionDialog() {
-        goTo(AddSubscriptionScreen())
     }
 
     private fun FeedItemsListView.showDeleteConfirmationDialog(

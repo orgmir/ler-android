@@ -1,20 +1,14 @@
 package app.luisramos.ler
 
 import android.app.Application
-import android.content.Context
-import androidx.work.Configuration
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.di.DefaultAppContainer
-import app.luisramos.ler.domain.work.FeedUpdateWorker
+import app.luisramos.ler.domain.work.configureWorkManager
+import app.luisramos.ler.domain.work.enqueueFeedSyncWork
+import app.luisramos.ler.ui.notifications.createNotificationChannel
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.crashes.Crashes
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
-
-const val UPDATE_WORK_ID = "sync"
 
 class App : Application() {
 
@@ -31,29 +25,9 @@ class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
-        configureWorkManager()
-
+        configureWorkManager(appContainer.workerFactory)
         enqueueFeedSyncWork()
-    }
 
-    private fun configureWorkManager() {
-        val config = Configuration.Builder()
-            .setWorkerFactory(appContainer.workerFactory)
-            .build()
-        WorkManager.initialize(this, config)
+        createNotificationChannel()
     }
-}
-
-fun Context.enqueueFeedSyncWork(refreshData: Boolean = false) {
-    val policy = if (refreshData) {
-        ExistingPeriodicWorkPolicy.REPLACE
-    } else {
-        ExistingPeriodicWorkPolicy.KEEP
-    }
-    WorkManager.getInstance(this)
-        .enqueueUniquePeriodicWork(
-            UPDATE_WORK_ID,
-            policy,
-            PeriodicWorkRequestBuilder<FeedUpdateWorker>(15, TimeUnit.MINUTES).build()
-        )
 }
