@@ -1,7 +1,7 @@
 package app.luisramos.ler.data
 
 import android.content.Context
-import app.luisramos.ler.Database
+import app.luisramos.ler.LerDatabase
 import app.luisramos.ler.data.model.FeedUpdateMode
 import app.luisramos.ler.domain.Db
 import com.squareup.sqldelight.ColumnAdapter
@@ -25,11 +25,11 @@ class DefaultDatabase(
 ) : Db {
 
     private val driver = AndroidSqliteDriver(
-        Database.Schema,
+        LerDatabase.Schema,
         context,
         "collection.db"
     )
-    private val queryWrapper = Database(
+    private val queryWrapper = LerDatabase(
         driver = driver,
         feedAdapter = Feed.Adapter(
             updateModeAdapter = EnumColumnAdapter(),
@@ -105,6 +105,11 @@ class DefaultDatabase(
         queryWrapper.feedQueries.findFeedByUpdateLink(updateLink).executeAsOneOrNull()
     }
 
+    override suspend fun toggleFeedNotify(id: Long) {
+        val notify = queryWrapper.feedQueries.findFeedById(id).executeAsOneOrNull()?.notify ?: false
+        queryWrapper.feedQueries.toggleNotify(!notify, id)
+    }
+
     override suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>> =
         queryWrapper.feedItemQueries.selectAll(feedId, showRead).asFlow().mapToList(dbContext)
 
@@ -120,7 +125,7 @@ class DefaultDatabase(
             title = title,
             description = description,
             link = link,
-            unread = 1,
+            unread = true,
             publishedAt = publishedAt,
             updatedAt = updatedAt,
             createdAt = Date(),
@@ -152,12 +157,12 @@ class DefaultDatabase(
     }
 
     override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {
-        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread.toLong())
+        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
     }
 
     override suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean) =
         withContext(dbContext) {
-            queryWrapper.feedItemQueries.updateFeedItemUnreadWithFeedId(unread.toLong(), feedId)
+            queryWrapper.feedItemQueries.updateFeedItemUnreadWithFeedId(unread, feedId)
         }
 
     override suspend fun findFeedItemsIdsByFeedId(feedId: Long): List<FindAllIdsByFeedId> =
@@ -165,6 +170,3 @@ class DefaultDatabase(
             queryWrapper.feedItemQueries.findAllIdsByFeedId(feedId).executeAsList()
         }
 }
-
-fun Boolean.toLong(): Long = if (this) 1L else 0L
-fun Long.toBoolean(): Boolean = this != 0L

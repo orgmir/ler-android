@@ -69,6 +69,14 @@ android {
             )
         )
     }
+
+    sqldelight {
+        database("LerDatabase") {
+            packageName = "app.luisramos.ler"
+            schemaOutputDirectory = file("src/main/sqldelight/schema")
+            verifyMigrations = true
+        }
+    }
 }
 
 tasks.withType<KotlinCompile> {

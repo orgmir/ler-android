@@ -1,12 +1,11 @@
 import java.util.Date;
 
-
 CREATE TABLE feedItem (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT,
     link TEXT NOT NULL,
-    unread INTEGER DEFAULT 1 NOT NULL,
+    unread INTEGER as Boolean DEFAULT 1,
     publishedAt INTEGER as Date,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date,
@@ -24,6 +23,7 @@ SELECT
     feedItem.updatedAt,
     feedItem.createdAt,
     feedId,
+    feed.notify AS feedNotify,
     feed.title AS feedTitle
 FROM feedItem
 INNER JOIN feed ON feed.id = feedItem.feedId

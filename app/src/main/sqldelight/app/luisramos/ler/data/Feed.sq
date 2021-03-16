@@ -9,6 +9,7 @@ CREATE TABLE feed (
     description TEXT,
     updateMode TEXT as FeedUpdateMode NOT NULL,
     updateTimeInterval INTEGER NOT NULL,
+    notify INTEGER as Boolean DEFAULT 0,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date NOT NULL
 );
@@ -60,3 +61,8 @@ SELECT * FROM feed WHERE id = :id;
 
 findFeedByUpdateLink:
 SELECT * FROM feed WHERE updateLink = :update_link;
+
+toggleNotify:
+UPDATE feed
+SET notify = ?
+WHERE id = ?;

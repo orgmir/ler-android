@@ -12,10 +12,10 @@ object Versions {
 
 object AppVersion {
 
-    const val Major = 1
-    const val Minor = 0
-    const val Patch = 3
-    val Build get() = System.getProperty("buildNumber")?.toInt() ?: 0
+    private const val Major = 1
+    private const val Minor = 0
+    private const val Patch = 3
+    private val Build get() = System.getProperty("buildNumber")?.toInt() ?: 0
 
     val Name get() = "$Major.$Minor.$Patch"
     val FullName get() = "$Name.$Build"

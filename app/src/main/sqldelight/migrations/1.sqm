@@ -1,0 +1,37 @@
+import app.luisramos.ler.data.model.FeedUpdateMode;
+import java.util.Date;
+
+BEGIN TRANSACTION;
+
+CREATE TABLE new_feed (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    link TEXT NOT NULL,
+    updateLink TEXT NOT NULL DEFAULT '',
+    description TEXT,
+    updateMode TEXT as FeedUpdateMode NOT NULL,
+    updateTimeInterval INTEGER NOT NULL,
+    notify INTEGER as Boolean DEFAULT 0,
+    updatedAt INTEGER as Date,
+    createdAt INTEGER as Date NOT NULL
+);
+
+INSERT INTO new_feed
+    SELECT
+        id,
+        title,
+        link,
+        updateLink,
+        description,
+        updateMode,
+        updateTimeInterval,
+        0,
+        updatedAt,
+        createdAt
+    FROM feed;
+
+DROP TABLE feed;
+
+ALTER TABLE new_feed RENAME TO feed;
+
+COMMIT;

@@ -23,6 +23,7 @@ class FakeFetchFeedUseCase(
         description = null,
         updateMode = FeedUpdateMode.NONE,
         updateTimeInterval = 0,
+        notify = false,
         updatedAt = null,
         createdAt = Date()
     )
