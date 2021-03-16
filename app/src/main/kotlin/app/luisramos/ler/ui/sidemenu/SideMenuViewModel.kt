@@ -45,10 +45,15 @@ class SideMenuViewModel(
     }
 
     private fun List<FeedsWithCount>.toSideMenuItems() = map { item ->
+
         SideMenuItem(
             id = item.id,
             title = item.title,
-            count = item.itemsCount.toString().let { if (it == "0" || it == "null") "" else it },
+            count = when (item.itemsCount) {
+                null -> ""
+                0.0 -> ""
+                else -> String.format("%d", item.itemsCount.toInt())
+            },
             isSelected = (selectedFeed.value ?: -1L) == item.id
         )
     }
