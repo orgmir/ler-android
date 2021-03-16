@@ -28,48 +28,13 @@ class FeedListScreen : Screen() {
     override fun createView(container: ViewGroup): View =
         FeedItemsListView(container.context).apply {
             val viewModel: FeedItemsListViewModel by viewModels()
-
-            onCreateOptionsMenu { menu ->
-                activity.menuInflater.inflate(R.menu.menu_main, menu)
-
-                menu.findItem(R.id.menu_hide_read).apply {
-                    isChecked = viewModel.showReadFeedItems.value ?: false
-                    val iconRes = if (isChecked) {
-                        R.drawable.ic_baseline_visibility_24
-                    } else {
-                        R.drawable.ic_baseline_visibility_off_24
-                    }
-                    icon = ContextCompat.getDrawable(context, iconRes)
-
-                    setOnMenuItemClickListener {
-                        viewModel.toggleUnreadFilter()
-                        true
-                    }
-                }
-                menu.findItem(R.id.menu_delete_feed).apply {
-                    isVisible = viewModel.isDeleteMenuOptionVisible.value ?: false
-                    setOnMenuItemClickListener {
-                        viewModel.tapDeleteFeed()
-                        true
-                    }
-                }
-
-                menu.findItem(R.id.menu_mark_as_read).setOnMenuItemClickListener {
-                    viewModel.markAllAsRead()
-                    true
-                }
-
-                menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
-                    context.enqueueFeedSyncWork(refreshData = true)
-                    true
-                }
-            }
-
             setupView(viewModel)
             setupViewModel(viewModel)
         }
 
     private fun FeedItemsListView.setupView(viewModel: FeedItemsListViewModel) {
+        setupMenu(viewModel)
+
         val swipeActionCallback = SwipeActionsCallback(context, adapter) {
             viewModel.toggleUnread(it)
         }
@@ -101,6 +66,60 @@ class FeedListScreen : Screen() {
 
     }
 
+    private fun FeedItemsListView.setupMenu(viewModel: FeedItemsListViewModel) {
+        onCreateOptionsMenu { menu ->
+            activity.menuInflater.inflate(R.menu.menu_main, menu)
+
+            menu.findItem(R.id.menu_notify_me).apply {
+                isVisible = viewModel.isNotifyMenuOptionVisible.value ?: false
+                isChecked = viewModel.isNotifyMenuOptionChecked.value ?: false
+                val iconRes = if (isChecked) {
+                    R.drawable.ic_baseline_notifications_active_24
+                } else {
+                    R.drawable.ic_baseline_notifications_off_24
+                }
+                icon = ContextCompat.getDrawable(context, iconRes)
+
+                setOnMenuItemClickListener {
+                    viewModel.toggleNotifyMe()
+                    true
+                }
+            }
+
+            menu.findItem(R.id.menu_hide_read).apply {
+                isChecked = viewModel.showReadFeedItems.value ?: true
+                val iconRes = if (isChecked) {
+                    R.drawable.ic_baseline_visibility_off_24
+                } else {
+                    R.drawable.ic_baseline_visibility_24
+                }
+                icon = ContextCompat.getDrawable(context, iconRes)
+
+                setOnMenuItemClickListener {
+                    viewModel.toggleUnreadFilter()
+                    true
+                }
+            }
+            menu.findItem(R.id.menu_delete_feed).apply {
+                isVisible = viewModel.isDeleteMenuOptionVisible.value ?: false
+                setOnMenuItemClickListener {
+                    viewModel.tapDeleteFeed()
+                    true
+                }
+            }
+
+            menu.findItem(R.id.menu_mark_as_read).setOnMenuItemClickListener {
+                viewModel.markAllAsRead()
+                true
+            }
+
+            menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
+                context.enqueueFeedSyncWork(refreshData = true)
+                true
+            }
+        }
+    }
+
     private fun FeedItemsListView.setupViewModel(viewModel: FeedItemsListViewModel) {
         viewModel.uiState.observe(this) {
             emptyView.visibility =
@@ -118,11 +137,8 @@ class FeedListScreen : Screen() {
                 is UiState.Success -> adapter.submitList(it.data)
             }
         }
-        viewModel.showReadFeedItems.observe(this) {
-            (context as? Activity)?.invalidateOptionsMenu()
-        }
-        viewModel.isDeleteMenuOptionVisible.observe(this) {
-            (context as? Activity)?.invalidateOptionsMenu()
+        viewModel.shouldUpdateMenuOptions.observe(this) {
+            (context as? Activity)?.apply { post { invalidateOptionsMenu() } }
         }
         viewModel.updateListPosition.observe(this) {
             adapter.notifyItemChanged(it)

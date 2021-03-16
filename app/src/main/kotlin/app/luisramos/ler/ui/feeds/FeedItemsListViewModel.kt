@@ -2,10 +2,11 @@ package app.luisramos.ler.ui.feeds
 
 import androidx.lifecycle.*
 import app.luisramos.ler.data.SelectAll
-import app.luisramos.ler.data.toBoolean
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.ui.ScaffoldViewModel
+import app.luisramos.ler.ui.event.EmptyEvent
 import app.luisramos.ler.ui.event.Event
+import app.luisramos.ler.ui.event.postEmptyEvent
 import app.luisramos.ler.ui.event.postEvent
 import app.luisramos.ler.ui.views.UiState
 import app.luisramos.ler.ui.views.data
@@ -14,10 +15,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class FeedItemsListViewModel(
-    val parentViewModel: ScaffoldViewModel,
+    private val parentViewModel: ScaffoldViewModel,
     private val fetchFeedsUseCase: FetchFeedItemsUseCase,
     private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
+    private val toggleNotifyMeFeedUseCase: ToggleNotifyMeFeedUseCase,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -26,7 +28,20 @@ class FeedItemsListViewModel(
     val goToExternalBrowser = MutableLiveData<Event<String>>()
     val updateListPosition = MutableLiveData<Int>()
     val showReadFeedItems = MutableLiveData(preferences.showReadFeedItems)
-    val isDeleteMenuOptionVisible = parentViewModel.selectedFeed.map { it != -1L }
+    val isNotifyMenuOptionVisible = parentViewModel.selectedFeed.map { it != -1L }
+    val isNotifyMenuOptionChecked = MutableLiveData(false)
+    val isDeleteMenuOptionVisible = isNotifyMenuOptionVisible
+    val shouldUpdateMenuOptions = MediatorLiveData<EmptyEvent>().apply {
+        addSource(showReadFeedItems) {
+            postEmptyEvent()
+        }
+        addSource(isNotifyMenuOptionChecked) {
+            postEmptyEvent()
+        }
+        addSource(isNotifyMenuOptionVisible) {
+            postEmptyEvent()
+        }
+    }
     val showDeleteConfirmation = MutableLiveData<Event<String>>()
 
     private var fetchJob: Job? = null
@@ -45,7 +60,6 @@ class FeedItemsListViewModel(
     fun tappedItem(position: Int) = viewModelScope.launch {
         getItem(position)?.let {
             setUnreadFeedItemUseCase.setUnread(it.id, false)
-//            updateListPosition.value = position
             goToExternalBrowser.postEvent(it.link)
         }
     }
@@ -64,8 +78,17 @@ class FeedItemsListViewModel(
 
     fun toggleUnread(position: Int) = viewModelScope.launch {
         getItem(position)?.let {
-            setUnreadFeedItemUseCase.setUnread(it.id, !it.unread.toBoolean())
-//            updateListPosition.value = position
+            setUnreadFeedItemUseCase.setUnread(it.id, it.unread?.not() ?: false)
+        }
+    }
+
+    fun toggleNotifyMe() {
+        val title = parentViewModel.title.value ?: return
+        if (title == "All") return
+
+        viewModelScope.launch {
+            val id = parentViewModel.selectedFeed.value
+            id?.let { toggleNotifyMeFeedUseCase.toggleNotifyMe(id) }
         }
     }
 
@@ -90,14 +113,21 @@ class FeedItemsListViewModel(
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
             uiState.value = UiState.Loading
-            val showRead = if (preferences.showReadFeedItems) 1L else 0L
+            val showRead = if (preferences.showReadFeedItems) 0L else 1L
             fetchFeedsUseCase.fetch(feedId, showRead).collect { result ->
+                updateNotifyMeMenu(result)
                 uiState.value = result.fold(
                     onFailure = { UiState.Error("Failed loading feeds") },
                     onSuccess = { UiState.Success(it) }
                 )
             }
         }
+    }
+
+    private fun updateNotifyMeMenu(result: Result<List<SelectAll>>) {
+        isNotifyMenuOptionChecked.value = result.getOrNull()?.let {
+            it.firstOrNull()?.run { feedId != -1L && feedNotify ?: false }
+        } ?: false
     }
 
     private fun getItem(position: Int): SelectAll? = uiState.value?.data?.getOrNull(position)

@@ -2,21 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_notify_me"
+        android:checkable="true"
+        android:contentDescription="@string/content_desc_notify_me"
+        android:icon="@drawable/ic_baseline_notifications_off_24"
+        android:title="@string/menu_notify_me"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_hide_read"
         android:checkable="true"
         android:icon="@drawable/ic_baseline_visibility_24"
-        android:title="@string/hide_read_items"
-        app:showAsAction="ifRoom" />
+        android:title="@string/menu_hide_read_items"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_refresh"
         android:title="@string/menu_refresh"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_mark_as_read"
-        android:title="@string/mark_all_as_read"
+        android:title="@string/menu_mark_all_as_read"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_delete_feed"
-        android:title="@string/delete_feed"
+        android:title="@string/menu_delete_feed"
         app:showAsAction="never" />
 </menu>

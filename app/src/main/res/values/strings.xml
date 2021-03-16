@@ -8,9 +8,9 @@
     <string name="feed_item_list_empty_msg">All done for now!</string>
     <string name="no_more_feed_items">no more feed items</string>
     <string name="filter_list">Filter list</string>
-    <string name="hide_read_items">Hide read items</string>
-    <string name="mark_all_as_read">Mark all as read</string>
-    <string name="delete_feed">Remove feed</string>
+    <string name="menu_hide_read_items">Hide read items</string>
+    <string name="menu_mark_all_as_read">Mark all as read</string>
+    <string name="menu_delete_feed">Remove feed</string>
     <string name="delete_confirmation_msg">Are you sure you want to delete this feed? You can always subscribe to it again.</string>
     <string name="delete">Delete</string>
     <string name="menu_refresh">Refresh feeds</string>
@@ -18,4 +18,8 @@
     <string name="error_fetching_feeds_add_subscription">Error loading pages for this url.</string>
     <string name="error_adding_subscription">Failed adding subscription. Please try again</string>
     <string name="add_subscription_success">Subscription added</string>
+    <string name="notif_channel_name_general">General</string>
+    <string name="notif_channel_desc_general">Feed updates</string>
+    <string name="content_desc_notify_me">Notify me of new posts for this feed</string>
+    <string name="menu_notify_me">Notify me</string>
 </resources>
