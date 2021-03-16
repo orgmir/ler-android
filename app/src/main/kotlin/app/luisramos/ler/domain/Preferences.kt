@@ -9,7 +9,7 @@ interface Preferences {
 
 class DefaultPreferences(val preferences: SharedPreferences) : Preferences {
     override var showReadFeedItems: Boolean
-        get() = preferences.getBoolean("showReadFeedItems", true)
+        get() = preferences.getBoolean("showReadFeedItems", false)
         set(value) {
             preferences.edit(commit = true) { putBoolean("showReadFeedItems", value) }
         }
