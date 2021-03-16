@@ -37,19 +37,19 @@ class SideMenuViewModelTest {
                     FeedsWithCount(
                         id = -1,
                         title = "All",
-                        itemsCount = 0,
+                        itemsCount = 0.0,
                         titleOrder = null
                     ),
                     FeedsWithCount(
                         id = 1,
                         title = "Feed #1",
-                        itemsCount = 0,
+                        itemsCount = 0.0,
                         titleOrder = null
                     ),
                     FeedsWithCount(
                         id = 2,
                         title = "Feed #2",
-                        itemsCount = 32,
+                        itemsCount = 32.0,
                         titleOrder = null
                     )
                 )

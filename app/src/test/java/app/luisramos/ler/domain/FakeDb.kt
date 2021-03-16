@@ -4,6 +4,7 @@ import app.luisramos.ler.data.*
 import app.luisramos.ler.data.model.FeedUpdateMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import okhttp3.internal.notify
 import java.util.*
 
 class FakeDb : Db {
@@ -31,6 +32,7 @@ class FakeDb : Db {
             description = description,
             updateMode = updateMode,
             updateTimeInterval = 3600,
+            notify = false,
             updatedAt = updatedAt,
             createdAt = Date()
         )
@@ -66,7 +68,7 @@ class FakeDb : Db {
         feedMap.values.toList().map {
             FeedsWithCount(
                 id = it.id,
-                itemsCount = 0,
+                itemsCount = 0.0,
                 title = it.title,
                 titleOrder = it.title
             )
@@ -77,6 +79,10 @@ class FakeDb : Db {
 
     override suspend fun findFeedByUpdateLink(updateLink: String): Feed? =
         feedMap.values.firstOrNull { it.updateLink.equals(updateLink, ignoreCase = true) }
+
+    override suspend fun toggleFeedNotify(id: Long) {
+        feedMap[id] = feedMap[id]?.run { copy(notify = notify?.not() ?: false) } ?: return
+    }
 
     override suspend fun insertFeedItem(
         title: String,
@@ -91,7 +97,7 @@ class FakeDb : Db {
             title = title,
             description = description,
             link = link,
-            unread = 1,
+            unread = false,
             publishedAt = publishedAt,
             updatedAt = updatedAt,
             createdAt = Date(),
@@ -125,7 +131,7 @@ class FakeDb : Db {
     }
 
     override suspend fun setFeedItemUnread(id: Long, unread: Boolean) {
-        feedItemMap[id] = feedItemMap[id]?.copy(unread = if (unread) 1 else 0) ?: return
+        feedItemMap[id] = feedItemMap[id]?.copy(unread = unread) ?: return
     }
 
     override suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean) {
@@ -135,7 +141,7 @@ class FakeDb : Db {
     }
 
     override suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>> =
-        flowOf(feedItemMap.values.filter { (feedId == -1L || it.feedId == feedId) && (showRead == 1L && it.unread == 1L) }
+        flowOf(feedItemMap.values.filter { (feedId == -1L || it.feedId == feedId) && (showRead == 1L && it.unread == true) }
             .map {
                 SelectAll(
                     id = it.id,
@@ -147,7 +153,8 @@ class FakeDb : Db {
                     updatedAt = it.updatedAt,
                     createdAt = it.createdAt,
                     feedId = it.feedId,
-                    feedTitle = feedMap[feedId]?.title.orEmpty()
+                    feedTitle = feedMap[feedId]?.title.orEmpty(),
+                    feedNotify = false
                 )
             })
 
