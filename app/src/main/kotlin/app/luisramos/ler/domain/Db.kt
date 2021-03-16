@@ -28,11 +28,11 @@ interface Db {
     ): Long
 
     suspend fun deleteFeed(id: Long)
-
     suspend fun selectAllFeeds(): List<Feed>
     suspend fun selectAllFeedsWithCount(): Flow<List<FeedsWithCount>>
     suspend fun findFeedById(id: Long): Feed?
     suspend fun findFeedByUpdateLink(updateLink: String): Feed?
+    suspend fun toggleFeedNotify(id: Long)
 
     suspend fun insertFeedItem(
         title: String,

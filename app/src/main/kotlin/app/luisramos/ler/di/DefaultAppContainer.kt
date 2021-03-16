@@ -29,6 +29,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val refreshFeedsUseCase: RefreshFeedsUseCase =
         DefaultRefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
     override val deleteFeedUseCase = DeleteFeedUseCase(db)
+    override val toggleNotifyMeFeedUseCase = DefaultToggleNotifyMeFeedUseCase(db)
 
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 

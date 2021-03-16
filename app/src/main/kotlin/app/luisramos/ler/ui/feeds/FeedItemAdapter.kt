@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import app.luisramos.ler.R
 import app.luisramos.ler.data.SelectAll
-import app.luisramos.ler.data.toBoolean
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,13 +30,13 @@ class FeedItemAdapter : ListAdapter<SelectAll, FeedItemAdapter.ViewHolder>(DiffU
             textView1.text = item.title
             textView2.text = item.feedTitle
             textView3.text = item.publishedAt?.let { dateFormatter.format(it) } ?: "--"
-            val textStyle = if (item.unread.toBoolean()) {
+            val textStyle = if (item.unread == true) {
                 Typeface.BOLD
             } else {
                 Typeface.NORMAL
             }
             textView1.setTextStyle(textStyle)
-            val tintRes = if (item.unread.toBoolean()) {
+            val tintRes = if (item.unread == true) {
                 R.color.colorAccent
             } else {
                 R.color.black_54
