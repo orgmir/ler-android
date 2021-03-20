@@ -13,9 +13,9 @@ import app.luisramos.ler.di.observe
 import app.luisramos.ler.domain.work.FeedUpdateWorker
 import app.luisramos.ler.domain.work.UPDATE_WORK_ID
 import app.luisramos.ler.ui.feeds.FeedListScreen
-import app.luisramos.ler.ui.navigation.NavigatingActivity
-import app.luisramos.ler.ui.navigation.Screen
-import app.luisramos.ler.ui.navigation.activity
+import app.luisramos.ler.ui.screen.NavigatingActivity
+import app.luisramos.ler.ui.screen.Screen
+import app.luisramos.ler.ui.screen.activity
 import app.luisramos.ler.ui.subscription.AddSubscriptionScreen
 
 class MainActivity : NavigatingActivity() {
@@ -32,6 +32,9 @@ class MainActivity : NavigatingActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val appContainer = (applicationContext as App).appContainer
+        appContainer.bindNavigation(this)
+
         val view = ScaffoldView(this)
         setContentView(view)
         setupView(view)

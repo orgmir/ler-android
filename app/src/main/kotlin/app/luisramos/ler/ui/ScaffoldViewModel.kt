@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import app.luisramos.ler.R
 import app.luisramos.ler.domain.FetchFeedUseCase
 import app.luisramos.ler.ui.feeds.FeedListScreen
-import app.luisramos.ler.ui.navigation.Screen
+import app.luisramos.ler.ui.screen.Screen
 import kotlinx.coroutines.launch
 
 class ScaffoldViewModel(

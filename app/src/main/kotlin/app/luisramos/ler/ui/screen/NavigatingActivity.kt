@@ -1,4 +1,4 @@
-package app.luisramos.ler.ui.navigation
+package app.luisramos.ler.ui.screen
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils.loadAnimation
 import androidx.appcompat.app.AppCompatActivity
 import app.luisramos.ler.R
+import java.util.*
 
 abstract class NavigatingActivity : AppCompatActivity() {
 

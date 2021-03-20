@@ -1,4 +1,4 @@
-package app.luisramos.ler.ui.navigation
+package app.luisramos.ler.ui.screen
 
 import android.app.Activity
 import android.view.Menu

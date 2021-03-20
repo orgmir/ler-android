@@ -1,4 +1,4 @@
-package app.luisramos.ler.ui.navigation
+package app.luisramos.ler.ui.screen
 
 import android.os.Parcel
 import android.os.Parcelable
