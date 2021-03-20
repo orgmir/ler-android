@@ -22,4 +22,9 @@
     <string name="notif_channel_desc_general">Feed updates</string>
     <string name="content_desc_notify_me">Notify me of new posts for this feed</string>
     <string name="menu_notify_me">Notify me</string>
+    <string name="menu_settings">Settings</string>
+    <string name="settings_show_read_feed_items">Show read feed items</string>
+    <string name="settings_new_post_notif_time">\"New posts\" notification time</string>
+    <string name="settings_new_post_notif_desc">The time the daily notification will trigger letting you know of new posts from your subscriptions.</string>
+    <string name="settings_save_button">Save</string>
 </resources>

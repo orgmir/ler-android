@@ -26,4 +26,8 @@
         android:id="@+id/menu_delete_feed"
         android:title="@string/menu_delete_feed"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="never" />
 </menu>
