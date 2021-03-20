@@ -4,16 +4,12 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.core.view.isVisible
 import app.luisramos.ler.R
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.di.viewModels
-import app.luisramos.ler.ui.event.observeEvent
-import app.luisramos.ler.ui.navigation.Screen
-import app.luisramos.ler.ui.navigation.activity
-import app.luisramos.ler.ui.navigation.goBack
-import app.luisramos.ler.ui.navigation.onScreenExiting
+import app.luisramos.ler.ui.screen.Screen
+import app.luisramos.ler.ui.screen.onScreenExiting
 import app.luisramos.ler.ui.views.focusAndShowKeyboard
 import app.luisramos.ler.ui.views.hideKeyboard
 
@@ -69,22 +65,11 @@ class AddSubscriptionScreen(
             swipeRefreshLayout.isRefreshing = it is AddSubscriptionViewModel.UiState.Loading
             emptyTextView.isVisible = it is AddSubscriptionViewModel.UiState.Empty
             when (it) {
-                is AddSubscriptionViewModel.UiState.ShowError -> showToast(it.message)
                 is AddSubscriptionViewModel.UiState.Loaded -> adapter.submitList(it.items)
                 is AddSubscriptionViewModel.UiState.Empty -> emptyTextView.setText(it.message)
                 else -> {
                 }
             }
         }
-
-        viewModel.goBack.observeEvent(this) {
-            showToast(R.string.add_subscription_success)
-            goBack()
-        }
-    }
-
-    private fun AddSubscriptionView.showToast(textRes: Int) {
-        val text = resources.getString(textRes)
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }

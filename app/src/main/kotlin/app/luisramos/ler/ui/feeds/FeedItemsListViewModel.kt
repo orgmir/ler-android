@@ -8,6 +8,7 @@ import app.luisramos.ler.ui.event.EmptyEvent
 import app.luisramos.ler.ui.event.Event
 import app.luisramos.ler.ui.event.postEmptyEvent
 import app.luisramos.ler.ui.event.postEvent
+import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.views.UiState
 import app.luisramos.ler.ui.views.data
 import kotlinx.coroutines.Job
@@ -20,12 +21,12 @@ class FeedItemsListViewModel(
     private val setUnreadFeedItemUseCase: SetUnreadFeedItemUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase,
     private val toggleNotifyMeFeedUseCase: ToggleNotifyMeFeedUseCase,
+    private val navigation: Navigation,
     private val preferences: Preferences
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState<SelectAll>>()
 
-    val goToExternalBrowser = MutableLiveData<Event<String>>()
     val updateListPosition = MutableLiveData<Int>()
     val showReadFeedItems = MutableLiveData(preferences.showReadFeedItems)
     val isNotifyMenuOptionVisible = parentViewModel.selectedFeed.map { it != -1L }
@@ -60,7 +61,7 @@ class FeedItemsListViewModel(
     fun tappedItem(position: Int) = viewModelScope.launch {
         getItem(position)?.let {
             setUnreadFeedItemUseCase.setUnread(it.id, false)
-            goToExternalBrowser.postEvent(it.link)
+            navigation.goToExternalBrowser(it.link)
         }
     }
 
@@ -103,6 +104,10 @@ class FeedItemsListViewModel(
         val id = parentViewModel.selectedFeed.value
         id?.let { deleteFeedUseCase.deleteFeed(id) }
         parentViewModel.selectedFeed.value = -1 // reset to "All" filter
+    }
+
+    fun onSettingsMenuClicked() {
+        navigation.goToSettingsScreen()
     }
 
     private fun reloadData() {

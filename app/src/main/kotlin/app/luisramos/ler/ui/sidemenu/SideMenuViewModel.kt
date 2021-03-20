@@ -7,13 +7,15 @@ import app.luisramos.ler.data.FeedsWithCount
 import app.luisramos.ler.domain.FetchFeedsUseCase
 import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.ScaffoldViewModel
+import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.views.UiState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SideMenuViewModel(
     parentViewModel: ScaffoldViewModel,
-    private val fetchFeedsUseCase: FetchFeedsUseCase
+    private val fetchFeedsUseCase: FetchFeedsUseCase,
+    private val navigation: Navigation
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState<SideMenuItem>>()
@@ -56,6 +58,10 @@ class SideMenuViewModel(
             },
             isSelected = (selectedFeed.value ?: -1L) == item.id
         )
+    }
+
+    fun addSubscriptionButtonClicked() {
+        navigation.goToAddSubscriptionScreen()
     }
 
     data class SideMenuItem(

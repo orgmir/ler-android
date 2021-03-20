@@ -3,14 +3,12 @@ package app.luisramos.ler.ui.feeds
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.provider.SettingsSlicesContract
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.work.WorkInfo
@@ -21,11 +19,9 @@ import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.domain.work.UPDATE_WORK_ID
 import app.luisramos.ler.domain.work.enqueueFeedSyncWork
 import app.luisramos.ler.ui.event.observeEvent
-import app.luisramos.ler.ui.navigation.Screen
-import app.luisramos.ler.ui.navigation.activity
-import app.luisramos.ler.ui.navigation.goTo
-import app.luisramos.ler.ui.navigation.onCreateOptionsMenu
-import app.luisramos.ler.ui.settings.SettingsScreen
+import app.luisramos.ler.ui.screen.Screen
+import app.luisramos.ler.ui.screen.activity
+import app.luisramos.ler.ui.screen.onCreateOptionsMenu
 import app.luisramos.ler.ui.views.UiState
 
 class FeedListScreen : Screen() {
@@ -123,7 +119,7 @@ class FeedListScreen : Screen() {
             }
 
             menu.findItem(R.id.menu_settings).setOnMenuItemClickListener {
-                goTo(SettingsScreen())
+                viewModel.onSettingsMenuClicked()
                 true
             }
         }
@@ -149,10 +145,6 @@ class FeedListScreen : Screen() {
         }
         viewModel.updateListPosition.observe(this) {
             adapter.notifyItemChanged(it)
-        }
-        viewModel.goToExternalBrowser.observeEvent(this) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-            ContextCompat.startActivity(context, intent, null)
         }
         viewModel.showDeleteConfirmation.observeEvent(this) {
             showDeleteConfirmationDialog(it, viewModel)

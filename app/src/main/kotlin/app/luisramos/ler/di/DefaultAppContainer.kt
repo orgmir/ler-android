@@ -5,6 +5,9 @@ import androidx.work.WorkerFactory
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.ui.ScaffoldViewModel
+import app.luisramos.ler.ui.navigation.Navigation
+import app.luisramos.ler.ui.navigation.Navigator
+import app.luisramos.ler.ui.screen.NavigatingActivity
 import kotlinx.coroutines.Dispatchers
 
 class DefaultAppContainer(context: Context) : AppContainer {
@@ -13,6 +16,9 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val preferences: Preferences =
         DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE))
+
+    private lateinit var _navigation: Navigation
+    override val navigation: Navigation get() = _navigation
 
     override val fetchChannelUseCase: FetchChannelUseCase = DefaultFetchChannelUseCase()
     override val fetchFeedsUseCase: FetchFeedsUseCase = DefaultFetchFeedsUseCase(db)
@@ -42,4 +48,8 @@ class DefaultAppContainer(context: Context) : AppContainer {
     }
 
     override val activityViewModelProviderFactory = ActivityViewModelProviderFactory(this)
+
+    override fun bindNavigation(navigatingActivity: NavigatingActivity) {
+        _navigation = Navigator(navigatingActivity)
+    }
 }

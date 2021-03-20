@@ -8,27 +8,26 @@ import app.luisramos.ler.domain.FetchAndSaveChannelUseCase
 import app.luisramos.ler.domain.FetchFeedsFromHtmlUseCase
 import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.ScaffoldViewModel
-import app.luisramos.ler.ui.event.EmptyEvent
-import app.luisramos.ler.ui.event.postEmptyEvent
-import app.luisramos.ler.ui.navigation.activity
+import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.subscription.AddSubscriptionViewModel.UiState.*
 import kotlinx.coroutines.launch
 
 class AddSubscriptionViewModel(
     private val parentViewModel: ScaffoldViewModel,
     private val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase,
-    private val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase
+    private val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase,
+    private val navigation: Navigation
 ) : ViewModel() {
 
     val uiState = MutableLiveData<UiState>()
-    val goBack = MutableLiveData<EmptyEvent>()
 
     fun fetchFeeds(url: String) = viewModelScope.launch {
         uiState.value = Loading
         val resultFeeds = fetchFeedsFromHtmlUseCase.fetch(url)
         uiState.value = resultFeeds.fold(
             onFailure = {
-                ShowError(R.string.error_fetching_feeds_add_subscription)
+                navigation.showToast(R.string.error_fetching_feeds_add_subscription)
+                Error
             },
             onSuccess = {
                 if (it.isEmpty()) {
@@ -45,9 +44,11 @@ class AddSubscriptionViewModel(
         uiState.value = Loading
         val result = fetchAndSaveChannelUseCase.fetchAndSaveChannel(item.url)
         if (result.isFailure) {
-            uiState.value = ShowError(R.string.error_adding_subscription)
+            navigation.showToast(R.string.error_adding_subscription)
+            uiState.value = Error
         } else {
-            goBack.postEmptyEvent()
+            navigation.showToast(R.string.add_subscription_success)
+            navigation.goBack()
         }
     }
 
@@ -59,10 +60,9 @@ class AddSubscriptionViewModel(
         parentViewModel.title.value = title
     }
 
-
     sealed class UiState {
         object Loading : UiState()
-        data class ShowError(val message: Int) : UiState()
+        object Error : UiState()
         data class Empty(val message: Int) : UiState()
         data class Loaded(val items: List<SubscriptionUiModel>) : UiState()
     }

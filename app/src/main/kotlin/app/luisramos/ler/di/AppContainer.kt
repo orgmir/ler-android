@@ -3,6 +3,8 @@ package app.luisramos.ler.di
 import androidx.work.WorkerFactory
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.ui.ScaffoldViewModel
+import app.luisramos.ler.ui.navigation.Navigation
+import app.luisramos.ler.ui.screen.NavigatingActivity
 
 interface AppContainer {
     val db: Db
@@ -10,6 +12,8 @@ interface AppContainer {
     val workerFactory: WorkerFactory
 
     val preferences: Preferences
+
+    val navigation: Navigation
 
     val fetchChannelUseCase: FetchChannelUseCase
     val fetchFeedsUseCase: FetchFeedsUseCase
@@ -25,4 +29,6 @@ interface AppContainer {
 
     val activityViewModelProviderFactory: ActivityViewModelProviderFactory
     fun getViewModelFactory(parentViewModel: ScaffoldViewModel): ViewModelProviderFactory
+
+    fun bindNavigation(navigatingActivity: NavigatingActivity)
 }

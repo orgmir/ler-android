@@ -7,9 +7,7 @@ import androidx.core.view.postDelayed
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.ui.ScaffoldView
-import app.luisramos.ler.ui.navigation.Screen
-import app.luisramos.ler.ui.navigation.goTo
-import app.luisramos.ler.ui.subscription.AddSubscriptionScreen
+import app.luisramos.ler.ui.screen.Screen
 import app.luisramos.ler.ui.views.UiState
 
 class SideMenuScreen : Screen() {
@@ -23,7 +21,7 @@ class SideMenuScreen : Screen() {
             (container as ScaffoldView).closeDrawer()
             // wait for the side menu animation to end...
             postDelayed(ScaffoldView.ANIM_DURATION) {
-                goTo(AddSubscriptionScreen())
+                viewModel.addSubscriptionButtonClicked()
             }
         }
 
