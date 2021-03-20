@@ -8,9 +8,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
-
-fun Boolean.toggleGone(): Int = if (this) View.VISIBLE else View.GONE
-fun Boolean.toggleInvisible(): Int = if (this) View.VISIBLE else View.INVISIBLE
+import app.luisramos.ler.R
 
 fun View.getDimen(@AttrRes attrRes: Int): Float = getTypedValue(attrRes)?.let {
     TypedValue.complexToDimension(it.data, resources.displayMetrics)
@@ -67,5 +65,12 @@ fun View.focusAndShowKeyboard() {
                     }
                 }
             })
+    }
+}
+
+fun View.setSelectableItemBackground() {
+    with(TypedValue()) {
+        context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
+        setBackgroundResource(resourceId)
     }
 }

@@ -7,12 +7,15 @@ import app.luisramos.ler.R
 import app.luisramos.ler.domain.FetchAndSaveChannelUseCase
 import app.luisramos.ler.domain.FetchFeedsFromHtmlUseCase
 import app.luisramos.ler.domain.fold
+import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.event.EmptyEvent
 import app.luisramos.ler.ui.event.postEmptyEvent
+import app.luisramos.ler.ui.navigation.activity
 import app.luisramos.ler.ui.subscription.AddSubscriptionViewModel.UiState.*
 import kotlinx.coroutines.launch
 
 class AddSubscriptionViewModel(
+    private val parentViewModel: ScaffoldViewModel,
     private val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase,
     private val fetchAndSaveChannelUseCase: FetchAndSaveChannelUseCase
 ) : ViewModel() {
@@ -50,6 +53,10 @@ class AddSubscriptionViewModel(
 
     fun resetState() {
         uiState.value = Loaded(emptyList())
+    }
+
+    fun updateTitle(title: String) {
+        parentViewModel.title.value = title
     }
 
 

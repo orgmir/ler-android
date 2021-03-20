@@ -34,7 +34,7 @@ class AddSubscriptionScreen(
         }
 
     private fun AddSubscriptionView.setupView(viewModel: AddSubscriptionViewModel) {
-        activity.title = resources.getString(R.string.add_subscription)
+        viewModel.updateTitle(resources.getString(R.string.add_subscription))
 
         editTextView.setText(url)
         editTextView.setOnEditorActionListener { _, actionId, event ->

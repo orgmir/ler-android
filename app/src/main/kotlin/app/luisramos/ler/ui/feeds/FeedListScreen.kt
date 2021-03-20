@@ -3,12 +3,15 @@ package app.luisramos.ler.ui.feeds
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.provider.SettingsSlicesContract
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -20,9 +23,10 @@ import app.luisramos.ler.domain.work.enqueueFeedSyncWork
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.navigation.Screen
 import app.luisramos.ler.ui.navigation.activity
+import app.luisramos.ler.ui.navigation.goTo
 import app.luisramos.ler.ui.navigation.onCreateOptionsMenu
+import app.luisramos.ler.ui.settings.SettingsScreen
 import app.luisramos.ler.ui.views.UiState
-import app.luisramos.ler.ui.views.toggleGone
 
 class FeedListScreen : Screen() {
     override fun createView(container: ViewGroup): View =
@@ -117,14 +121,17 @@ class FeedListScreen : Screen() {
                 context.enqueueFeedSyncWork(refreshData = true)
                 true
             }
+
+            menu.findItem(R.id.menu_settings).setOnMenuItemClickListener {
+                goTo(SettingsScreen())
+                true
+            }
         }
     }
 
     private fun FeedItemsListView.setupViewModel(viewModel: FeedItemsListViewModel) {
         viewModel.uiState.observe(this) {
-            emptyView.visibility =
-                (it as? UiState.Success)?.data.isNullOrEmpty()
-                    .toggleGone()
+            emptyView.isVisible = (it as? UiState.Success)?.data.isNullOrEmpty()
             when (it) {
                 is UiState.Loading -> { /* No need to do anything, loading is in toolbar */
                 }

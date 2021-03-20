@@ -21,7 +21,8 @@ class SideMenuScreen : Screen() {
 
         addSubscriptionButton.setOnClickListener {
             (container as ScaffoldView).closeDrawer()
-            postDelayed(300) {
+            // wait for the side menu animation to end...
+            postDelayed(ScaffoldView.ANIM_DURATION) {
                 goTo(AddSubscriptionScreen())
             }
         }

@@ -45,16 +45,7 @@ class MainActivity : NavigatingActivity() {
     }
 
     override fun onNewScreen(screen: Screen) {
-        when (screen) {
-            is FeedListScreen -> {
-                viewModel.updateTitle(viewModel.selectedFeed.value ?: -1L)
-                toolbar.setNavigationIcon(R.drawable.ic_menu)
-            }
-            else -> {
-                title?.let { viewModel.updateTitle(it.toString()) }
-                toolbar.setNavigationIcon(R.drawable.ic_arrow_back)
-            }
-        }
+        viewModel.onNewScreen(screen)
     }
 
     private fun setupView(view: ScaffoldView) {
@@ -99,6 +90,9 @@ class MainActivity : NavigatingActivity() {
         }
         viewModel.title.observe(this) {
             title = it
+        }
+        viewModel.navigationIcon.observe(this) {
+            toolbar.setNavigationIcon(it)
         }
     }
 

@@ -12,10 +12,15 @@ import com.squareup.contour.ContourLayout
 
 class ScaffoldView(context: Context, attrs: AttributeSet? = null) : ContourLayout(context, attrs) {
 
+    companion object {
+        const val ANIM_DURATION = 300L
+    }
+
     var isDrawerOpen = false
         set(value) {
             TransitionManager.beginDelayedTransition(this)
             touchArea.animate()
+                .setDuration(ANIM_DURATION)
                 .alpha(if (value) 1f else 0f)
                 .start()
             touchArea.isClickable = value
@@ -54,7 +59,6 @@ class ScaffoldView(context: Context, attrs: AttributeSet? = null) : ContourLayou
         )
         sideMenuView.layoutBy(
             x = leftTo { if (isDrawerOpen) 0.xdip else (-340).xdip }
-//            x = leftTo { 0.xdip }
                 .widthOf { 340.xdip },
             y = matchParentY()
         )

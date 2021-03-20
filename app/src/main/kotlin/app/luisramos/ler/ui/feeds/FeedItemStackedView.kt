@@ -1,5 +1,6 @@
 package app.luisramos.ler.ui.feeds
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
@@ -76,6 +77,7 @@ class FeedItemStackedView(
             y = bottomTo { parent.bottom() }.heightOf { 1.ydip }
         )
 
+        @SuppressLint("SetTextI18n")
         if (isInEditMode) {
             textView1.text =
                 "Understanding Bits, Bytes, Bases, and Writing a Hex Dump in Javascript (Node)"

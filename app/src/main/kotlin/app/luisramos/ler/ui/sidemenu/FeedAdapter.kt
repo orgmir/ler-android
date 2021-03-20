@@ -3,12 +3,12 @@ package app.luisramos.ler.ui.sidemenu
 import android.graphics.Typeface
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import app.luisramos.ler.ui.feeds.setTextStyle
 import app.luisramos.ler.ui.sidemenu.SideMenuViewModel.SideMenuItem
-import app.luisramos.ler.ui.views.toggleGone
 
 class FeedAdapter : ListAdapter<SideMenuItem, FeedAdapter.ViewHolder>(ItemDiffer()) {
 
@@ -32,7 +32,7 @@ class FeedAdapter : ListAdapter<SideMenuItem, FeedAdapter.ViewHolder>(ItemDiffer
             }
             textView1.setTextStyle(textStyle)
             textView2.setTextStyle(textStyle)
-            selectedAccentView.visibility = item.isSelected.toggleGone()
+            selectedAccentView.isVisible = item.isSelected
 
             setOnClickListener { onItemClick?.invoke(position) }
         }
