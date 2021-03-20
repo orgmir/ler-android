@@ -1,16 +1,13 @@
 package app.luisramos.ler.domain
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
 
 interface Preferences {
     var showReadFeedItems: Boolean
+    var newPostNotificationTime: Int
 }
 
-class DefaultPreferences(val preferences: SharedPreferences) : Preferences {
-    override var showReadFeedItems: Boolean
-        get() = preferences.getBoolean("showReadFeedItems", false)
-        set(value) {
-            preferences.edit(commit = true) { putBoolean("showReadFeedItems", value) }
-        }
+class DefaultPreferences(preferences: SharedPreferences) : Preferences {
+    override var showReadFeedItems: Boolean by preferences.boolean("showReadFeedItems", false)
+    override var newPostNotificationTime: Int by preferences.int("newPostNotificationTime", 800)
 }
