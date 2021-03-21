@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="app.luisramos.ler">
 
-
     <!-- Allows unlocking your device and activating its screen so UI tests can succeed -->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -25,4 +24,10 @@
     <uses-permission
         android:name="android.permission.DUMP"
         tools:ignore="ProtectedPermissions" />
+
+    <application>
+        <activity
+            android:name="app.luisramos.ler.ui.screen.NavigatingTestActivity"
+            android:theme="@style/Theme.AppCompat" />
+    </application>
 </manifest>
