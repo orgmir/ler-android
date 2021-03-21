@@ -26,6 +26,7 @@ interface AppContainer {
     val refreshFeedsUseCase: RefreshFeedsUseCase
     val deleteFeedUseCase: DeleteFeedUseCase
     val toggleNotifyMeFeedUseCase: ToggleNotifyMeFeedUseCase
+    val saveNotifyTimePrefUseCase: SaveNotifyTimePrefUseCase
 
     val activityViewModelProviderFactory: ActivityViewModelProviderFactory
     fun getViewModelFactory(parentViewModel: ScaffoldViewModel): ViewModelProviderFactory

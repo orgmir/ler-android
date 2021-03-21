@@ -28,7 +28,7 @@ class FeedItemsListViewModel(
     val uiState = MutableLiveData<UiState<SelectAll>>()
 
     val updateListPosition = MutableLiveData<Int>()
-    val showReadFeedItems = MutableLiveData(preferences.showReadFeedItems)
+    val showReadFeedItems = MutableLiveData(preferences.hideReadFeedItems)
     val isNotifyMenuOptionVisible = parentViewModel.selectedFeed.map { it != -1L }
     val isNotifyMenuOptionChecked = MutableLiveData(false)
     val isDeleteMenuOptionVisible = isNotifyMenuOptionVisible
@@ -47,14 +47,12 @@ class FeedItemsListViewModel(
 
     private var fetchJob: Job? = null
 
-    private val observer = Observer<Long> { loadData(it) }
-
     init {
-        parentViewModel.selectedFeed.observeForever(observer)
+        parentViewModel.selectedFeed.observeForever(::loadData)
     }
 
     override fun onCleared() {
-        parentViewModel.selectedFeed.removeObserver(observer)
+        parentViewModel.selectedFeed.removeObserver(::loadData)
         super.onCleared()
     }
 
@@ -66,9 +64,9 @@ class FeedItemsListViewModel(
     }
 
     fun toggleUnreadFilter() {
-        preferences.showReadFeedItems = !preferences.showReadFeedItems
-        showReadFeedItems.value = preferences.showReadFeedItems
-        reloadData()
+        preferences.hideReadFeedItems = !preferences.hideReadFeedItems
+        showReadFeedItems.value = preferences.hideReadFeedItems
+        loadData()
     }
 
     fun markAllAsRead() = viewModelScope.launch {
@@ -110,7 +108,7 @@ class FeedItemsListViewModel(
         navigation.goToSettingsScreen()
     }
 
-    private fun reloadData() {
+    fun loadData() {
         loadData(parentViewModel.selectedFeed.value ?: -1)
     }
 
@@ -118,7 +116,7 @@ class FeedItemsListViewModel(
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
             uiState.value = UiState.Loading
-            val showRead = if (preferences.showReadFeedItems) 0L else 1L
+            val showRead = if (preferences.hideReadFeedItems) 0L else 1L
             fetchFeedsUseCase.fetch(feedId, showRead).collect { result ->
                 updateNotifyMeMenu(result)
                 uiState.value = result.fold(

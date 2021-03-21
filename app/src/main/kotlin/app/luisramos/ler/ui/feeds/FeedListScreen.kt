@@ -30,6 +30,8 @@ class FeedListScreen : Screen() {
             val viewModel: FeedItemsListViewModel by viewModels()
             setupView(viewModel)
             setupViewModel(viewModel)
+
+            viewModel.loadData()
         }
 
     private fun FeedItemsListView.setupView(viewModel: FeedItemsListViewModel) {
@@ -63,7 +65,6 @@ class FeedListScreen : Screen() {
                     }
                 }
         }
-
     }
 
     private fun FeedItemsListView.setupMenu(viewModel: FeedItemsListViewModel) {

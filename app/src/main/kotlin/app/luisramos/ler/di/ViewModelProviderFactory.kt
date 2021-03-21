@@ -37,6 +37,7 @@ class ViewModelProviderFactory(
             ) as T
             SettingsViewModel::class.java -> SettingsViewModel(
                 parentViewModel,
+                saveNotifyTimePrefUseCase,
                 navigation,
                 preferences
             ) as T
