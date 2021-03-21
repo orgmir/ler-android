@@ -4,7 +4,6 @@ import app.luisramos.ler.data.*
 import app.luisramos.ler.data.model.FeedUpdateMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import okhttp3.internal.notify
 import java.util.*
 
 class FakeDb : Db {

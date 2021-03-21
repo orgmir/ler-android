@@ -3,12 +3,12 @@ package app.luisramos.ler.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.luisramos.ler.App
 import app.luisramos.ler.R
+import app.luisramos.ler.di.appViewModels
 import app.luisramos.ler.di.observe
 import app.luisramos.ler.domain.work.FeedUpdateWorker
 import app.luisramos.ler.domain.work.UPDATE_WORK_ID
@@ -20,10 +20,7 @@ import app.luisramos.ler.ui.subscription.AddSubscriptionScreen
 
 class MainActivity : NavigatingActivity() {
 
-    val viewModel: ScaffoldViewModel by viewModels {
-        val appContainer = (applicationContext as App).appContainer
-        appContainer.activityViewModelProviderFactory
-    }
+    val viewModel: ScaffoldViewModel by appViewModels()
     private val toolbar: Toolbar by lazy {
         findViewById(R.id.toolbar)
     }

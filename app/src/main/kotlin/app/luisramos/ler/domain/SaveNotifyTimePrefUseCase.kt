@@ -17,7 +17,7 @@ class DefaultSaveNotifyTimePrefUseCase(
         }
 
     override suspend fun savePref(hour: Int, minute: Int) {
-        preferences.newPostNotificationTime = hour + minute * 100
+        preferences.newPostNotificationTime = hour * 100 + minute
         // TODO reschedule notification work for next time slot
         //  - refresh feeds
         //  - check the notify on feeds if there are new posts

@@ -6,6 +6,7 @@ import app.luisramos.ler.domain.FakeFetchFeedsUseCase
 import app.luisramos.ler.domain.Result
 import app.luisramos.ler.test.CoroutineDispatcherRule
 import app.luisramos.ler.test.InstantTaskExecutorRule
+import app.luisramos.ler.ui.FakeNavigation
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.views.data
 import com.google.common.truth.Truth.assertThat
@@ -24,6 +25,7 @@ class SideMenuViewModelTest {
     @get:Rule
     val instantTaskRule = InstantTaskExecutorRule()
 
+    private val navigation = FakeNavigation()
     private val feedUseCase = FakeFetchFeedUseCase()
     private val feedsUseCase = FakeFetchFeedsUseCase()
     private lateinit var scaffoldViewModel: ScaffoldViewModel
@@ -59,7 +61,7 @@ class SideMenuViewModelTest {
 
     private fun setUp() {
         scaffoldViewModel = ScaffoldViewModel(feedUseCase)
-        viewModel = SideMenuViewModel(scaffoldViewModel, feedsUseCase)
+        viewModel = SideMenuViewModel(scaffoldViewModel, feedsUseCase, navigation)
     }
 
     @Test
