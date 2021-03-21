@@ -6,20 +6,11 @@ import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelLazy
 import app.luisramos.ler.App
-import app.luisramos.ler.ui.ScaffoldViewModel
 
-inline fun <reified VM : ViewModel> View.viewModels(): Lazy<VM> {
-    val activity = context as ComponentActivity
-    val appContainer = (activity.application as App).appContainer
-    return activity.viewModels {
-        val parentViewModel = ViewModelLazy(
-            ScaffoldViewModel::class,
-            { activity.viewModelStore },
-            { appContainer.activityViewModelProviderFactory }).value
-        appContainer.getViewModelFactory(parentViewModel)
-    }
+inline fun <reified VM : ViewModel> ComponentActivity.appViewModels() = viewModels<VM> {
+    val appContainer = (application as App).appContainer
+    appContainer.activityViewModelProviderFactory
 }
 
 fun <T> LiveData<T>.observe(view: View, observer: Observer<T>) {

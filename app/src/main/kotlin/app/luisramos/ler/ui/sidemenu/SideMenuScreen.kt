@@ -13,7 +13,7 @@ import app.luisramos.ler.ui.views.UiState
 class SideMenuScreen : Screen() {
 
     override fun createView(container: ViewGroup): View = SideMenuView(container.context).apply {
-        val viewModel: SideMenuViewModel by container.viewModels()
+        val viewModel: SideMenuViewModel = viewModels(context)
 
         adapter.onItemClick = { viewModel.onItemTapped(it) }
 

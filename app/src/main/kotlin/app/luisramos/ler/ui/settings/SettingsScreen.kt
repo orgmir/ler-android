@@ -9,7 +9,7 @@ import app.luisramos.ler.ui.screen.Screen
 class SettingsScreen : Screen() {
     override fun createView(container: ViewGroup): View =
         SettingsView(container.context).apply {
-            val viewModel: SettingsViewModel by viewModels()
+            val viewModel: SettingsViewModel = viewModels(context)
             setupView(viewModel)
             setupViewModel(viewModel)
         }

@@ -27,7 +27,7 @@ import app.luisramos.ler.ui.views.UiState
 class FeedListScreen : Screen() {
     override fun createView(container: ViewGroup): View =
         FeedItemsListView(container.context).apply {
-            val viewModel: FeedItemsListViewModel by viewModels()
+            val viewModel: FeedItemsListViewModel = viewModels(context)
             setupView(viewModel)
             setupViewModel(viewModel)
 

@@ -18,13 +18,12 @@ class AddSubscriptionScreen(
 ) : Screen() {
     override fun createView(container: ViewGroup): View =
         AddSubscriptionView(container.context).apply {
-            val viewModel: AddSubscriptionViewModel by viewModels()
+            val viewModel: AddSubscriptionViewModel = viewModels(context)
 
             setupView(viewModel)
             setupViewModel(viewModel)
 
             onScreenExiting {
-                viewModel.resetState()
                 hideKeyboard()
             }
         }

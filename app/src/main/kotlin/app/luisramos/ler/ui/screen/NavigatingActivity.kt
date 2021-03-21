@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils.loadAnimation
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.luisramos.ler.R
 import java.util.*
@@ -23,6 +24,8 @@ abstract class NavigatingActivity : AppCompatActivity() {
 
     private lateinit var container: ViewGroup
     private lateinit var currentView: View
+
+    private val viewModel: NavigatingActivityViewModel by viewModels()
 
     var onCreateOptionsMenu = NO_MENU
 
@@ -95,6 +98,7 @@ abstract class NavigatingActivity : AppCompatActivity() {
         container.removeView(currentView)
         currentView.notifyScreenExiting()
 
+        backstack.forEach { frame -> viewModel.clearStore(frame.screen) }
         backstack.clear()
 
         currentScreen = screen
@@ -138,6 +142,7 @@ abstract class NavigatingActivity : AppCompatActivity() {
         currentView.startAnimation(loadAnimation(this, R.anim.exit_backward))
         container.removeView(currentView)
         currentView.notifyScreenExiting()
+        viewModel.clearStore(currentScreen)
 
         val latest = backstack.removeAt(backstack.size - 1)
         currentScreen = latest.screen
@@ -148,6 +153,9 @@ abstract class NavigatingActivity : AppCompatActivity() {
 
         screenUpdated()
     }
+
+    fun getViewModelStoreForScreen(screen: Screen) =
+        viewModel.getStore(screen)
 
     private fun screenUpdated() {
         invalidateOptionsMenu()
