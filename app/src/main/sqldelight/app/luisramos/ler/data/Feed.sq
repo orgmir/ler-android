@@ -66,3 +66,15 @@ toggleNotify:
 UPDATE feed
 SET notify = ?
 WHERE id = ?;
+
+selectAllNotifyFeedTitles:
+SELECT feed.title
+FROM feed
+INNER JOIN feedItem ON feed.id = feedItem.feedId
+WHERE
+    notify = 1
+    AND
+    feedItem.unread = 1
+    AND
+    feedItem.createdAt > :createdAfter
+GROUP BY feedId;

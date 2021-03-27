@@ -30,3 +30,9 @@ fun SharedPreferences.int(key: String, defaultValue: Int = -1) =
         getter = { getInt(key, defaultValue) },
         setter = { edit { putInt(key, it) } }
     )
+
+fun SharedPreferences.long(key: String, defaultValue: Long = -1L) =
+    makeDelegate(
+        getter = { getLong(key, defaultValue) },
+        setter = { edit { putLong(key, it) } }
+    )

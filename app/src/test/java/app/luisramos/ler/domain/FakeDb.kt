@@ -83,6 +83,9 @@ class FakeDb : Db {
         feedMap[id] = feedMap[id]?.run { copy(notify = notify?.not() ?: false) } ?: return
     }
 
+    override suspend fun selectAllNotifyFeedTitles(createdAfter: Date): List<String> =
+        feedMap.values.filter { it.notify == true && it.createdAt > createdAfter }.map { it.title }
+
     override suspend fun insertFeedItem(
         title: String,
         description: String?,

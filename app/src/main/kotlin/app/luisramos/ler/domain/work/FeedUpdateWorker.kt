@@ -23,3 +23,4 @@ class FeedUpdateWorker(
         return Result.success()
     }
 }
+

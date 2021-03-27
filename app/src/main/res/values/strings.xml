@@ -27,4 +27,11 @@
     <string name="settings_new_post_notif_time">\"New posts\" notification time</string>
     <string name="settings_new_post_notif_desc">The time the daily notification will trigger letting you know of new posts from your subscriptions.</string>
     <string name="settings_save_button">Save</string>
+    <string name="action_notify_user_new_posts">app.luisramos.ler.NOTIFY_NEW_POSTS</string>
+    <string name="notif_new_posts_title">Ler</string>
+    <string name="notif_new_posts_text_0">Your subscriptions have been updated.</string>
+    <string name="notif_new_posts_text_1">New post from %1$s.</string>
+    <string name="notif_new_posts_text_2">New posts from %1$s and %2$s.</string>
+    <string name="notif_new_posts_text_3">New posts from %1$s, %2$s, and %3$s.</string>
+    <string name="notif_new_posts_text_4">New posts from %1$s, %2$s, and others.</string>
 </resources>

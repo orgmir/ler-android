@@ -19,7 +19,6 @@ import tools.fastlane.screengrab.Screengrab
 import java.util.concurrent.TimeUnit.SECONDS
 
 @LargeTest
-@RunWith(AndroidJUnit4::class)
 class ScreenshotTest {
 
     companion object {

@@ -10,7 +10,7 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.crashes.Crashes
 import timber.log.Timber
 
-class App : Application() {
+open class App : Application() {
 
     lateinit var appContainer: AppContainer
 
@@ -19,7 +19,7 @@ class App : Application() {
 
         AppCenter.start(this, "264ee049-5bbc-4cf2-92e5-720ef223f22d", Crashes::class.java)
 
-        appContainer = DefaultAppContainer(this)
+        appContainer = createAppContainer()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -29,5 +29,9 @@ class App : Application() {
         enqueueFeedSyncWork()
 
         createNotificationChannel()
+
+        // TODO enqueue local notif?
     }
+
+    protected open fun createAppContainer(): AppContainer = DefaultAppContainer(this)
 }

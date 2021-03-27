@@ -21,7 +21,7 @@ val dateAdapter = object : ColumnAdapter<Date, Long> {
 
 class DefaultDatabase(
     context: Context,
-    private val dbContext: CoroutineContext
+    var dbContext: CoroutineContext
 ) : Db {
 
     private val driver = AndroidSqliteDriver(
@@ -49,7 +49,8 @@ class DefaultDatabase(
         description: String?,
         updateLink: String,
         updateMode: FeedUpdateMode,
-        updatedAt: Date
+        updatedAt: Date,
+        createdAt: Date
     ): Long =
         withContext(dbContext) {
             queryWrapper.feedQueries.insertFeed(
@@ -60,7 +61,7 @@ class DefaultDatabase(
                 updateMode = updateMode,
                 updateTimeInterval = 3600,
                 updatedAt = updatedAt,
-                createdAt = Date()
+                createdAt = createdAt
             )
             queryWrapper.feedQueries.lastInsertRowId().executeAsOne()
         }
@@ -110,6 +111,9 @@ class DefaultDatabase(
         queryWrapper.feedQueries.toggleNotify(!notify, id)
     }
 
+    override suspend fun selectAllNotifyFeedTitles(createdAfter: Date): List<String> =
+        queryWrapper.feedQueries.selectAllNotifyFeedTitles(createdAfter).executeAsList()
+
     override suspend fun selectAllFeedItems(feedId: Long, showRead: Long): Flow<List<SelectAll>> =
         queryWrapper.feedItemQueries.selectAll(feedId, showRead).asFlow().mapToList(dbContext)
 
@@ -119,7 +123,8 @@ class DefaultDatabase(
         link: String,
         publishedAt: Date,
         updatedAt: Date,
-        feedId: Long
+        feedId: Long,
+        createdAt: Date
     ): Long = withContext(dbContext) {
         queryWrapper.feedItemQueries.insertFeedItem(
             title = title,
@@ -128,7 +133,7 @@ class DefaultDatabase(
             unread = true,
             publishedAt = publishedAt,
             updatedAt = updatedAt,
-            createdAt = Date(),
+            createdAt = createdAt,
             feedId = feedId
         )
         queryWrapper.feedItemQueries.lastInsertRowId().executeAsOne()

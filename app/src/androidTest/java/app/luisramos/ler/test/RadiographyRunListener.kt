@@ -9,7 +9,6 @@ import radiography.Radiography
 import radiography.ViewStateRenderers.DefaultsIncludingPii
 
 class RadiographyRunListener : RunListener() {
-
     override fun testRunStarted(description: Description?) {
         val defaultFailureHandler =
             DefaultFailureHandler(InstrumentationRegistry.getInstrumentation().targetContext)

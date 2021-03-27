@@ -30,9 +30,7 @@ fun App.createNotificationChannel() {
     notificationManager?.createNotificationChannel(channel)
 }
 
-fun Context.showLocalNotification() {
-    // TODO send the user to the browser probably
-    // TODO add "mark as read"
+fun Context.showLocalNotificationForNewPosts(titles: List<String>) {
     val intent = Intent(this, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
@@ -40,8 +38,8 @@ fun Context.showLocalNotification() {
         PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     val notif = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_rss_foreground)
-        .setContentTitle("Toggling visibility")
-        .setContentText("Visibility is now toggled")
+        .setContentTitle(getString(R.string.notif_new_posts_title))
+        .setContentText(getContentText(titles))
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
@@ -50,3 +48,24 @@ fun Context.showLocalNotification() {
         notify(1, notif)
     }
 }
+
+private fun Context.getContentText(feedTitles: List<String>): String =
+    when (feedTitles.size) {
+        1 -> resources.getString(R.string.notif_new_posts_text_1, feedTitles[0])
+        2 -> resources.getString(R.string.notif_new_posts_text_2, feedTitles[0], feedTitles[1])
+        3 -> resources.getString(
+            R.string.notif_new_posts_text_3,
+            feedTitles[0],
+            feedTitles[1],
+            feedTitles[2]
+        )
+        else -> if (feedTitles.size > 3) {
+            resources.getString(
+                R.string.notif_new_posts_text_4,
+                feedTitles[0],
+                feedTitles[1]
+            )
+        } else {
+            resources.getString(R.string.notif_new_posts_text_0)
+        }
+    }

@@ -15,7 +15,8 @@ interface Db {
         description: String?,
         updateLink: String,
         updateMode: FeedUpdateMode,
-        updatedAt: Date
+        updatedAt: Date,
+        createdAt: Date = Date()
     ): Long
 
     suspend fun updateFeed(
@@ -33,6 +34,7 @@ interface Db {
     suspend fun findFeedById(id: Long): Feed?
     suspend fun findFeedByUpdateLink(updateLink: String): Feed?
     suspend fun toggleFeedNotify(id: Long)
+    suspend fun selectAllNotifyFeedTitles(createdAfter: Date): List<String>
 
     suspend fun insertFeedItem(
         title: String,
@@ -40,7 +42,8 @@ interface Db {
         link: String,
         publishedAt: Date,
         updatedAt: Date,
-        feedId: Long
+        feedId: Long,
+        createdAt: Date = Date(),
     ): Long
 
     suspend fun updateFeedItem(

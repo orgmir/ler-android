@@ -33,7 +33,7 @@ android {
         versionCode(AppVersion.Code)
         versionName(AppVersion.Name)
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "app.luisramos.ler.TestRunner"
     }
 
     signingConfigs {
@@ -65,7 +65,9 @@ android {
                 "kotlin/**",
                 "**/*.kotlin_metadata",
                 "META-INF/*.kotlin_module",
-                "META-INF/*.version"
+                "META-INF/*.version",
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1"
             )
         )
     }
@@ -122,4 +124,5 @@ dependencies {
     androidTestImplementation(Dependencies.Test.AndroidX.Espresso)
     androidTestImplementation(Dependencies.Test.Screengrab)
     androidTestImplementation(Dependencies.Test.Radiography)
+    androidTestImplementation(Dependencies.Test.Coroutines)
 }

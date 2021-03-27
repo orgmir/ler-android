@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.work.WorkerFactory
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
+import app.luisramos.ler.domain.work.enqueueLocalNotif
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.navigation.Navigator
+import app.luisramos.ler.ui.notifications.showLocalNotificationForNewPosts
 import app.luisramos.ler.ui.screen.NavigatingActivity
 import kotlinx.coroutines.Dispatchers
 
@@ -36,8 +38,17 @@ class DefaultAppContainer(context: Context) : AppContainer {
         DefaultRefreshFeedsUseCase(db, fetchAndSaveChannelUseCase)
     override val deleteFeedUseCase = DeleteFeedUseCase(db)
     override val toggleNotifyMeFeedUseCase = DefaultToggleNotifyMeFeedUseCase(db)
-    override val saveNotifyTimePrefUseCase = DefaultSaveNotifyTimePrefUseCase(preferences)
-    
+    override val scheduleNewPostsNotifUseCase = DefaultScheduleNewPostsNotifUseCase({ delay ->
+        context.enqueueLocalNotif(delay)
+    })
+    override val saveNotifyTimePrefUseCase =
+        DefaultSaveNotifyTimePrefUseCase(scheduleNewPostsNotifUseCase, preferences)
+    override val fetchFeedTitlesToNotifyUserUseCase = DefaultFetchFeedTitlesToNotifyUserUseCase(db)
+    override val showNewPostsLocalNotifUseCase =
+        DefaultShowNewPostsLocalNotifUseCase(fetchFeedTitlesToNotifyUserUseCase) { titles ->
+            context.showLocalNotificationForNewPosts(titles)
+        }
+
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 
     private var _viewModelFactory: ViewModelProviderFactory? = null
