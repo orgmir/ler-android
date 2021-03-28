@@ -21,7 +21,8 @@ class FakeDb : Db {
         description: String?,
         updateLink: String,
         updateMode: FeedUpdateMode,
-        updatedAt: Date
+        updatedAt: Date,
+        createdAt: Date
     ): Long {
         val feed = Feed(
             id = generateId(),
@@ -33,7 +34,7 @@ class FakeDb : Db {
             updateTimeInterval = 3600,
             notify = false,
             updatedAt = updatedAt,
-            createdAt = Date()
+            createdAt = createdAt
         )
         feedMap[feed.id] = feed
         return feed.id
@@ -92,7 +93,8 @@ class FakeDb : Db {
         link: String,
         publishedAt: Date,
         updatedAt: Date,
-        feedId: Long
+        feedId: Long,
+        createdAt: Date
     ): Long {
         val feedItem = FeedItem(
             id = generateId(),
@@ -102,7 +104,7 @@ class FakeDb : Db {
             unread = false,
             publishedAt = publishedAt,
             updatedAt = updatedAt,
-            createdAt = Date(),
+            createdAt = createdAt,
             feedId = feedId
         )
         feedItemMap[feedItem.id] = feedItem

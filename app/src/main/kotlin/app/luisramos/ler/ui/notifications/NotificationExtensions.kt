@@ -22,7 +22,7 @@ const val CHANNEL_ID = "General"
 fun App.createNotificationChannel() {
     val name = resources.getString(R.string.notif_channel_name_general)
     val descriptionText = resources.getString(R.string.notif_channel_desc_general)
-    val importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
+    val importance = NotificationManager.IMPORTANCE_DEFAULT
     val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
         description = descriptionText
     }
