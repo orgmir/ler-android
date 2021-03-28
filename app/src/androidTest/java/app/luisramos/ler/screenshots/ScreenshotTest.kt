@@ -1,9 +1,6 @@
 package app.luisramos.ler.screenshots
 
-import android.app.Activity
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import app.luisramos.ler.test.CleanStatusBarRule
 import app.luisramos.ler.test.DisableAnimationsRule
@@ -14,7 +11,6 @@ import com.schibsted.spain.barista.rule.cleardata.ClearDatabaseRule
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import tools.fastlane.screengrab.Screengrab
 import java.util.concurrent.TimeUnit.SECONDS
 
@@ -46,23 +42,16 @@ class ScreenshotTest {
                 typeUrlInSearchBar("https://luisramos.dev")
                 submitSearch()
                 sleep(1, SECONDS)
+                Screengrab.screenshot("2_add_subscription")
                 selectFirstResult()
             } backToFeedList {
+                sleep(4, SECONDS)
+                Screengrab.screenshot("1_feed_list")
+                openSideMenu()
+            } toSideMenu {
                 sleep(1, SECONDS)
-                assertOpensExternalUrl {
-                    tapSecondItem()
-                }
-                Screengrab.screenshot("feed_list")
-                sleep(1, SECONDS)
+                Screengrab.screenshot("3_side_menu")
             }
         }
     }
 }
-
-val <A : Activity> ActivityScenario<A>.activity: A
-    get() {
-        var temp: A? = null
-        this.onActivity { temp = it }
-        return temp!!
-    }
-

@@ -1,17 +1,4 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+update_fastlane
 
 default_platform(:android)
 
@@ -29,11 +16,13 @@ platform :android do
 
   desc "Take screenshots"
   lane :take_screenshots do
+    build_for_screenshots
   	screengrab(
   		clear_previous_screenshots: true,
   		app_apk_path: 'app/build/outputs/apk/debug/app-debug.apk',
   		tests_apk_path: 'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
-  		use_tests_in_classes: ['app.luisramos.ler.screenshots.ScreenshotTest']
+  		use_tests_in_classes: ['app.luisramos.ler.screenshots.ScreenshotTest'],
+  		test_instrumentation_runner: 'app.luisramos.ler.TestRunner'
   	)
   end
 
