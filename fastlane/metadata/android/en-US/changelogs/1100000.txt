@@ -1,0 +1,6 @@
+New daily notification when you have new unread posts. You can choose which subscriptions to get updates from.
+
+Also in this release:
+- Add a settings screen, with options to configure the notification trigger time
+- Fixed feed links not getting parsed correctly
+- Fixed date parsing, so they take into account users locale (and actually work)
