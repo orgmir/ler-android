@@ -15,7 +15,6 @@ class DefaultScheduleNewPostsNotifUseCase(
 ) : ScheduleNewPostsNotifUseCase {
     override fun schedule(hour: Int, minute: Int) {
         val datetimeToNotif = calendarProvider().apply {
-            timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
