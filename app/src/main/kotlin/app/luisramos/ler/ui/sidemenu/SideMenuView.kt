@@ -49,6 +49,7 @@ class SideMenuView(
 
     val adapter get() = recyclerView.adapter as FeedAdapter
     private val recyclerView = RecyclerView(context).apply {
+        id = R.id.sideMenuRecyclerView
         updatePadding(
             top = 8.dip,
             bottom = 8.dip
