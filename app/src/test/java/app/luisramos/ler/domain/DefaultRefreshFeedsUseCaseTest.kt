@@ -1,6 +1,7 @@
 package app.luisramos.ler.domain
 
 import app.luisramos.ler.data.model.FeedUpdateMode
+import app.luisramos.ler.test.FakeDb
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test

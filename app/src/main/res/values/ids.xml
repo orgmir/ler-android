@@ -7,4 +7,5 @@
     <item name="searchButton" type="id" />
     <item name="subscriptionRecyclerView" type="id" />
     <item name="feedItemsRecyclerView" type="id" />
+    <item name="sideMenuRecyclerView" type="id" />
 </resources>

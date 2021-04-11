@@ -2,6 +2,8 @@ package app.luisramos.ler.di
 
 import android.content.Context
 import androidx.work.WorkerFactory
+import app.luisramos.ler.data.Api
+import app.luisramos.ler.data.DefaultApi
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.domain.work.enqueueLocalNotif
@@ -11,18 +13,25 @@ import app.luisramos.ler.ui.navigation.Navigator
 import app.luisramos.ler.ui.notifications.showLocalNotificationForNewPosts
 import app.luisramos.ler.ui.screen.NavigatingActivity
 import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 
-class DefaultAppContainer(context: Context) : AppContainer {
-
-    override val db: Db = DefaultDatabase(context, Dispatchers.IO)
-
+class DefaultAppContainer(
+    context: Context,
+    coroutineContext: CoroutineContext = Dispatchers.IO,
+    override val db: Db = DefaultDatabase(context, coroutineContext),
     override val preferences: Preferences =
-        DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE))
+        DefaultPreferences(context.getSharedPreferences("default", Context.MODE_PRIVATE)),
+    override val api: Api = DefaultApi(coroutineContext)
+) : AppContainer {
 
     private lateinit var _navigation: Navigation
     override val navigation: Navigation get() = _navigation
 
-    override val fetchChannelUseCase: FetchChannelUseCase = DefaultFetchChannelUseCase()
+    override val fetchChannelUseCase: FetchChannelUseCase = DefaultFetchChannelUseCase(
+        coroutineContext = coroutineContext,
+        api = api
+    )
     override val fetchFeedsUseCase: FetchFeedsUseCase = DefaultFetchFeedsUseCase(db)
     override val saveFeedUseCase: SaveFeedUseCase = DefaultSaveFeedUseCase(db)
     override val fetchAndSaveChannelUseCase = DefaultFetchAndSaveChannelUseCase(
@@ -30,7 +39,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         saveFeedUseCase
     )
     override val fetchFeedsFromHtmlUseCase: FetchFeedsFromHtmlUseCase =
-        DefaultFetchFeedsFromHtmlUseCase()
+        DefaultFetchFeedsFromHtmlUseCase(coroutineContext, api)
     override val fetchFeedItemsUseCase = FetchFeedItemsUseCase(db)
     override val setFeedItemUnreadUseCase = SetUnreadFeedItemUseCase(db)
     override val fetchFeedUseCase: FetchFeedUseCase = DefaultFetchFeedUseCase(db)

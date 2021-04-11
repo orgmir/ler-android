@@ -14,7 +14,7 @@ interface Api {
 }
 
 class DefaultApi(
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
+    private val coroutineContext: CoroutineContext
 ) : Api {
     private val client = OkHttpClient.Builder().build()
 

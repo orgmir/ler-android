@@ -1,20 +1,19 @@
 package app.luisramos.ler.di
 
 import androidx.work.WorkerFactory
+import app.luisramos.ler.data.Api
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.screen.NavigatingActivity
 
-interface AppContainer {
+interface AppContainer : UseCaseContainer, FactoryContainer, NavigationContainer {
     val db: Db
-
-    val workerFactory: WorkerFactory
-
     val preferences: Preferences
+    val api: Api
+}
 
-    val navigation: Navigation
-
+interface UseCaseContainer {
     val fetchChannelUseCase: FetchChannelUseCase
     val fetchFeedsUseCase: FetchFeedsUseCase
     val saveFeedUseCase: SaveFeedUseCase
@@ -30,9 +29,15 @@ interface AppContainer {
     val scheduleNewPostsNotifUseCase: ScheduleNewPostsNotifUseCase
     val fetchFeedTitlesToNotifyUserUseCase: FetchFeedTitlesToNotifyUserUseCase
     val showNewPostsLocalNotifUseCase: ShowNewPostsLocalNotifUseCase
+}
 
+interface FactoryContainer {
+    val workerFactory: WorkerFactory
     val activityViewModelProviderFactory: ActivityViewModelProviderFactory
     fun getViewModelFactory(parentViewModel: ScaffoldViewModel): ViewModelProviderFactory
+}
 
+interface NavigationContainer {
+    val navigation: Navigation
     fun bindNavigation(navigatingActivity: NavigatingActivity)
 }

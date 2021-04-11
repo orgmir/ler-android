@@ -17,8 +17,8 @@ interface FetchFeedsFromHtmlUseCase {
 }
 
 class DefaultFetchFeedsFromHtmlUseCase(
-    private val coroutineContext: CoroutineContext = Dispatchers.IO,
-    private val api: Api = DefaultApi()
+    private val coroutineContext: CoroutineContext,
+    private val api: Api
 ) : FetchFeedsFromHtmlUseCase {
 
     override suspend fun fetch(urlString: String): Result<List<Pair<String, String>>> =

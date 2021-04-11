@@ -19,8 +19,8 @@ interface FetchChannelUseCase {
 
 class DefaultFetchChannelUseCase(
     private val parser: FeedParser = RssAtomCombinedParser,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO,
-    private val api: Api = DefaultApi()
+    private val coroutineContext: CoroutineContext,
+    private val api: Api
 ) : FetchChannelUseCase {
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun fetchChannel(urlString: String): Result<FeedModel> =

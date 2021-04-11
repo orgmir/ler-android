@@ -59,6 +59,14 @@ android {
         srcDir("src/main/kotlin")
     }
 
+    sourceSets["test"].java {
+        srcDir("src/sharedTest/java")
+    }
+
+    sourceSets["androidTest"].java {
+        srcDir("src/sharedTest/java")
+    }
+
     packagingOptions {
         resources.excludes.addAll(
             listOf(
