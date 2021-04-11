@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 
 const val UPDATE_WORK_ID = "sync"
 const val LOCAL_NOTIF_WORK_ID = "new_post_notif_id"
+const val LOCAL_NOTIF_TAG = "new_post_notif_tag"
 
 fun App.configureWorkManager(workerFactory: WorkerFactory) {
     val config = Configuration.Builder()
@@ -29,7 +30,7 @@ fun Context.enqueueFeedSyncWork(refreshData: Boolean = false) {
         )
 }
 
-fun Context.enqueueLocalNotif(delay: Long) {
+fun Context.enqueueNewPostsLocalNotification(delay: Long) {
     val feedUpdateWork = OneTimeWorkRequestBuilder<FeedUpdateWorker>()
         .setInitialDelay(delay, TimeUnit.MILLISECONDS)
         .build()
@@ -40,4 +41,9 @@ fun Context.enqueueLocalNotif(delay: Long) {
         .then(showLocalNotifWork)
         .then(rescheduleWork)
         .enqueue()
+}
+
+fun Context.cancelNewPostsLocalNotification() {
+    WorkManager.getInstance(this)
+        .cancelUniqueWork(LOCAL_NOTIF_WORK_ID)
 }

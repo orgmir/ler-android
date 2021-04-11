@@ -67,10 +67,3 @@ fun View.focusAndShowKeyboard() {
             })
     }
 }
-
-fun View.setSelectableItemBackground() {
-    with(TypedValue()) {
-        context.theme.resolveAttribute(R.attr.selectableItemBackground, this, true)
-        setBackgroundResource(resourceId)
-    }
-}

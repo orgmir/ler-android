@@ -25,10 +25,11 @@ interface UseCaseContainer {
     val refreshFeedsUseCase: RefreshFeedsUseCase
     val deleteFeedUseCase: DeleteFeedUseCase
     val toggleNotifyMeFeedUseCase: ToggleNotifyMeFeedUseCase
-    val saveNotifyTimePrefUseCase: SaveNotifyTimePrefUseCase
+    val newPostsNotificationPreferencesUseCase: NewPostsNotificationPreferencesUseCase
     val scheduleNewPostsNotifUseCase: ScheduleNewPostsNotifUseCase
     val fetchFeedTitlesToNotifyUserUseCase: FetchFeedTitlesToNotifyUserUseCase
     val showNewPostsLocalNotifUseCase: ShowNewPostsLocalNotifUseCase
+    val cancelNewPostsNotifUseCase: CancelNewPostsNotificationUseCase
 }
 
 interface FactoryContainer {

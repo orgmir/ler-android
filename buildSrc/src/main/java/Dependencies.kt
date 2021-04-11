@@ -8,6 +8,7 @@ object Versions {
     const val Kotlin = "1.4.31"
     const val Sqldelight = "1.4.4"
     const val Coroutines = "1.4.3"
+    const val WorkManager = "2.5.0"
 }
 
 object AppVersion {
@@ -48,7 +49,7 @@ object Dependencies {
         const val Activity = "androidx.activity:activity-ktx:1.1.0"
         const val Fragment = "androidx.fragment:fragment-ktx:1.2.5"
         const val SwipeRefresh = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-        const val Work = "androidx.work:work-runtime-ktx:2.4.0"
+        const val Work = "androidx.work:work-runtime-ktx:${Versions.WorkManager}"
     }
 
     object SqlDelight {
@@ -67,6 +68,7 @@ object Dependencies {
         const val Barista = "com.schibsted.spain:barista:3.8.0"
         const val Screengrab = "tools.fastlane:screengrab:2.0.0"
         const val Radiography = "com.squareup.radiography:radiography:2.3.0"
+        const val WorkManager = "androidx.work:work-testing:${Versions.WorkManager}"
 
         object AndroidX {
             const val Core = "androidx.test:core-ktx:1.3.0"

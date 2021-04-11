@@ -6,7 +6,8 @@ import app.luisramos.ler.data.Api
 import app.luisramos.ler.data.DefaultApi
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
-import app.luisramos.ler.domain.work.enqueueLocalNotif
+import app.luisramos.ler.domain.work.cancelNewPostsLocalNotification
+import app.luisramos.ler.domain.work.enqueueNewPostsLocalNotification
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.navigation.Navigator
@@ -14,7 +15,6 @@ import app.luisramos.ler.ui.notifications.showLocalNotificationForNewPosts
 import app.luisramos.ler.ui.screen.NavigatingActivity
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 class DefaultAppContainer(
     context: Context,
@@ -48,10 +48,17 @@ class DefaultAppContainer(
     override val deleteFeedUseCase = DeleteFeedUseCase(db)
     override val toggleNotifyMeFeedUseCase = DefaultToggleNotifyMeFeedUseCase(db)
     override val scheduleNewPostsNotifUseCase = DefaultScheduleNewPostsNotifUseCase({ delay ->
-        context.enqueueLocalNotif(delay)
+        context.enqueueNewPostsLocalNotification(delay)
     })
-    override val saveNotifyTimePrefUseCase =
-        DefaultSaveNotifyTimePrefUseCase(scheduleNewPostsNotifUseCase, preferences)
+    override val cancelNewPostsNotifUseCase = DefaultCancelNewPostsNotificationUseCase {
+        context.cancelNewPostsLocalNotification()
+    }
+    override val newPostsNotificationPreferencesUseCase =
+        DefaultNewPostsNotificationPreferencesUseCase(
+            scheduleNewPostsNotifUseCase,
+            cancelNewPostsNotifUseCase,
+            preferences
+        )
     override val fetchFeedTitlesToNotifyUserUseCase = DefaultFetchFeedTitlesToNotifyUserUseCase(db)
     override val showNewPostsLocalNotifUseCase =
         DefaultShowNewPostsLocalNotifUseCase(fetchFeedTitlesToNotifyUserUseCase) { titles ->

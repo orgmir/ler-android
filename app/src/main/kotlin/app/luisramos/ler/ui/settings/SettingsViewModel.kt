@@ -6,14 +6,14 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import app.luisramos.ler.R
 import app.luisramos.ler.domain.Preferences
-import app.luisramos.ler.domain.SaveNotifyTimePrefUseCase
+import app.luisramos.ler.domain.NewPostsNotificationPreferencesUseCase
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     parentViewModel: ScaffoldViewModel,
-    private val saveNotifyTimePrefUseCase: SaveNotifyTimePrefUseCase,
+    private val newPostsNotificationPreferencesUseCase: NewPostsNotificationPreferencesUseCase,
     private val navigation: Navigation,
     private val preferences: Preferences
 ) : ViewModel() {
@@ -30,9 +30,13 @@ class SettingsViewModel(
                 title = R.string.settings_hide_read_feed_items,
                 isChecked = preferences.hideReadFeedItems
             ),
+            SettingsUiModel.Switch(
+                title = R.string.settings_new_post_notif_switch,
+                isChecked = preferences.isNewPostNotificationEnabled
+            ),
             SettingsUiModel.TimePicker(
-                R.string.settings_new_post_notif_time,
-                R.string.settings_new_post_notif_desc,
+                title = R.string.settings_new_post_notif_time,
+                desc = R.string.settings_new_post_notif_desc,
                 time = time
             )
         )
@@ -41,7 +45,7 @@ class SettingsViewModel(
     init {
         parentViewModel.title.value = "Settings"
 
-        val (hour, minute) = saveNotifyTimePrefUseCase.notifyHourMinute
+        val (hour, minute) = newPostsNotificationPreferencesUseCase.notifyHourMinute
         timeLiveData.value = TimeUiModel(hour, minute)
         // observe so we can save the value in preferences if the user
         // changes it
@@ -56,14 +60,17 @@ class SettingsViewModel(
     fun onItemClicked(position: Int) {
         when (position) {
             0 -> preferences.hideReadFeedItems = !preferences.hideReadFeedItems
-            1 -> navigation.openTimePicker(timeLiveData)
+            1 -> preferences.isNewPostNotificationEnabled =
+                !preferences.isNewPostNotificationEnabled
+            // timeLiveData will be udpated with the new time
+            2 -> navigation.openTimePicker(timeLiveData)
         }
     }
 
     private fun saveTime(timeUiModel: TimeUiModel) {
         viewModelScope.launch {
             val (hour, minute) = timeUiModel
-            saveNotifyTimePrefUseCase.savePref(hour, minute)
+            newPostsNotificationPreferencesUseCase.savePref(hour, minute)
         }
     }
 }

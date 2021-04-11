@@ -27,7 +27,7 @@ class DefaultWorkerFactory(
             workerParameters
         )
         RescheduleLocalNotifNewPostsWorker::class.java.name -> RescheduleLocalNotifNewPostsWorker(
-            appContainer.saveNotifyTimePrefUseCase,
+            appContainer.newPostsNotificationPreferencesUseCase,
             appContainer.scheduleNewPostsNotifUseCase,
             appContext,
             workerParameters

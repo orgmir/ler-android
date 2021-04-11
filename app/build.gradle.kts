@@ -133,4 +133,5 @@ dependencies {
     androidTestImplementation(Dependencies.Test.Screengrab)
     androidTestImplementation(Dependencies.Test.Radiography)
     androidTestImplementation(Dependencies.Test.Coroutines)
+    androidTestImplementation(Dependencies.Test.WorkManager)
 }

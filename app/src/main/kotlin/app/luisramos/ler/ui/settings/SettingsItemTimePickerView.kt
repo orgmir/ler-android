@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.updatePadding
 import app.luisramos.ler.R
+import app.luisramos.ler.ui.views.getDrawable
 import com.squareup.contour.ContourLayout
 
 class SettingsItemTimePickerView(
@@ -37,7 +38,7 @@ class SettingsItemTimePickerView(
     }
 
     init {
-        setBackgroundResource(R.drawable.background_item_with_divider)
+        background = getDrawable(R.attr.selectableItemBackground)
         setOnClickListener { clickListener() }
 
         timeTextView.layoutBy(

@@ -27,11 +27,24 @@ open class App : Application() {
 
         configureWorkManager(appContainer.workerFactory)
         enqueueFeedSyncWork()
-
         createNotificationChannel()
-
-        // TODO enqueue local notif?
+        scheduleNewPostsLocalNotification()
     }
 
     protected open fun createAppContainer(): AppContainer = DefaultAppContainer(this)
+
+    /*
+     * Make sure that we always schedule the notification on app start,
+     * so new app installs will have the notification registered by default.
+     * Scheduling the notif replaces an existing scheduled work, if it already
+     * exists, so it should be good to do this every app start
+     */
+    private fun scheduleNewPostsLocalNotification() {
+        appContainer.apply {
+            if (preferences.isNewPostNotificationEnabled) {
+                val (hour, minute) = newPostsNotificationPreferencesUseCase.notifyHourMinute
+                scheduleNewPostsNotifUseCase.schedule(hour, minute)
+            }
+        }
+    }
 }
