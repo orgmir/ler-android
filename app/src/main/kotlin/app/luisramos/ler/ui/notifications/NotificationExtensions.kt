@@ -36,10 +36,12 @@ fun Context.showLocalNotificationForNewPosts(titles: List<String>) {
     }
     val pendingIntent =
         PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    val contentText = getContentText(titles)
     val notif = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_launcher_rss_foreground)
         .setContentTitle(getString(R.string.notif_new_posts_title))
-        .setContentText(getContentText(titles))
+        .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+        .setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
