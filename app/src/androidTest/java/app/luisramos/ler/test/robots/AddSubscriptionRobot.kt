@@ -1,4 +1,4 @@
-package app.luisramos.ler.screenshots
+package app.luisramos.ler.test.robots
 
 import app.luisramos.ler.R
 import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn

@@ -5,6 +5,10 @@ import androidx.test.filters.LargeTest
 import app.luisramos.ler.test.CleanStatusBarRule
 import app.luisramos.ler.test.DisableAnimationsRule
 import app.luisramos.ler.test.IntentsTestRule
+import app.luisramos.ler.test.robots.backToFeedList
+import app.luisramos.ler.test.robots.feedList
+import app.luisramos.ler.test.robots.toAddSubscription
+import app.luisramos.ler.test.robots.toSideMenu
 import app.luisramos.ler.ui.MainActivity
 import com.schibsted.spain.barista.interaction.BaristaSleepInteractions.sleep
 import com.schibsted.spain.barista.rule.cleardata.ClearDatabaseRule
