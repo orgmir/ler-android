@@ -2,6 +2,7 @@ package app.luisramos.ler.ui.settings
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,8 @@ class SettingsAdapter : ListAdapter<SettingsUiModel, SettingsAdapter.ViewHolder>
         when {
             itemView is SettingsItemSwitchView && item is SettingsUiModel.Switch -> itemView.apply {
                 titleTextView.setText(item.title)
+                item.desc?.let { subTitleTextView.setText(it) }
+                subTitleTextView.isVisible = item.desc != null
                 switch.isChecked = item.isChecked
                 clickListener = { itemClickListener(position) }
             }

@@ -26,7 +26,7 @@ object AppVersion {
 object Dependencies {
 
     object Build {
-        const val Gradle = "com.android.tools.build:gradle:7.0.0-alpha12"
+        const val Gradle = "com.android.tools.build:gradle:7.0.0-alpha14"
         const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
         const val Sqldelight = "com.squareup.sqldelight:gradle-plugin:${Versions.Sqldelight}"
     }

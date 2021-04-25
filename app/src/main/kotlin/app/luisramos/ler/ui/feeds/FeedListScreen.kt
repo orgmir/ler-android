@@ -18,6 +18,7 @@ import app.luisramos.ler.di.observe
 import app.luisramos.ler.di.viewModels
 import app.luisramos.ler.domain.work.UPDATE_WORK_ID
 import app.luisramos.ler.domain.work.enqueueFeedSyncWork
+import app.luisramos.ler.domain.work.enqueueRefreshFeedsWork
 import app.luisramos.ler.ui.event.observeEvent
 import app.luisramos.ler.ui.screen.Screen
 import app.luisramos.ler.ui.screen.activity
@@ -48,7 +49,7 @@ class FeedListScreen : Screen() {
 
         swipeRefreshLayout.apply {
             setOnRefreshListener {
-                context.enqueueFeedSyncWork(refreshData = true)
+                context.enqueueRefreshFeedsWork()
             }
 
             WorkManager.getInstance(context)
@@ -115,7 +116,7 @@ class FeedListScreen : Screen() {
             }
 
             menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
-                context.enqueueFeedSyncWork(refreshData = true)
+                context.enqueueRefreshFeedsWork()
                 true
             }
 

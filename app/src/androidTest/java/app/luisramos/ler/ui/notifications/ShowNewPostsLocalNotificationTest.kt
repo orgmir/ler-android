@@ -13,6 +13,7 @@ import app.luisramos.ler.test.DisableAnimationsRule
 import app.luisramos.ler.ui.MainActivity
 import com.google.common.truth.Truth.assertThat
 import com.schibsted.spain.barista.rule.cleardata.ClearDatabaseRule
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.ClassRule
 import org.junit.Rule
@@ -41,8 +42,7 @@ class ShowNewPostsLocalNotificationTest {
     @Test
     fun whenThereAreNewPosts_shouldShowNotification() {
         launchActivity<MainActivity>().use {
-            runBlockingTest {
-                (appContainer.db as DefaultDatabase).dbContext = coroutineContext
+            runBlocking {
                 setupFeedsInDb()
                 triggerNotification()
             }

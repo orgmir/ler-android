@@ -30,6 +30,7 @@ interface UseCaseContainer {
     val fetchFeedTitlesToNotifyUserUseCase: FetchFeedTitlesToNotifyUserUseCase
     val showNewPostsLocalNotifUseCase: ShowNewPostsLocalNotifUseCase
     val cancelNewPostsNotifUseCase: CancelNewPostsNotificationUseCase
+    val scheduleFeedSyncUseCase: ScheduleFeedSyncUseCase
 }
 
 interface FactoryContainer {

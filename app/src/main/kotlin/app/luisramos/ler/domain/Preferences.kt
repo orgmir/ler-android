@@ -6,6 +6,7 @@ interface Preferences {
     var hideReadFeedItems: Boolean
     var isNewPostNotificationEnabled: Boolean
     var newPostNotificationTime: Int
+    var isFeedRefreshEnabled: Boolean
 }
 
 class DefaultPreferences(preferences: SharedPreferences) : Preferences {
@@ -13,4 +14,5 @@ class DefaultPreferences(preferences: SharedPreferences) : Preferences {
     override var isNewPostNotificationEnabled: Boolean
             by preferences.boolean("isNewPostNotificationEnabled", true)
     override var newPostNotificationTime: Int by preferences.int("newPostNotificationTime", 800)
+    override var isFeedRefreshEnabled: Boolean by preferences.boolean("isFeedRefreshEnabled", true)
 }

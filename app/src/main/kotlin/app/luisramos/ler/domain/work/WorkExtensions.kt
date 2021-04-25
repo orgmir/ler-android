@@ -16,18 +16,19 @@ fun App.configureWorkManager(workerFactory: WorkerFactory) {
     WorkManager.initialize(this, config)
 }
 
-fun Context.enqueueFeedSyncWork(refreshData: Boolean = false) {
-    val policy = if (refreshData) {
-        ExistingPeriodicWorkPolicy.REPLACE
-    } else {
-        ExistingPeriodicWorkPolicy.KEEP
-    }
+fun Context.enqueueFeedSyncWork() {
+    val work = PeriodicWorkRequestBuilder<FeedUpdateWorker>(12, TimeUnit.HOURS).build()
     WorkManager.getInstance(this)
         .enqueueUniquePeriodicWork(
             UPDATE_WORK_ID,
-            policy,
-            PeriodicWorkRequestBuilder<FeedUpdateWorker>(15, TimeUnit.MINUTES).build()
+            ExistingPeriodicWorkPolicy.KEEP,
+            work
         )
+}
+
+fun Context.enqueueRefreshFeedsWork() {
+    val work = OneTimeWorkRequestBuilder<FeedUpdateWorker>().build()
+    WorkManager.getInstance(this).enqueue(work)
 }
 
 fun Context.enqueueNewPostsLocalNotification(delay: Long) {

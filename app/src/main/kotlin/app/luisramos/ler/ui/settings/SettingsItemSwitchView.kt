@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import app.luisramos.ler.R
 import app.luisramos.ler.ui.views.getDrawable
@@ -26,7 +27,7 @@ class SettingsItemSwitchView(
     }
 
     val subTitleTextView = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body2)
+        setTextAppearance(R.style.TextAppearance_MaterialComponents_Caption)
         gravity = Gravity.CENTER_VERTICAL
         updatePadding(left = 16.dip, right = 16.dip, top = 4.dip, bottom = 16.dip)
         setOnClickListener { switch.performClick() }
@@ -60,6 +61,12 @@ class SettingsItemSwitchView(
             } else {
                 subTitleTextView.bottom()
             }
+        }
+
+        if (isInEditMode) {
+            titleTextView.text = resources.getString(R.string.settings_new_post_notif_switch)
+            subTitleTextView.text = resources.getString(R.string.settings_new_post_notif_desc)
+            subTitleTextView.isVisible = true
         }
     }
 }

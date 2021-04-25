@@ -5,9 +5,10 @@ package app.luisramos.ler.domain
 /**
  * Clone of Kotlin Result class, so we can return in mocked test methods.
  *
+ * Inlining this class causes a crash.
  * See https://youtrack.jetbrains.com/issue/KT-27105
  */
-inline class Result<out T>(val value: Any?) {
+class Result<out T>(val value: Any?) {
 
     val isSuccess: Boolean get() = value !is Failure
 

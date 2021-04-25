@@ -7,6 +7,7 @@ import app.luisramos.ler.data.DefaultApi
 import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.domain.*
 import app.luisramos.ler.domain.work.cancelNewPostsLocalNotification
+import app.luisramos.ler.domain.work.enqueueFeedSyncWork
 import app.luisramos.ler.domain.work.enqueueNewPostsLocalNotification
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
@@ -65,6 +66,10 @@ class DefaultAppContainer(
             context.showLocalNotificationForNewPosts(titles)
         }
 
+    override val scheduleFeedSyncUseCase = DefaultScheduleFeedSyncUseCase(preferences) {
+        context.enqueueFeedSyncWork()
+    }
+    
     override val workerFactory: WorkerFactory = DefaultWorkerFactory(this)
 
     private var _viewModelFactory: ViewModelProviderFactory? = null

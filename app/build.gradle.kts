@@ -22,6 +22,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+        useIR = true
+        freeCompilerArgs = listOf(
+            "-Xinline-classes",
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        )
+    }
+
     compileSdkVersion(Versions.Build.CompileSdk)
 
     defaultConfig {
@@ -89,19 +98,9 @@ android {
     }
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOfNotNull(
-            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        )
-    }
-}
-
 dependencies {
     implementation(Dependencies.Kotlin)
     implementation(Dependencies.AndroidX.Core)
-    implementation(Dependencies.AndroidX.ConstraintLayout)
     implementation(Dependencies.AndroidX.RecyclerView)
     implementation(Dependencies.AndroidX.ViewModel)
     implementation(Dependencies.AndroidX.LiveData)

@@ -5,15 +5,11 @@ import app.luisramos.ler.data.model.FeedUpdateMode
 import app.luisramos.ler.domain.Db
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.properties.Delegates.observable
 
 class FakeDb : Db, CoroutineScope {
 
