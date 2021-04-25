@@ -9,7 +9,7 @@ CREATE TABLE feed (
     description TEXT,
     updateMode TEXT as FeedUpdateMode NOT NULL,
     updateTimeInterval INTEGER NOT NULL,
-    notify INTEGER as Boolean DEFAULT 0,
+    notify INTEGER as Boolean DEFAULT 1,
     updatedAt INTEGER as Date,
     createdAt INTEGER as Date NOT NULL
 );
