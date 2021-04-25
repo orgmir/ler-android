@@ -1,6 +1,8 @@
-New daily notification when you have new unread posts. You can choose which subscriptions to get updates from.
+New features:
+- Add new posts notification! You will now get notified when there are new posts for you to read. This can be toggled per subscription as well.
+- New settings screen! This is where you can configure the new posts notification time or disable it entirely. You can also disable the subscriptions background refresh from here.
 
-Also in this release:
-- Add a settings screen, with options to configure the notification trigger time
-- Fixed feed links not getting parsed correctly
-- Fixed date parsing, so they take into account users locale (and actually work)
+Bug fixes:
+- Fixed update URL for a subscription not getting parsed correctly.
+- Fixed post published date parsing, now uses the device locale (and it actually works).
+- Reduce the subscription refresh rate from every 15 minutes to every 12 hours.

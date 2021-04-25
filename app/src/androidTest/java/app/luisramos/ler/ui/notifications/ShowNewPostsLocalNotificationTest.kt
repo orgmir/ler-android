@@ -6,15 +6,14 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import app.luisramos.ler.App
-import app.luisramos.ler.data.DefaultDatabase
 import app.luisramos.ler.data.model.FeedUpdateMode
 import app.luisramos.ler.domain.Db
 import app.luisramos.ler.test.DisableAnimationsRule
+import app.luisramos.ler.test.robots.feedList
 import app.luisramos.ler.ui.MainActivity
 import com.google.common.truth.Truth.assertThat
 import com.schibsted.spain.barista.rule.cleardata.ClearDatabaseRule
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
@@ -50,7 +49,11 @@ class ShowNewPostsLocalNotificationTest {
 
         uiDevice.openNotification()
 
-        uiDevice.assertNotificationIsVisible()
+        uiDevice.tapNewPostsNotification()
+
+        feedList {
+            assertTitleIs("All")
+        }
     }
 
     private suspend fun triggerNotification() {
@@ -89,7 +92,7 @@ class ShowNewPostsLocalNotificationTest {
         time
     }
 
-    private fun UiDevice.assertNotificationIsVisible() {
+    private fun UiDevice.tapNewPostsNotification() {
         val notifTitle = By.text("Ler")
         wait(Until.hasObject(notifTitle), 5000)
 
@@ -97,5 +100,9 @@ class ShowNewPostsLocalNotificationTest {
         assertThat(titleObject).isNotNull()
         val descriptionObject = findObject(By.text("New post from Test Feed."))
         assertThat(descriptionObject).isNotNull()
+        descriptionObject.click()
+
+        // wait for app to open
+        wait(Until.hasObject(By.textStartsWith("All")), 5000)
     }
 }

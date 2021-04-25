@@ -26,9 +26,12 @@ platform :android do
   	)
   end
 
-  desc "Deploy a new version to the Google Play"
+  desc "Deploy a new version to the Google Play, after running all tests"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
+    gradle(
+      flags: "--no-daemon --build-cache",
+      task: "clean check assembleRelease"
+    )
     upload_to_play_store
   end
 end

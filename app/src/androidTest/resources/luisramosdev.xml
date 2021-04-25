@@ -1,280 +1,875 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Luis Ramos Blog]]></title><description><![CDATA[Freelance mobile developer building native iOS and Android apps. I write about what I learn!]]></description><link>https://luisramos.dev</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 24 Nov 2020 00:23:23 GMT</lastBuildDate><item><title><![CDATA[Publishing your first android library!]]></title><description><![CDATA[Publishing a library you develop is a journey on its own. It can be overwhelming, especially if you are targeting Android. There is a lot of…]]></description><link>https://luisramos.dev/publishing-your-first-android-library</link><guid isPermaLink="false">https://luisramos.dev/publishing-your-first-android-library</guid><pubDate>Tue, 15 Sep 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Publishing a library you develop is a journey on its own. It can be overwhelming, especially if you are targeting Android. There is a lot of documentation out here, but I could not find one that would go end to end with it. So I wrote this post!&lt;/p&gt;
-&lt;p&gt;This came about because I released my first open source library: &lt;a href=&quot;https://github.com/orgmir/kroclin&quot;&gt;Kroclin&lt;/a&gt;! It is a snapshot testing library written in Kotlin, to help out writing less code in your tests. Check it out and give it a star if would like. Now, let me tell you about the journey to release it!&lt;/p&gt;
-&lt;p&gt;Sonatype provides a &lt;a href=&quot;https://central.sonatype.org/pages/ossrh-guide.html&quot;&gt;guide for OSS repository hosting&lt;/a&gt; and &lt;a href=&quot;https://central.sonatype.org/pages/releasing-the-deployment.html&quot;&gt;another one for releasing your deployment&lt;/a&gt; that I read, but they could be more helpful. Everything you need to know is there, it just takes several readings and lots of googling to grok it. Here are the steps you need to go through:&lt;/p&gt;
-&lt;p&gt;First, &lt;a href=&quot;https://issues.sonatype.org/&quot;&gt;create a Sonatype JIRA account&lt;/a&gt; if you don&apos;t have one already.&lt;/p&gt;
-&lt;p&gt;Then &lt;a href=&quot;https://issues.sonatype.org/secure/CreateIssue.jspa?issuetype=21&amp;#x26;pid=10134&quot;&gt;create a new project issue&lt;/a&gt;. Make sure to click this link, since they require that you use the template. In the issue body, write that you want to claim the domain that matches the library &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt;. In the case of my library, the &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt; is &lt;code class=&quot;language-text&quot;&gt;dev.luisramos.kroclin&lt;/code&gt; and I claimed &lt;code class=&quot;language-text&quot;&gt;dev.luisramos.*&lt;/code&gt;. Here is &lt;a href=&quot;https://issues.sonatype.org/browse/OSSRH-60527&quot;&gt;my JIRA ticket&lt;/a&gt; as an example.&lt;/p&gt;
-&lt;div class=&quot;blockquote info&quot;&gt;
-I picked up from reading other issues that you only need to go through this process once, if you request a wildcard `groupId`. Other libraries released under the same `groupId` don&apos;t require a new project ticket to be created.
-&lt;/div&gt;
-&lt;p&gt;Note that you could also claim the &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt; that matches your project hosting, for example, &lt;code class=&quot;language-text&quot;&gt;io.github.orgmir&lt;/code&gt; if that&apos;s where your project lives.&lt;/p&gt;
-&lt;p&gt;After you have opened a new project ticket, you need to prove that you own the domain you claimed. You can either:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Add a TXT record to your DNS referencing the url to the JIRA ticket you created (fastest)&lt;/li&gt;
-&lt;li&gt;Setup a redirect to your github page&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;I went with the first option, and since every DNS provider differs I won&apos;t go into specifics. Some googling on how to add a TXT record for your DNS provider should get you there.&lt;/p&gt;
-&lt;div class=&quot;blockquote info&quot;&gt;
-&lt;strong&gt;NOTE:&lt;/strong&gt; You will need to submit the full URL for the issue, so in my case the content for the TXT record was &lt;a href=&quot;https://issues.sonatype.org/browse/OSSRH-60527&quot;&gt;&lt;i&gt;https://issues.sonatype.org/browse/OSSRH-60527&lt;/i&gt;&lt;/a&gt;.
-&lt;/div&gt;
-&lt;p&gt;I went ahead and added a comment on the ticket with the output of &lt;code class=&quot;language-text&quot;&gt;dig -t TXT luisramos.dev&lt;/code&gt;, just to show that it was working. Don&apos;t know if it made a difference 😅&lt;/p&gt;
-&lt;p&gt;After doing the proof of domain ownership, you will need to wait for Sonatype to reply to your ticket. They will let you know once the repository on their end is ready to receive artifacts. Don&apos;t actually upload anything until they give you the OK, your artifacts will just end up in a generic catch-all repository.&lt;/p&gt;
-&lt;p&gt;After they reply, go ahead and upload your first artifact. You can copy my &lt;a href=&quot;https://github.com/Orgmir/kroclin/blob/main/gradle/gradle-mvn-push.gradle&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;gradle-mvn-push.gradle&lt;/code&gt;&lt;/a&gt; script and run &lt;code class=&quot;language-text&quot;&gt;./gradlew clean build uploadArchives&lt;/code&gt; (don&apos;t worry, I also copied it from &lt;a href=&quot;https://github.com/JakeWharton/wormhole/blob/master/gradle/gradle-mvn-push.gradle&quot;&gt;someone else&lt;/a&gt;). You could also use a plugin like &lt;a href=&quot;https://github.com/vanniktech/gradle-maven-publish-plugin&quot;&gt;vanniktech/gradle-maven-publish-plugin&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Once the upload is done, go ahead and log in to &lt;a href=&quot;https://oss.sonatype.org&quot;&gt;https://oss.sonatype.org&lt;/a&gt; using your Sonatype JIRA account.&lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &quot;
-    &gt;
-      &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 71.17647058823529%; position: relative; bottom: 0; left: 0; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;Nexus Repository Manager&quot;
-        title=&quot;Nexus Repository Manager&quot;
-        src=&quot;/static/dba9d6501dcc2a8f73b6317db94c0456/c5bb3/nexus_repository_manager.png&quot;
-        srcset=&quot;/static/dba9d6501dcc2a8f73b6317db94c0456/04472/nexus_repository_manager.png 170w,
-/static/dba9d6501dcc2a8f73b6317db94c0456/9f933/nexus_repository_manager.png 340w,
-/static/dba9d6501dcc2a8f73b6317db94c0456/c5bb3/nexus_repository_manager.png 680w,
-/static/dba9d6501dcc2a8f73b6317db94c0456/eafa0/nexus_repository_manager.png 939w&quot;
-        sizes=&quot;(max-width: 680px) 100vw, 680px&quot;
-        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
-        loading=&quot;lazy&quot;
-      /&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Select &lt;code class=&quot;language-text&quot;&gt;Staging Repositories&lt;/code&gt; on the side bar, and you should see a list with the repository for your library. Select the repo, and press &lt;code class=&quot;language-text&quot;&gt;Close&lt;/code&gt; on the top bar. This will perform some validation on Sonatype&apos;s side, and once the status updates and the repository is tagged as closed, select the repository again and press &lt;code class=&quot;language-text&quot;&gt;Release&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;If you use a plugin, the upload step will probably try to close and release the staging repository. Loggin in to Nexus Repository Manager should only be needed when you are releasing for the first time, or if you use a script like me.&lt;/p&gt;
-&lt;p&gt;You can now update on your JIRA ticket that the repository has been released. This will let Sonatype know, and they will trigger a sync with maven central, so your library can show when searching in &lt;a href=&quot;https://search.maven.org&quot;&gt;search.maven.org&lt;/a&gt;. This step should is also only needed the first time you are releasing.&lt;/p&gt;
-&lt;p&gt;And that&apos;s it! It might take a couple of hours for the sync to happen, but congratulations! You have released a library onto the world! What a trip it was 🚀&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Ler - An RSS Aggregator for Android!]]></title><description><![CDATA[I have been working on a RSS aggregator app called Ler. Its available for Android, and you should give it a try! It is the first app I…]]></description><link>https://luisramos.dev/ler-rss-aggregator-for-android</link><guid isPermaLink="false">https://luisramos.dev/ler-rss-aggregator-for-android</guid><pubDate>Fri, 20 Mar 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I have been working on a RSS aggregator app called &lt;em&gt;Ler&lt;/em&gt;. Its available for Android, and you should &lt;a href=&quot;https://play.google.com/store/apps/details?id=app.luisramos.ler&quot;&gt;give it a try!&lt;/a&gt; It is the first app I design, develop and publish all by myself, so I am pretty proud of that!&lt;/p&gt;
-&lt;p&gt;&lt;a class=&quot;text-center w-48 block mx-auto&quot; href=&apos;https://play.google.com/store/apps/details?id=app.luisramos.ler&apos;&gt;&lt;img alt=&quot;Get it on Google Play&quot; src=&quot;https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I know what you are thinking, &lt;em&gt;another&lt;/em&gt; RSS feed app? Aren&apos;t there billions of them? Well, yes. But this one is mine. And I have plans. Big plans! Let me tell you how it came to be, and what I want to do with it.&lt;/p&gt;
-&lt;h3&gt;Twitter is a time sink&lt;/h3&gt;
-&lt;p&gt;I spend too much time on twitter. I checked my phone usage settings for apps, and twitter is always number one on the list, toppling YouTube (!!) and WhatsApp. I though I watched a lot of Youtube, but aparently, on a very boring day, I accumulated &lt;em&gt;4 hours&lt;/em&gt; of twitter usage...&lt;/p&gt;
-&lt;p&gt;So I looked into Googles digital wellbeing app, and turned on a 30 minute timeout for Twitter. And it works! Some days, I don&apos;t even reach the timeout. Unfortunatly, this also meant that a lot of the blogs I read wouldn&apos;t reach me as well.&lt;/p&gt;
-&lt;p&gt;And there you have it. I took the time I was wasting and built this app!&lt;/p&gt;
-&lt;h3&gt;Ler&lt;/h3&gt;
-&lt;p&gt;The app name is the portuguese word for &lt;em&gt;reading&lt;/em&gt;. I did a search and it seems nobody claimed it, so why not? The main features that I have built so far:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;You can subscribe to RSS feeds (crazy I know). You can manually type in a website adress, or you can share from the browser to the app!&lt;/li&gt;
-&lt;li&gt;You can filter out articles that you already read, or just show articles from one feed.&lt;/li&gt;
-&lt;li&gt;You can swipe an article to toggle it read, or mark all articles in a feed at once!&lt;/li&gt;
-&lt;li&gt;Feeds will be checked for updates every hour automagically.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Articles currently open in the browser. I toyed with the idea of having a built in reader, but that seemed overkill for what I wanted to do. I already used the browser to do most of my reading anyway.&lt;/p&gt;
-&lt;p&gt;I am pretty proud of how it turned out, despite not being great at UI design, I kept it simple and it does the job! I have been using it for the past couple of weeks, and I think I impressed myself by actually using it instead of defaulting to Twitter as a time killer.&lt;/p&gt;
-&lt;h3&gt;Open so everyone can &lt;em&gt;read&lt;/em&gt; it&lt;/h3&gt;
-&lt;p&gt;Not only am I using this app to avoid using twitter all the time, I will also use it as a showcase project. Hence, my plan in the next weeks is to write a bunch of tests, clean up the folder structure, and open source it.&lt;/p&gt;
-&lt;p&gt;So far, I have not worked in an app that had their source open, so most often when talking about my work I can&apos;t provide examples. I applied all my knowledge and tried to build the simples app I could, while still being a good example of how I would build an app.&lt;/p&gt;
-&lt;p&gt;My plan is to also write about android development, while using the app as an example. I made some architecture choices that I can talk about, since I haven&apos;t found a lot of written examples online.&lt;/p&gt;
-&lt;p&gt;Please give it a spin, and let me know what you think! You can &lt;a href=&quot;https://twitter.com/luisramos1337&quot;&gt;tweet at me&lt;/a&gt; or send me an &lt;a href=&quot;mailto:luis.ramos@hey.com?subject=Ler%20Feedback&quot;&gt;email&lt;/a&gt;. I have a little roadmap with more features, but let me know if you want a particular feature added, and I will add it to the list!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[My new blog! - Creating a Gatsby website]]></title><description><![CDATA[Welcome to my new blog! Hope you enjoy it, I have spent the last couple of weeks building it. Now that it is done, I can finally start…]]></description><link>https://luisramos.dev/new-blog-creating-gatsby-website</link><guid isPermaLink="false">https://luisramos.dev/new-blog-creating-gatsby-website</guid><pubDate>Tue, 17 Mar 2020 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Welcome to my new blog! Hope you enjoy it, I have spent the last couple of weeks building it. Now that it is done, I can finally start writing about stuff! &lt;/p&gt;
-&lt;p&gt;&lt;em&gt;I kinda rebuilt it because I wanted to write about building it...&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;So let me tell you how it works, what I learned, and how easy it is to do it!&lt;/p&gt;
-&lt;h2&gt;Tech stack&lt;/h2&gt;
-&lt;p&gt;To be upfront about it, this blog is built using &lt;a href=&quot;https://www.gatsbyjs.org/&quot;&gt;Gatsby&lt;/a&gt;, and deployed using Github Actions to a Digital Ocean droplet. And I am very happy with it. This entire website is open source, so if you wanna check the code &lt;a href=&quot;https://github.com/orgmir/luisramos.dev&quot;&gt;go ahead&lt;/a&gt;!&lt;/p&gt;
-&lt;p&gt;One day I was reading some blog posts from Tania Rascia and &lt;a href=&quot;https://www.taniarascia.com/migrating-from-wordpress-to-gatsby/&quot;&gt;this post&lt;/a&gt; made me look into Gatsby. In it she migrated her wordpress blog to a Gatsby website that she built from a pretty bare bones template. I have been thinking of revamping my blog again, since the last one was &lt;a href=&quot;/migration-to-hugo/&quot;&gt;more than a year ago&lt;/a&gt;. Pairing that with my interest with this new JAMStack thing, I just got excited and started looking through the docs!&lt;/p&gt;
-&lt;p&gt;After building this website, I really enjoyed working with the plugin system and I loved that it used React and Graphql.&lt;/p&gt;
-&lt;h3&gt;Getting started&lt;/h3&gt;
-&lt;p&gt;Following Tania&apos;s footsteps, I installed the &lt;code class=&quot;language-text&quot;&gt;gatsby-cli&lt;/code&gt; and created a website using the &lt;a href=&quot;https://github.com/vagr9k/gatsby-advanced-starter/&quot;&gt;gatsby-advanced-starter&lt;/a&gt;. Turns out, that was totally overkill for me, and most of the things there overwhelmed me. So I tried again running &lt;code class=&quot;language-text&quot;&gt;gatsby new luisramos.dev&lt;/code&gt; and slowly added the plugins I needed as I went along.&lt;/p&gt;
-&lt;p&gt;Starting with the empty project, the first thing I did was setup &lt;a href=&quot;tailwindcss.com/&quot;&gt;Tailwind CSS&lt;/a&gt;. I am not very good in terms of design skills, and playing around with CSS is fun but can also become a huge waste of time.  Tailwind fits nicelly into the &quot;just make a component&quot; React world, and paired with a fantastic documentation page, it is very easy to work with. You can quickly create your styles using the existing classes, and when it you start duplicating a lot, you move everything to a component! 👍&lt;/p&gt;
-&lt;p&gt;Setting up Tailwind with Gatsby was as easy as adding the plugin &lt;code class=&quot;language-text&quot;&gt;gatsby-plugin-postcss&lt;/code&gt; to gatsby configuration, adding a &lt;code class=&quot;language-text&quot;&gt;postcss.config.js&lt;/code&gt; requiring the Tailwind library, and adding the Tailwind css imports to the &lt;code class=&quot;language-text&quot;&gt;global.css&lt;/code&gt; file.&lt;/p&gt;
-&lt;p&gt;I am very impressed with the plugin system. Anything you need, and you bet there is a plugin that does it! I wanted a RSS feed with all my posts, there&apos;s a plugin for that: &lt;code class=&quot;language-text&quot;&gt;gatsby-plugin-feed&lt;/code&gt;. I want my posts to be in markdown, there&apos;s a plugin for that: &lt;code class=&quot;language-text&quot;&gt;gatsby-transformer-remark&lt;/code&gt;. I wanted syntax highlighting for my code snippets, there&apos;s even a plugin for the plugin: &lt;code class=&quot;language-text&quot;&gt;gatsby-remark-prismjs&lt;/code&gt;! Overall, very wonderful to work with.&lt;/p&gt;
-&lt;p&gt;This plugin system even got me wanting to build more websites!&lt;/p&gt;
-&lt;h3&gt;React+Graphql&lt;/h3&gt;
-&lt;p&gt;Another feature I enjoyed was the React and Graphql support. In the beggining it felt very overkill to have a graphql query everywhere, but the more I read the documentation, the more it made sense to me.&lt;/p&gt;
-&lt;p&gt;I have enough experience with React that I could jump straight into this new website building my layout. After I had build the header/footer/nav combo, I started thinking about the main page, and I decided that I wanted the latest three posts there. So when you land, you can immediatly read some stuff.&lt;/p&gt;
-&lt;p&gt;To do this, you write a graphql query in your React page, name it &lt;code class=&quot;language-text&quot;&gt;pageQuery&lt;/code&gt; and export it. Then, Gatsby will take the data generated from that query and feed it to the component.&lt;/p&gt;
-&lt;p&gt;The whole experience around this was incredible: I played around with the graphql browser until I had the data I wanted, I pasted the query into the page component, and like magic the data was there! Graphql is pretty sweet.&lt;/p&gt;
-&lt;p&gt;After that, I added some code to &lt;code class=&quot;language-text&quot;&gt;gatsby-node.js&lt;/code&gt; so it would create a page for all of my posts. It uses a template, so I don&apos;t need to create a component for each post manually. After that, I added a contact and about pages, an RSS feed, some more styling and a bit of content. Sooner than I was expecting, I had a website ready to be deployed!&lt;/p&gt;
-&lt;h2&gt;Deployment via Github Actions&lt;/h2&gt;
-&lt;p&gt;My previous blog was hosted on the same &lt;a href=&quot;%5Bhttps://www.digitalocean.com%5D(https://www.digitalocean.com/)&quot;&gt;Digital Ocean&lt;/a&gt; droplet that this one is. I have this one box that I use to play around with several things, so since I am already paying for it, and I don&apos;t drive a lot of traffic, I planned the same for this blog.&lt;/p&gt;
-&lt;p&gt;The deployment steps to get this into the server are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Run &lt;code class=&quot;language-text&quot;&gt;gatsby build&lt;/code&gt; to get the static version of the website&lt;/li&gt;
-&lt;li&gt;Upload the generated folder to the server, preferebly using &lt;code class=&quot;language-text&quot;&gt;rsync&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;So I shopped around a bit, and I am impressed by the amount of Github actions already available. I created a workflow that checkouts my code, runs the build and uploads the website to my server in less than half an hour. And it caches the &lt;code class=&quot;language-text&quot;&gt;~/.npm&lt;/code&gt; folder, so it all runs in 2 mins on CI.&lt;/p&gt;
-&lt;h2&gt;Yay Gatsby&lt;/h2&gt;
-&lt;p&gt;I am very happy with the current setup. This website already has pulled this post out of me, so lets see if it makes me write more! Hope you enjoyed this write up as much as I have enjoyed building the site. &lt;/p&gt;
-&lt;p&gt;If you liked this post, or if you just wanna send me some feedback, send me a &lt;a href=&quot;https://twitter.com/luisramos1337&quot;&gt;tweet&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;As a final note, I wrote this post in a very cool markdown editor, &lt;a href=&quot;https://typora.io/&quot;&gt;Typora&lt;/a&gt;. It is free during beta, so give it a try!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Oh My Zsh prompt theme for Windows Powershell!]]></title><description><![CDATA[I do most of my programming in my mac these days, but once in a while my gaming desktop becomes the testground for some code bashing. Since…]]></description><link>https://luisramos.dev/windows-powershell-oh-my-zsh</link><guid isPermaLink="false">https://luisramos.dev/windows-powershell-oh-my-zsh</guid><pubDate>Sat, 04 May 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I do most of my programming in my mac these days, but once in a while my gaming desktop becomes the testground for some code bashing. Since I use git on the terminal, on windows I use powershell instead of a sweet zsh shell.&lt;/p&gt;
-&lt;p&gt;Working with powershell is not that bad, but I terribly miss not having the git branches on my prompt. Since I really enjoy the &lt;a href=&quot;https://ohmyz.sh/&quot;&gt;Oh My Zsh&lt;/a&gt; theme on my Mac, here’s a snippet that changes your power shell prompt!&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; prompt &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-\&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt; = &lt;span class=&quot;token namespace&quot;&gt;[char]&lt;/span&gt;27
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+    <channel>
+        <title><![CDATA[Luis Ramos Blog]]></title>
+        <description>
+            <![CDATA[Freelance mobile developer building native iOS and Android apps. I write about what I learn!]]></description>
+        <link>https://luisramos.dev</link>
+        <generator>GatsbyJS</generator>
+        <lastBuildDate>Tue, 24 Nov 2020 00:23:23 GMT</lastBuildDate>
+        <item>
+            <title><![CDATA[Publishing your first android library!]]></title>
+            <description>
+                <![CDATA[Publishing a library you develop is a journey on its own. It can be overwhelming, especially if you are targeting Android. There is a lot of…]]></description>
+            <link>https://luisramos.dev/publishing-your-first-android-library</link>
+            <guid isPermaLink="false">https://luisramos.dev/publishing-your-first-android-library
+            </guid>
+            <pubDate>Tue, 15 Sep 2020 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Publishing a library you develop is a journey on its own. It
+                can be overwhelming, especially if you are targeting Android. There is a lot of
+                documentation out here, but I could not find one that would go end to end with it.
+                So I wrote this post!&lt;/p&gt; &lt;p&gt;This came about because I released my first
+                open source library: &lt;a href=&quot;https://github.com/orgmir/kroclin&quot;&gt;Kroclin&lt;/a&gt;!
+                It is a snapshot testing library written in Kotlin, to help out writing less code in
+                your tests. Check it out and give it a star if would like. Now, let me tell you
+                about the journey to release it!&lt;/p&gt; &lt;p&gt;Sonatype provides a &lt;a href=&quot;https://central.sonatype.org/pages/ossrh-guide.html&quot;&gt;guide
+                for OSS repository hosting&lt;/a&gt; and &lt;a href=&quot;https://central.sonatype.org/pages/releasing-the-deployment.html&quot;&gt;another
+                one for releasing your deployment&lt;/a&gt; that I read, but they could be more
+                helpful. Everything you need to know is there, it just takes several readings and
+                lots of googling to grok it. Here are the steps you need to go through:&lt;/p&gt;
+                &lt;p&gt;First, &lt;a href=&quot;https://issues.sonatype.org/&quot;&gt;create a
+                Sonatype JIRA account&lt;/a&gt; if you don&apos;t have one already.&lt;/p&gt; &lt;p&gt;Then
+                &lt;a href=&quot;https://issues.sonatype.org/secure/CreateIssue.jspa?issuetype=21&amp;#x26;pid=10134&quot;&gt;create
+                a new project issue&lt;/a&gt;. Make sure to click this link, since they require that
+                you use the template. In the issue body, write that you want to claim the domain
+                that matches the library &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt;.
+                In the case of my library, the &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt;
+                is &lt;code class=&quot;language-text&quot;&gt;dev.luisramos.kroclin&lt;/code&gt;
+                and I claimed &lt;code class=&quot;language-text&quot;&gt;dev.luisramos.*&lt;/code&gt;.
+                Here is &lt;a href=&quot;https://issues.sonatype.org/browse/OSSRH-60527&quot;&gt;my
+                JIRA ticket&lt;/a&gt; as an example.&lt;/p&gt; &lt;div class=&quot;blockquote info&quot;&gt;
+                I picked up from reading other issues that you only need to go through this process
+                once, if you request a wildcard `groupId`. Other libraries released under the same
+                `groupId` don&apos;t require a new project ticket to be created. &lt;/div&gt; &lt;p&gt;Note
+                that you could also claim the &lt;code class=&quot;language-text&quot;&gt;groupId&lt;/code&gt;
+                that matches your project hosting, for example, &lt;code class=&quot;language-text&quot;&gt;io.github.orgmir&lt;/code&gt;
+                if that&apos;s where your project lives.&lt;/p&gt; &lt;p&gt;After you have opened a
+                new project ticket, you need to prove that you own the domain you claimed. You can
+                either:&lt;/p&gt; &lt;ol&gt; &lt;li&gt;Add a TXT record to your DNS referencing the
+                url to the JIRA ticket you created (fastest)&lt;/li&gt; &lt;li&gt;Setup a redirect
+                to your github page&lt;/li&gt; &lt;/ol&gt; &lt;p&gt;I went with the first option,
+                and since every DNS provider differs I won&apos;t go into specifics. Some googling
+                on how to add a TXT record for your DNS provider should get you there.&lt;/p&gt;
+                &lt;div class=&quot;blockquote info&quot;&gt; &lt;strong&gt;NOTE:&lt;/strong&gt; You
+                will need to submit the full URL for the issue, so in my case the content for the
+                TXT record was &lt;a href=&quot;https://issues.sonatype.org/browse/OSSRH-60527&quot;&gt;&lt;i&gt;https://issues.sonatype.org/browse/OSSRH-60527&lt;/i&gt;&lt;/a&gt;.
+                &lt;/div&gt; &lt;p&gt;I went ahead and added a comment on the ticket with the output
+                of &lt;code class=&quot;language-text&quot;&gt;dig -t TXT luisramos.dev&lt;/code&gt;,
+                just to show that it was working. Don&apos;t know if it made a difference 😅&lt;/p&gt;
+                &lt;p&gt;After doing the proof of domain ownership, you will need to wait for
+                Sonatype to reply to your ticket. They will let you know once the repository on
+                their end is ready to receive artifacts. Don&apos;t actually upload anything until
+                they give you the OK, your artifacts will just end up in a generic catch-all
+                repository.&lt;/p&gt; &lt;p&gt;After they reply, go ahead and upload your first
+                artifact. You can copy my &lt;a href=&quot;https://github.com/Orgmir/kroclin/blob/main/gradle/gradle-mvn-push.gradle&quot;&gt;&lt;code
+                class=&quot;language-text&quot;&gt;gradle-mvn-push.gradle&lt;/code&gt;&lt;/a&gt;
+                script and run &lt;code class=&quot;language-text&quot;&gt;./gradlew clean build
+                uploadArchives&lt;/code&gt; (don&apos;t worry, I also copied it from &lt;a href=&quot;https://github.com/JakeWharton/wormhole/blob/master/gradle/gradle-mvn-push.gradle&quot;&gt;someone
+                else&lt;/a&gt;). You could also use a plugin like &lt;a href=&quot;https://github.com/vanniktech/gradle-maven-publish-plugin&quot;&gt;vanniktech/gradle-maven-publish-plugin&lt;/a&gt;.&lt;/p&gt;
+                &lt;p&gt;Once the upload is done, go ahead and log in to &lt;a href=&quot;https://oss.sonatype.org&quot;&gt;https://oss.sonatype.org&lt;/a&gt;
+                using your Sonatype JIRA account.&lt;/p&gt; &lt;p&gt;&lt;span
+                class=&quot;gatsby-resp-image-wrapper&quot; style=&quot;position: relative; display:
+                block; margin-left: auto; margin-right: auto; max-width: 680px; &quot; &gt; &lt;span
+                class=&quot;gatsby-resp-image-background-image&quot; style=&quot;padding-bottom:
+                71.17647058823529%; position: relative; bottom: 0; left: 0; display: block;&quot;
+                &gt;&lt;/span&gt; &lt;img
+                class=&quot;gatsby-resp-image-image&quot; alt=&quot;Nexus Repository Manager&quot;
+                title=&quot;Nexus Repository Manager&quot; src=&quot;/static/dba9d6501dcc2a8f73b6317db94c0456/c5bb3/nexus_repository_manager.png&quot;
+                srcset=&quot;/static/dba9d6501dcc2a8f73b6317db94c0456/04472/nexus_repository_manager.png
+                170w,
+                /static/dba9d6501dcc2a8f73b6317db94c0456/9f933/nexus_repository_manager.png 340w,
+                /static/dba9d6501dcc2a8f73b6317db94c0456/c5bb3/nexus_repository_manager.png 680w,
+                /static/dba9d6501dcc2a8f73b6317db94c0456/eafa0/nexus_repository_manager.png 939w&quot;
+                sizes=&quot;(max-width: 680px) 100vw, 680px&quot; style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+                loading=&quot;lazy&quot; /&gt; &lt;/span&gt;&lt;/p&gt; &lt;p&gt;Select &lt;code
+                class=&quot;language-text&quot;&gt;Staging Repositories&lt;/code&gt; on the side
+                bar, and you should see a list with the repository for your library. Select the
+                repo, and press &lt;code class=&quot;language-text&quot;&gt;Close&lt;/code&gt; on
+                the top bar. This will perform some validation on Sonatype&apos;s side, and once the
+                status updates and the repository is tagged as closed, select the repository again
+                and press &lt;code class=&quot;language-text&quot;&gt;Release&lt;/code&gt;.&lt;/p&gt;
+                &lt;p&gt;If you use a plugin, the upload step will probably try to close and release
+                the staging repository. Loggin in to Nexus Repository Manager should only be needed
+                when you are releasing for the first time, or if you use a script like me.&lt;/p&gt;
+                &lt;p&gt;You can now update on your JIRA ticket that the repository has been
+                released. This will let Sonatype know, and they will trigger a sync with maven
+                central, so your library can show when searching in &lt;a href=&quot;https://search.maven.org&quot;&gt;search.maven.org&lt;/a&gt;.
+                This step should is also only needed the first time you are releasing.&lt;/p&gt;
+                &lt;p&gt;And that&apos;s it! It might take a couple of hours for the sync to happen,
+                but congratulations! You have released a library onto the world! What a trip it was
+                🚀&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Ler - An RSS Aggregator for Android!]]></title>
+            <description>
+                <![CDATA[I have been working on a RSS aggregator app called Ler. Its available for Android, and you should give it a try! It is the first app I…]]></description>
+            <link>https://luisramos.dev/ler-rss-aggregator-for-android</link>
+            <guid isPermaLink="false">https://luisramos.dev/ler-rss-aggregator-for-android</guid>
+            <pubDate>Fri, 20 Mar 2020 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;I have been working on a RSS aggregator app called &lt;em&gt;Ler&lt;/em&gt;.
+                Its available for Android, and you should &lt;a href=&quot;https://play.google.com/store/apps/details?id=app.luisramos.ler&quot;&gt;give
+                it a try!&lt;/a&gt; It is the first app I design, develop and publish all by myself,
+                so I am pretty proud of that!&lt;/p&gt; &lt;p&gt;&lt;a class=&quot;text-center w-48
+                block mx-auto&quot; href=&apos;https://play.google.com/store/apps/details?id=app.luisramos.ler&apos;&gt;&lt;img
+                alt=&quot;Get it on Google Play&quot; src=&quot;https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+                &lt;p&gt;I know what you are thinking, &lt;em&gt;another&lt;/em&gt; RSS feed app?
+                Aren&apos;t there billions of them? Well, yes. But this one is mine. And I have
+                plans. Big plans! Let me tell you how it came to be, and what I want to do with it.&lt;/p&gt;
+                &lt;h3&gt;Twitter is a time sink&lt;/h3&gt; &lt;p&gt;I spend too much time on
+                twitter. I checked my phone usage settings for apps, and twitter is always number
+                one on the list, toppling YouTube (!!) and WhatsApp. I though I watched a lot of
+                Youtube, but aparently, on a very boring day, I accumulated &lt;em&gt;4 hours&lt;/em&gt;
+                of twitter usage...&lt;/p&gt; &lt;p&gt;So I looked into Googles digital wellbeing
+                app, and turned on a 30 minute timeout for Twitter. And it works! Some days, I don&apos;t
+                even reach the timeout. Unfortunatly, this also meant that a lot of the blogs I read
+                wouldn&apos;t reach me as well.&lt;/p&gt; &lt;p&gt;And there you have it. I took the
+                time I was wasting and built this app!&lt;/p&gt; &lt;h3&gt;Ler&lt;/h3&gt; &lt;p&gt;The
+                app name is the portuguese word for &lt;em&gt;reading&lt;/em&gt;. I did a search and
+                it seems nobody claimed it, so why not? The main features that I have built so far:&lt;/p&gt;
+                &lt;ul&gt; &lt;li&gt;You can subscribe to RSS feeds (crazy I know). You can manually
+                type in a website adress, or you can share from the browser to the app!&lt;/li&gt;
+                &lt;li&gt;You can filter out articles that you already read, or just show articles
+                from one feed.&lt;/li&gt; &lt;li&gt;You can swipe an article to toggle it read, or
+                mark all articles in a feed at once!&lt;/li&gt; &lt;li&gt;Feeds will be checked for
+                updates every hour automagically.&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Articles currently
+                open in the browser. I toyed with the idea of having a built in reader, but that
+                seemed overkill for what I wanted to do. I already used the browser to do most of my
+                reading anyway.&lt;/p&gt; &lt;p&gt;I am pretty proud of how it turned out, despite
+                not being great at UI design, I kept it simple and it does the job! I have been
+                using it for the past couple of weeks, and I think I impressed myself by actually
+                using it instead of defaulting to Twitter as a time killer.&lt;/p&gt; &lt;h3&gt;Open
+                so everyone can &lt;em&gt;read&lt;/em&gt; it&lt;/h3&gt; &lt;p&gt;Not only am I using
+                this app to avoid using twitter all the time, I will also use it as a showcase
+                project. Hence, my plan in the next weeks is to write a bunch of tests, clean up the
+                folder structure, and open source it.&lt;/p&gt; &lt;p&gt;So far, I have not worked
+                in an app that had their source open, so most often when talking about my work I can&apos;t
+                provide examples. I applied all my knowledge and tried to build the simples app I
+                could, while still being a good example of how I would build an app.&lt;/p&gt; &lt;p&gt;My
+                plan is to also write about android development, while using the app as an example.
+                I made some architecture choices that I can talk about, since I haven&apos;t found a
+                lot of written examples online.&lt;/p&gt; &lt;p&gt;Please give it a spin, and let me
+                know what you think! You can &lt;a href=&quot;https://twitter.com/luisramos1337&quot;&gt;tweet
+                at me&lt;/a&gt; or send me an &lt;a href=&quot;mailto:luis.ramos@hey.com?subject=Ler%20Feedback&quot;&gt;email&lt;/a&gt;.
+                I have a little roadmap with more features, but let me know if you want a particular
+                feature added, and I will add it to the list!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[My new blog! - Creating a Gatsby website]]></title>
+            <description>
+                <![CDATA[Welcome to my new blog! Hope you enjoy it, I have spent the last couple of weeks building it. Now that it is done, I can finally start…]]></description>
+            <link>https://luisramos.dev/new-blog-creating-gatsby-website</link>
+            <guid isPermaLink="false">https://luisramos.dev/new-blog-creating-gatsby-website</guid>
+            <pubDate>Tue, 17 Mar 2020 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Welcome to my new blog! Hope you enjoy it, I have spent the
+                last couple of weeks building it. Now that it is done, I can finally start writing
+                about stuff! &lt;/p&gt; &lt;p&gt;&lt;em&gt;I kinda rebuilt it because I wanted to
+                write about building it...&lt;/em&gt;&lt;/p&gt; &lt;p&gt;So let me tell you how it
+                works, what I learned, and how easy it is to do it!&lt;/p&gt; &lt;h2&gt;Tech stack&lt;/h2&gt;
+                &lt;p&gt;To be upfront about it, this blog is built using &lt;a href=&quot;https://www.gatsbyjs.org/&quot;&gt;Gatsby&lt;/a&gt;,
+                and deployed using Github Actions to a Digital Ocean droplet. And I am very happy
+                with it. This entire website is open source, so if you wanna check the code &lt;a
+                href=&quot;https://github.com/orgmir/luisramos.dev&quot;&gt;go ahead&lt;/a&gt;!&lt;/p&gt;
+                &lt;p&gt;One day I was reading some blog posts from Tania Rascia and &lt;a href=&quot;https://www.taniarascia.com/migrating-from-wordpress-to-gatsby/&quot;&gt;this
+                post&lt;/a&gt; made me look into Gatsby. In it she migrated her wordpress blog to a
+                Gatsby website that she built from a pretty bare bones template. I have been
+                thinking of revamping my blog again, since the last one was &lt;a href=&quot;/migration-to-hugo/&quot;&gt;more
+                than a year ago&lt;/a&gt;. Pairing that with my interest with this new JAMStack
+                thing, I just got excited and started looking through the docs!&lt;/p&gt; &lt;p&gt;After
+                building this website, I really enjoyed working with the plugin system and I loved
+                that it used React and Graphql.&lt;/p&gt; &lt;h3&gt;Getting started&lt;/h3&gt; &lt;p&gt;Following
+                Tania&apos;s footsteps, I installed the &lt;code class=&quot;language-text&quot;&gt;gatsby-cli&lt;/code&gt;
+                and created a website using the &lt;a href=&quot;https://github.com/vagr9k/gatsby-advanced-starter/&quot;&gt;gatsby-advanced-starter&lt;/a&gt;.
+                Turns out, that was totally overkill for me, and most of the things there
+                overwhelmed me. So I tried again running &lt;code class=&quot;language-text&quot;&gt;gatsby
+                new luisramos.dev&lt;/code&gt; and slowly added the plugins I needed as I went
+                along.&lt;/p&gt; &lt;p&gt;Starting with the empty project, the first thing I did was
+                setup &lt;a href=&quot;tailwindcss.com/&quot;&gt;Tailwind CSS&lt;/a&gt;. I am not
+                very good in terms of design skills, and playing around with CSS is fun but can also
+                become a huge waste of time. Tailwind fits nicelly into the &quot;just make a
+                component&quot; React world, and paired with a fantastic documentation page, it is
+                very easy to work with. You can quickly create your styles using the existing
+                classes, and when it you start duplicating a lot, you move everything to a
+                component! 👍&lt;/p&gt; &lt;p&gt;Setting up Tailwind with Gatsby was as easy as
+                adding the plugin &lt;code class=&quot;language-text&quot;&gt;gatsby-plugin-postcss&lt;/code&gt;
+                to gatsby configuration, adding a &lt;code class=&quot;language-text&quot;&gt;postcss.config.js&lt;/code&gt;
+                requiring the Tailwind library, and adding the Tailwind css imports to the &lt;code
+                class=&quot;language-text&quot;&gt;global.css&lt;/code&gt; file.&lt;/p&gt; &lt;p&gt;I
+                am very impressed with the plugin system. Anything you need, and you bet there is a
+                plugin that does it! I wanted a RSS feed with all my posts, there&apos;s a plugin
+                for that: &lt;code class=&quot;language-text&quot;&gt;gatsby-plugin-feed&lt;/code&gt;.
+                I want my posts to be in markdown, there&apos;s a plugin for that: &lt;code class=&quot;language-text&quot;&gt;gatsby-transformer-remark&lt;/code&gt;.
+                I wanted syntax highlighting for my code snippets, there&apos;s even a plugin for
+                the plugin: &lt;code class=&quot;language-text&quot;&gt;gatsby-remark-prismjs&lt;/code&gt;!
+                Overall, very wonderful to work with.&lt;/p&gt; &lt;p&gt;This plugin system even got
+                me wanting to build more websites!&lt;/p&gt; &lt;h3&gt;React+Graphql&lt;/h3&gt; &lt;p&gt;Another
+                feature I enjoyed was the React and Graphql support. In the beggining it felt very
+                overkill to have a graphql query everywhere, but the more I read the documentation,
+                the more it made sense to me.&lt;/p&gt; &lt;p&gt;I have enough experience with React
+                that I could jump straight into this new website building my layout. After I had
+                build the header/footer/nav combo, I started thinking about the main page, and I
+                decided that I wanted the latest three posts there. So when you land, you can
+                immediatly read some stuff.&lt;/p&gt; &lt;p&gt;To do this, you write a graphql query
+                in your React page, name it &lt;code class=&quot;language-text&quot;&gt;pageQuery&lt;/code&gt;
+                and export it. Then, Gatsby will take the data generated from that query and feed it
+                to the component.&lt;/p&gt; &lt;p&gt;The whole experience around this was
+                incredible: I played around with the graphql browser until I had the data I wanted,
+                I pasted the query into the page component, and like magic the data was there!
+                Graphql is pretty sweet.&lt;/p&gt; &lt;p&gt;After that, I added some code to &lt;code
+                class=&quot;language-text&quot;&gt;gatsby-node.js&lt;/code&gt; so it would create a
+                page for all of my posts. It uses a template, so I don&apos;t need to create a
+                component for each post manually. After that, I added a contact and about pages, an
+                RSS feed, some more styling and a bit of content. Sooner than I was expecting, I had
+                a website ready to be deployed!&lt;/p&gt; &lt;h2&gt;Deployment via Github Actions&lt;/h2&gt;
+                &lt;p&gt;My previous blog was hosted on the same &lt;a href=&quot;%5Bhttps://www.digitalocean.com%5D(https://www.digitalocean.com/)&quot;&gt;Digital
+                Ocean&lt;/a&gt; droplet that this one is. I have this one box that I use to play
+                around with several things, so since I am already paying for it, and I don&apos;t
+                drive a lot of traffic, I planned the same for this blog.&lt;/p&gt; &lt;p&gt;The
+                deployment steps to get this into the server are:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Run
+                &lt;code class=&quot;language-text&quot;&gt;gatsby build&lt;/code&gt; to get the
+                static version of the website&lt;/li&gt; &lt;li&gt;Upload the generated folder to
+                the server, preferebly using &lt;code class=&quot;language-text&quot;&gt;rsync&lt;/code&gt;&lt;/li&gt;
+                &lt;/ul&gt; &lt;p&gt;So I shopped around a bit, and I am impressed by the amount of
+                Github actions already available. I created a workflow that checkouts my code, runs
+                the build and uploads the website to my server in less than half an hour. And it
+                caches the &lt;code class=&quot;language-text&quot;&gt;~/.npm&lt;/code&gt; folder,
+                so it all runs in 2 mins on CI.&lt;/p&gt; &lt;h2&gt;Yay Gatsby&lt;/h2&gt; &lt;p&gt;I
+                am very happy with the current setup. This website already has pulled this post out
+                of me, so lets see if it makes me write more! Hope you enjoyed this write up as much
+                as I have enjoyed building the site. &lt;/p&gt; &lt;p&gt;If you liked this post, or
+                if you just wanna send me some feedback, send me a &lt;a href=&quot;https://twitter.com/luisramos1337&quot;&gt;tweet&lt;/a&gt;.&lt;/p&gt;
+                &lt;p&gt;As a final note, I wrote this post in a very cool markdown editor, &lt;a
+                href=&quot;https://typora.io/&quot;&gt;Typora&lt;/a&gt;. It is free during beta, so
+                give it a try!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Oh My Zsh prompt theme for Windows Powershell!]]></title>
+            <description>
+                <![CDATA[I do most of my programming in my mac these days, but once in a while my gaming desktop becomes the testground for some code bashing. Since…]]></description>
+            <link>https://luisramos.dev/windows-powershell-oh-my-zsh</link>
+            <guid isPermaLink="false">https://luisramos.dev/windows-powershell-oh-my-zsh</guid>
+            <pubDate>Sat, 04 May 2019 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;I do most of my programming in my mac these days, but once in
+                a while my gaming desktop becomes the testground for some code bashing. Since I use
+                git on the terminal, on windows I use powershell instead of a sweet zsh shell.&lt;/p&gt;
+                &lt;p&gt;Working with powershell is not that bad, but I terribly miss not having the
+                git branches on my prompt. Since I really enjoy the &lt;a href=&quot;https://ohmyz.sh/&quot;&gt;Oh
+                My Zsh&lt;/a&gt; theme on my Mac, here’s a snippet that changes your power shell
+                prompt!&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre
+                class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;&lt;span
+                class=&quot;token keyword&quot;&gt;function&lt;/span&gt; prompt &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; \&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;
+                = &lt;span class=&quot;token namespace&quot;&gt;[char]&lt;/span&gt;27
 
-&lt;span class=&quot;token variable&quot;&gt;$p&lt;/span&gt; = &lt;span class=&quot;token function&quot;&gt;Split-Path&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;leaf &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;path &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get-Location&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt; = $&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;git symbolic&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;ref &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;q HEAD&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-replace&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;refs/heads/&quot;&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt; = &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[34mgit:(&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[31m&lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[34m)&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m &quot;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;token variable&quot;&gt;$p&lt;/span&gt; = &lt;span class=&quot;token
+                function&quot;&gt;Split-Path&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;leaf
+                &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;path &lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Get-Location&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                variable&quot;&gt;$branch&lt;/span&gt; = $&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;git
+                symbolic&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;ref &lt;span
+                class=&quot;token operator&quot;&gt;-&lt;/span&gt;q HEAD&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-replace&lt;/span&gt;
+                &lt;span class=&quot;token string&quot;&gt;&quot;refs/heads/&quot;&lt;/span&gt; &lt;span
+                class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;
+                = &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token
+                variable&quot;&gt;$ESC&lt;/span&gt;[34mgit:(&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m&lt;span
+                class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[31m&lt;span class=&quot;token
+                variable&quot;&gt;$branch&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m&lt;span
+                class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[34m)&lt;span class=&quot;token
+                variable&quot;&gt;$ESC&lt;/span&gt;[0m &quot;&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt;
 
-&lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[1m&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[32m&lt;span class=&quot;token function&quot;&gt;$&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token namespace&quot;&gt;[char]&lt;/span&gt;0x279C&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m &lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[36m&lt;span class=&quot;token variable&quot;&gt;$p&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m &lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;\&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m&quot;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This code lands in the &lt;code class=&quot;language-text&quot;&gt;$profile&lt;/code&gt; file, which probably needs to be created:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;new-item&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;itemtype file &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;path &lt;span class=&quot;token variable&quot;&gt;$profile&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;force
-notepad &lt;span class=&quot;token variable&quot;&gt;$PROFILE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Notepad should open up and you can copy paste the snipped there!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Auto Layout UIView Extension: A quick way to programatically create layouts]]></title><description><![CDATA[Recently I have taken a renewed interest into this blog. I have revamped the theme (mostly stealing it from my friend's blog, check it out…]]></description><link>https://luisramos.dev/autolayout-uiview-extension</link><guid isPermaLink="false">https://luisramos.dev/autolayout-uiview-extension</guid><pubDate>Tue, 30 Apr 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Recently I have taken a renewed interest into this blog. I have revamped the theme (mostly stealing it from my friend&apos;s blog, &lt;a href=&quot;https://accidental.dev/&quot;&gt;check it out&lt;/a&gt;) and now I&apos;m focusing on writing more regularly. I noticed that a lot of my code snippets are just sitting quietly on Github or Gitlab and could use a post or two to describe why I made them!&lt;/p&gt;
-&lt;p&gt;The first one I want to talk about is a UIView extension that I always use in my iOS projects. I always prefer to build my interface programatically, so that lead me to search for a few auto layout libraries.&lt;/p&gt;
-&lt;p&gt;The issue I have with using an auto layout library is that if a new developer joins the team, that person will need to deal with my choice of library that usually comes with its own set of idioms and abstractions. My experience is that people enjoy building layouts differently and the preference will always be for some other library! Also, the added abstractions leave me a bit too far away from the auto layout specifics.&lt;/p&gt;
-&lt;p&gt;Instead of choosing a library, a few years ago I created an extension with just a couple of methods to see if I could get away without adding a dependency.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with view&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  translatesAutoresizingMaskIntoConstraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;
-  leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
-  rightAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rightAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
-  topAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;topAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
-  bottomAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;bottomAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I kept adding to it as I needed and it kept growing. Currently it looks more like this:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;@discardableResult
-&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with view&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  translatesAutoresizingMaskIntoConstraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; constraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
-    leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-    rightAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rightAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-    topAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;topAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-    bottomAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;bottomAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;token builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;constraints&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; constraints
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[1m&lt;span
+                class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[32m&lt;span class=&quot;token
+                function&quot;&gt;$&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span
+                class=&quot;token namespace&quot;&gt;[char]&lt;/span&gt;0x279C&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m
+                &lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[36m&lt;span class=&quot;token
+                variable&quot;&gt;$p&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$ESC&lt;/span&gt;[0m
+                &lt;span class=&quot;token variable&quot;&gt;$branch&lt;/span&gt;\&lt;span class=&quot;token
+                variable&quot;&gt;$ESC&lt;/span&gt;[0m&quot;&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;p&gt;This
+                code lands in the &lt;code class=&quot;language-text&quot;&gt;$profile&lt;/code&gt;
+                file, which probably needs to be created:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code
+                class=&quot;language-powershell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;new-item&lt;/span&gt;
+                &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;itemtype file &lt;span
+                class=&quot;token operator&quot;&gt;-&lt;/span&gt;path &lt;span class=&quot;token
+                variable&quot;&gt;$profile&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;force
+                notepad &lt;span class=&quot;token variable&quot;&gt;$PROFILE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;Notepad should open up and you can copy paste the snipped there!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title>
+                <![CDATA[Auto Layout UIView Extension: A quick way to programatically create layouts]]></title>
+            <description>
+                <![CDATA[Recently I have taken a renewed interest into this blog. I have revamped the theme (mostly stealing it from my friend's blog, check it out…]]></description>
+            <link>https://luisramos.dev/autolayout-uiview-extension</link>
+            <guid isPermaLink="false">https://luisramos.dev/autolayout-uiview-extension</guid>
+            <pubDate>Tue, 30 Apr 2019 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Recently I have taken a renewed interest into this blog. I
+                have revamped the theme (mostly stealing it from my friend&apos;s blog, &lt;a href=&quot;https://accidental.dev/&quot;&gt;check
+                it out&lt;/a&gt;) and now I&apos;m focusing on writing more regularly. I noticed
+                that a lot of my code snippets are just sitting quietly on Github or Gitlab and
+                could use a post or two to describe why I made them!&lt;/p&gt; &lt;p&gt;The first
+                one I want to talk about is a UIView extension that I always use in my iOS projects.
+                I always prefer to build my interface programatically, so that lead me to search for
+                a few auto layout libraries.&lt;/p&gt; &lt;p&gt;The issue I have with using an auto
+                layout library is that if a new developer joins the team, that person will need to
+                deal with my choice of library that usually comes with its own set of idioms and
+                abstractions. My experience is that people enjoy building layouts differently and
+                the preference will always be for some other library! Also, the added abstractions
+                leave me a bit too far away from the auto layout specifics.&lt;/p&gt; &lt;p&gt;Instead
+                of choosing a library, a few years ago I created an extension with just a couple of
+                methods to see if I could get away without adding a dependency.&lt;/p&gt; &lt;div
+                class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code
+                class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;with view&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span
+                class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span
+                class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; translatesAutoresizingMaskIntoConstraints &lt;span
+                class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token
+                boolean&quot;&gt;false&lt;/span&gt; leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;leftAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;
+                rightAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rightAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt; topAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;topAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt; bottomAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;bottomAnchor&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive
+                &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token
+                boolean&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;I kept adding to it as I needed and it kept growing. Currently it looks
+                more like this:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre
+                class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;@discardableResult
+                &lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token
+                function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with
+                view&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;UIView&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span
+                class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token
+                builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                translatesAutoresizingMaskIntoConstraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;let&lt;/span&gt; constraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; leftAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;leftAnchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; rightAnchor&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rightAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; topAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;topAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; bottomAnchor&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;bottomAnchor&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;constant&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                function&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;constraints&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;return&lt;/span&gt; constraints &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt;
 
-@discardableResult
-&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;alignTop&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;to anchor&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;NSLayoutYAxisAnchor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; priority&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;UILayoutPriority&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; isActive&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  translatesAutoresizingMaskIntoConstraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; constraint &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; topAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; anchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  constraint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;priority &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; priority
-  constraint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; isActive
-  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; constraint
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;As you can see, some wrapper functions with sensible defaults make auto layout better to work with. The code becomes cleaner and easier to read, and you don&apos;t loose any of the features that auto layout gives us.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;token comment&quot;&gt;// ... setup view code&lt;/span&gt;
+                @discardableResult &lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;alignTop&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;to anchor&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;NSLayoutYAxisAnchor&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt;
+                &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token
+                number&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+                priority&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span
+                class=&quot;token builtin&quot;&gt;UILayoutPriority&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token keyword&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; isActive&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token
+                operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;NSLayoutConstraint&lt;/span&gt; &lt;span
+                class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                translatesAutoresizingMaskIntoConstraints &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;let&lt;/span&gt; constraint &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                topAnchor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;equalTo&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                anchor&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; constant&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt; constraint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;priority
+                &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; priority
+                constraint&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;isActive
+                &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; isActive &lt;span class=&quot;token
+                keyword&quot;&gt;return&lt;/span&gt; constraint &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;p&gt;As
+                you can see, some wrapper functions with sensible defaults make auto layout better
+                to work with. The code becomes cleaner and easier to read, and you don&apos;t loose
+                any of the features that auto layout gives us.&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code
+                class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;// ... setup view code&lt;/span&gt;
 
-  containerView&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  textView&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;alignTop&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  textView&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;alignLeadingTrailing&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This extension has grown after several years of copying this over to each new project and adding something that was missing. It fits my needs well, so I have stopped looking for an auto layout library! The full extension is available &lt;a href=&quot;https://gist.github.com/Orgmir/a140b15c1f2ab86b2a72d4c09570cd52&quot;&gt;in this public gist.&lt;/a&gt; Thanks for reading!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Blog revamp: Migrating to Hugo]]></title><description><![CDATA[Update: Since this post was made, I have moved my blog to a new website and tech stack. Check out the post about the new revamp! The blog…]]></description><link>https://luisramos.dev/migration-to-hugo</link><guid isPermaLink="false">https://luisramos.dev/migration-to-hugo</guid><pubDate>Thu, 27 Sep 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;em&gt;&lt;strong&gt;Update:&lt;/strong&gt;&lt;/em&gt; Since this post was made, I have moved my blog to a new website and tech stack. Check out the post about the new &lt;a href=&quot;/new-blog-creating-gatsby-website&quot;&gt;revamp&lt;/a&gt;!&lt;/p&gt;
-&lt;p&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;The blog has a new look! I like to think it looks a bit better now. Of course the fun side of it is the tech stack. It is now generated using &lt;a href=&quot;http://gohugo.io/&quot;&gt;hugo&lt;/a&gt;, deployed using &lt;a href=&quot;http://gitlab.com/&quot;&gt;Gitlab&lt;/a&gt; incredible CI pipelines, and also I&apos;m hosting it on a &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital Ocean&lt;/a&gt; droplet.&lt;/p&gt;
-&lt;p&gt;I want to talk about my experience migrating from Jekyll to hugo, and how I went about setting everything up.&lt;/p&gt;
-&lt;h2&gt;Migrating to Hugo&lt;/h2&gt;
-&lt;p&gt;This blog was previously hosted in Github pages, and it used Jekyll to render the static pages. All the content was in markdown already, so it was relatively easy to migrate it to hugo. The content structure is relatively similar in both frameworks. I only had trouble with the syntax higlight for my code snippets, and with processing the template sass files to css.&lt;/p&gt;
-&lt;p&gt;Hugo uses a code syntax generator called &lt;a href=&quot;https://github.com/alecthomas/chroma&quot;&gt;Chroma&lt;/a&gt;. The only change is that instead of using the normal markdown code marks, it uses specific tags:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; highlight swift &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You also need to declare the language you are highlighting (&lt;code class=&quot;language-text&quot;&gt;swift&lt;/code&gt; in that example).&lt;/p&gt;
-&lt;p&gt;Generating new content is super easy and fast, you just run the following command:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;hugo new posts/title-of-blog-post.md&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This command will create a new file in the specified content folder, with some front-matter meta data already setup for you to fill.&lt;/p&gt;
-&lt;p&gt;The template system is also straighforward to use, and you can easily define new content types and front-matter, to be used by the &lt;code class=&quot;language-text&quot;&gt;hugo new&lt;/code&gt; command.&lt;/p&gt;
-&lt;h3&gt;Hugo Extended&lt;/h3&gt;
-&lt;p&gt;I found a gap in documentation about this, but it seems that hugo has an &quot;extended&quot; version. It adds extras, like sass processing, to the usual binary.&lt;/p&gt;
-&lt;p&gt;When I tried to edit the template sass files, the changes weren&apos;t visible on refresh. They were being ignored, and since I was running locally there was no change it could be some cache issue.
-I eventually figured out that the template was using generated resources in a &lt;code class=&quot;language-text&quot;&gt;resources/_gen/&lt;/code&gt; folder, and deleting that basically broke the generation. Since no css was found, hugo errored out and didn&apos;t generate the website.&lt;/p&gt;
-&lt;p&gt;After googling around, I found out about the extended version of hugo that you can download from their releases page. Running the extended version compiled the sass files into css, and made everything work again. But now this means I need the extended version to generate my website, since I want to process the sass files on every generation.&lt;/p&gt;
-&lt;h2&gt;Deployment with Gitlab CI&lt;/h2&gt;
-&lt;p&gt;If you haven&apos;t tried &lt;a href=&quot;http://gitlab.com/&quot;&gt;Gitlab&lt;/a&gt; you should really give it a spin. I&apos;ll to not fanboy about it too much, but they have some amazing features.&lt;/p&gt;
-&lt;p&gt;One of them is the ability to setup a CI pipeline, writing some configuration on a &lt;code class=&quot;language-text&quot;&gt;.gitlab-ci.yml&lt;/code&gt; at the root of your repo. This way, everytime I push a commit to master, a deployment is triggered by Gitlab.
-You get 1000 free minutes of running time each month, more than enough for all your blogging needs.&lt;/p&gt;
-&lt;p&gt;Since I have to use hugo extended to generate my website, I couldn&apos;t use the suggested image to run my build. I created a new Dockerfile that installs the right hugo binary, and also all the commands needed for deployment. This highlights another cool feature of Gitlab: you have a container register for each project, meaning you can have your container images right next to the project they are relevant to.&lt;/p&gt;
-&lt;p&gt;After I built and pushed the image, I just needed to reference it in my CI file to get it running the deployment without a hitch! It&apos;s pretty satisfying to finally get a CI job green. Check out the &lt;a href=&quot;https://gitlab.com/snippets/1757791&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;.gitlab-ci.yml&lt;/code&gt;&lt;/a&gt; and the &lt;a href=&quot;https://gitlab.com/snippets/1757792&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dockerfile&lt;/code&gt;&lt;/a&gt; used for this.&lt;/p&gt;
-&lt;h2&gt;Hosting on Digital Ocean&lt;/h2&gt;
-&lt;p&gt;The final command of the deployment is a rsync into a Digital Ocean droplet. Pretty satisfied with the setup process for creating a droplet, it&apos;s a one button click for most of what you need. Haven&apos;t had an issue with it yet!&lt;/p&gt;
-&lt;p&gt;I am using nginx to serve the website on the droplet, which was fairly easy to setup with all the info that is available online. I setup certbot to create and automatically renew ssl certificates for the website. It also takes care of updating the website config for you.&lt;/p&gt;
-&lt;p&gt;Also, since Cloudflare has a one website free tier, I got all of my traffic running through it. So hopefully, my droplet will barelly be touched!&lt;/p&gt;
-&lt;h2&gt;DevOps for the common man&lt;/h2&gt;
-&lt;p&gt;I am really happy with this setup. Hugo is a powerful framework, quick to setup but roboust enough to handle more heavy duty websites. Gitlab enables DevOps for the common man, giving me control over it but in a way that I&apos;m not overwhelmed. And hosting solutions like Digital Ocean used in conjuction with CDNs like Cloudflare mean that you can serve a lot of people for cheap. A lot can be done by leveraging this infrastructure, which gets me excited!&lt;/p&gt;
-&lt;p&gt;Next up, I&apos;ll add a static CMS like &lt;a href=&quot;https://www.netlifycms.org/&quot;&gt;Netlify&lt;/a&gt; to this blog so I can write from anywhere!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[iOS local notifications ninja bug!]]></title><description><![CDATA[Recently I was working in a project that require me to show a local notification. And for the love of XCode, the app would not show an alert…]]></description><link>https://luisramos.dev/ios-local-notification-ninja-bug</link><guid isPermaLink="false">https://luisramos.dev/ios-local-notification-ninja-bug</guid><pubDate>Tue, 26 Sep 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Recently I was working in a project that require me to show a local notification. And for the love of XCode, the app would not show an alert! I was at a loss!&lt;/p&gt;
-&lt;p&gt;Beggining with iOS 10, the iOS notification framework was revamped to unify both remote and local notifications. This threw me into a loop while trying to figure out the problem. The only thing I had to go by was an error message that poped up when adding the notification to UNUserNotificationCenter:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code class=&quot;language-objc&quot;&gt;Adding notification request failed with error&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Error Domain&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;NSCocoaErrorDomain Code&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;4097&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;connection to service named com.apple.usernotifications.usernotificationservice&quot;&lt;/span&gt; UserInfo&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;NSDebugDescription&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;connection to service named com&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;apple&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;usernotifications&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;usernotificationservice&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;What a cryptic message, thanks Apple Dev team! I had a custom action setup, so the user could open a url with more info. I was adding this URL to the &lt;code class=&quot;language-text&quot;&gt;userInfo&lt;/code&gt; of the notification and here was where the bug lived! The issue was that I was adding the URL object, instead of an absolute string of the url. As soon as I changed this, everything worked.&lt;/p&gt;
-&lt;p&gt;Of course, a &lt;a href=&quot;https://stackoverflow.com/questions/41360531/unmutablenotificationcontent-with-custom-object-in-userinfo&quot;&gt;stackoverflow answer&lt;/a&gt; helped me figure this out!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Fastlane Supply uploads everything!]]></title><description><![CDATA[Ever since I found out about , I've been using it to deploy Android and iOS apps. It's amazing how streamlined things can get: it saves you…]]></description><link>https://luisramos.dev/fastlane-supply-uploads-everything</link><guid isPermaLink="false">https://luisramos.dev/fastlane-supply-uploads-everything</guid><pubDate>Tue, 05 Sep 2017 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Ever since I found out about &lt;a href=&quot;https://fastlane.tools/&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;fastlane&lt;/code&gt;&lt;/a&gt;, I&apos;ve been using it to deploy Android and iOS apps. It&apos;s amazing how streamlined things can get: it saves you a bunch of time when deploying a release; it supports integrations with your favourite distribution platforms (yay Crashlytics); and you can easily copy the setup from one app to the other! Couldn&apos;t be happier with it.&lt;/p&gt;
-&lt;p&gt;Here&apos;s a tip for the Android devs out there using &lt;a href=&quot;https://fastlane.tools/&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;fastlane&lt;/code&gt;&lt;/a&gt;, add this to your &lt;code class=&quot;language-text&quot;&gt;before_all&lt;/code&gt; step:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;before &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;all &lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt;
-  sh &lt;span class=&quot;token string&quot;&gt;&quot;rm -f ../app/build/outputs/apk/*/\_/\*.apk&quot;&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I&apos;ve found that when deploying Android builds using &lt;code class=&quot;language-text&quot;&gt;supply&lt;/code&gt;, the tool tries to upload whatever it can find in your &lt;code class=&quot;language-text&quot;&gt;build/outputs&lt;/code&gt; folder. And often the error you get are unrelated like:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code class=&quot;language-objc&quot;&gt;Google Api Error&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; apkUpgradeVersionConflict&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
-APK specifies a version code that has already been used&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This is obviously not true if you check your google play console and your build.gradle file. Looking at the output the (at the &lt;code class=&quot;language-text&quot;&gt;GRADLE_ALL_APK_OUTPUT_PATHS&lt;/code&gt; variable), it seems supply is trying to upload every apk he finds, including debugging version and other flavors. Adding that line will save you some time and stop you from screaming &quot;Why don&apos;t the versions match??&quot;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Xcode crash on auto-complete: Snippets!]]></title><description><![CDATA[My XCode crashed after updating it to version 7.2. It happened everytime I tried to use auto-complete in an Obj-c file. Since my project was…]]></description><link>https://luisramos.dev/xcode-crash-autocomplete-snippets</link><guid isPermaLink="false">https://luisramos.dev/xcode-crash-autocomplete-snippets</guid><pubDate>Sun, 07 Feb 2016 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;My XCode crashed after updating it to version 7.2. It happened everytime I tried to use auto-complete in an Obj-c file. Since my project was in Swift, it didn&apos;t bother me much. Things got worse when I actually needed to edit some library code!&lt;/p&gt;
-&lt;p&gt;It crash with this exception:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code class=&quot;language-objc&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;NSInvalidArgumentException&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;__NSCFData isEqualToString&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; unrecognized selector sent to instance &lt;span class=&quot;token number&quot;&gt;0x7fd01c5d4530&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Since I got bored fast using a text editor to work around it, I tried to fix it. I use some plugins, one of them being &lt;a href=&quot;https://github.com/FuzzyAutocomplete/FuzzyAutocompletePlugin&quot;&gt;fuzzy-autocomplete&lt;/a&gt; (if you don&apos;t use it, check it out, it&apos;s awesome!) I assumed the problem was with one of them. I removed them one by one and everytime I tried, BAM! Still crashing!&lt;/p&gt;
-&lt;p&gt;This was bad, because plugins where my only option. After googling for a while, I didn&apos;t find anyone with a similar problem, so I guessed it had something to do with my custom instalation. And this is dumb, but I should have looked to the XCode crash log sooner...&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code class=&quot;language-objc&quot;&gt;&lt;span class=&quot;token number&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0x00000001038f4708&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;IDECodeSnippetLibraryCompletionStrategy_scope&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;matchesScope&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;atBOL&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; IDEKit&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;After checking the crash log, it was apparent who the culprit was: Snippets!&lt;/p&gt;
-&lt;p&gt;It was the only custom thing left on my instalation. I renamed the snippets folder, effectivly stoping XCode from finding them. And guess what? Yes! Auto-complete worked again! I re-added all my loved plugins (fuzzy-autocomplete included), and back to coding I was. I dind&apos;t add my snippets, because I wasn&apos;t using them at all. But recreating them with the new XCode should solve the problem.&lt;/p&gt;
-&lt;p&gt;Just another day working with XCode...&lt;/p&gt;
-&lt;p&gt;PS: On a side note, if you don&apos;t use plugins with XCode, check &lt;a href=&quot;http://alcatraz.io/&quot;&gt;Alcatraz&lt;/a&gt;, a plugin manager! You are bound to find something that will improve your XCode usage :)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[iOS Project Structure]]></title><description><![CDATA[To better organized my code, I have been changing my project structure along the years. I think I've finally set with one, so time to record…]]></description><link>https://luisramos.dev/ios-project-structure</link><guid isPermaLink="false">https://luisramos.dev/ios-project-structure</guid><pubDate>Mon, 11 Jan 2016 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;To better organized my code, I have been changing my project structure along the years. I think I&apos;ve finally set with one, so time to record it for the future!&lt;/p&gt;
-&lt;p&gt;There are two basic guidelines when creating a project structure. First, keep it simple. Second, use something that makes sense to you.&lt;/p&gt;
-&lt;p&gt;If you google a bit for this topic you may find this quora &lt;a href=&quot;https://www.quora.com/How-should-I-structure-my-iOS-app&quot;&gt;answer&lt;/a&gt; or these &lt;a href=&quot;https://github.com/futurice/ios-good-practices#project-structure&quot;&gt;guidelines&lt;/a&gt;. They both suggest something like this:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;View Controllers&lt;/li&gt;
-&lt;li&gt;Views&lt;/li&gt;
-&lt;li&gt;View Models&lt;/li&gt;
-&lt;li&gt;UI (aka storyboards)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If you have small projects, this structure will work fine. But when you start adding more files to it it becomes confusing. I rather organize files in a functional way, separating them by areas and layers of the app. So it ends up something more like this:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Interface&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Base&lt;/li&gt;
-&lt;li&gt;Onboarding&lt;/li&gt;
-&lt;li&gt;Feed&lt;/li&gt;
-&lt;li&gt;User&lt;/li&gt;
-&lt;li&gt;Settings&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Networking&lt;/li&gt;
-&lt;li&gt;Local Storage&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Classes&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Categories/Extensions&lt;/li&gt;
-&lt;li&gt;Classes that don&apos;t fit anywhere else&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Resources&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Inside those folders I usually follow the first setup, separating files by Views, ViewControllers, etc. This way you have almost every file related to an area of the app in one folder. All my images are stored in XCAssets. Fonts and other raw files are in Resources (usually with a dedicated folder for each).&lt;/p&gt;
-&lt;p&gt;If you have an even awesome setup or if you just want to share yours, feel free to &lt;a href=&quot;https://twitter.com/luisramos1337&quot;&gt;send me a tweet&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Swift Variables in Extensions]]></title><description><![CDATA[I have recently started working on a project that uses Swift2.0! I have been using Obj-C for the past 3 years, and when Swift came I wasn't…]]></description><link>https://luisramos.dev/swift-variables-in-extensions</link><guid isPermaLink="false">https://luisramos.dev/swift-variables-in-extensions</guid><pubDate>Mon, 19 Oct 2015 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I have recently started working on a project that uses Swift2.0! I have been using Obj-C for the past 3 years, and when Swift came I wasn&apos;t one of the early adopters. Problems with the language and with SourceKit always crashing in XCode 6 didn&apos;t make for a good dev enviroment. Now with the 2.0 released to the wild, the promisse of open source and XCode 7, Swift is good to go!&lt;/p&gt;
-&lt;p&gt;One of the first problems I had is one that happens to many iOS developers that use extensions/categories in their projects: How do I add a variable (static or not) to an extension?&lt;/p&gt;
-&lt;p&gt;Since I seem to always be googling for this one, I&apos;ll log it here for future convinience.&lt;/p&gt;
-&lt;h3&gt;Static Variables&lt;/h3&gt;
-&lt;p&gt;For a static variable, there is actually a really neat way:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; defaultPadding &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;16&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;widthWithPadding&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;bounds&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;width &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;defaultPadding
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Since you can declare structs in an extension, you can use these value objects to hold your static variables and they function the same way as declaring a static variable on the class. If you don&apos;t like the extra &lt;code class=&quot;language-text&quot;&gt;Static.&lt;/code&gt; declaration, you can create wrappers using computed variables:&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; defaultPadding &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;defaultPadding &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Instance Variables&lt;/h3&gt;
-&lt;p&gt;For instance variables the solution is to use the obj-c runtime. You need to create computed variables that get and set an associated object using &lt;code class=&quot;language-text&quot;&gt;objc_getAssociatedObject()&lt;/code&gt; and &lt;code class=&quot;language-text&quot;&gt;objc_setAssociatedObject()&lt;/code&gt;. This is the same approach taken if using it with Obj-C.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;ObjectiveC&lt;/span&gt;
+                containerView&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;with&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                view&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; textView&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                function&quot;&gt;alignTop&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;with&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; view&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token number&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt; textView&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token function&quot;&gt;alignLeadingTrailing&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;with&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                view&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; constant&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token
+                number&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;This extension has grown after several years of copying this over to each
+                new project and adding something that was missing. It fits my needs well, so I have
+                stopped looking for an auto layout library! The full extension is available &lt;a
+                href=&quot;https://gist.github.com/Orgmir/a140b15c1f2ab86b2a72d4c09570cd52&quot;&gt;in
+                this public gist.&lt;/a&gt; Thanks for reading!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Blog revamp: Migrating to Hugo]]></title>
+            <description>
+                <![CDATA[Update: Since this post was made, I have moved my blog to a new website and tech stack. Check out the post about the new revamp! The blog…]]></description>
+            <link>https://luisramos.dev/migration-to-hugo</link>
+            <guid isPermaLink="false">https://luisramos.dev/migration-to-hugo</guid>
+            <pubDate>Thu, 27 Sep 2018 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;&lt;em&gt;&lt;strong&gt;Update:&lt;/strong&gt;&lt;/em&gt;
+                Since this post was made, I have moved my blog to a new website and tech stack.
+                Check out the post about the new &lt;a href=&quot;/new-blog-creating-gatsby-website&quot;&gt;revamp&lt;/a&gt;!&lt;/p&gt;
+                &lt;p&gt;&lt;/p&gt; &lt;hr&gt; &lt;p&gt;The blog has a new look! I like to think it
+                looks a bit better now. Of course the fun side of it is the tech stack. It is now
+                generated using &lt;a href=&quot;http://gohugo.io/&quot;&gt;hugo&lt;/a&gt;, deployed
+                using &lt;a href=&quot;http://gitlab.com/&quot;&gt;Gitlab&lt;/a&gt; incredible CI
+                pipelines, and also I&apos;m hosting it on a &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital
+                Ocean&lt;/a&gt; droplet.&lt;/p&gt; &lt;p&gt;I want to talk about my experience
+                migrating from Jekyll to hugo, and how I went about setting everything up.&lt;/p&gt;
+                &lt;h2&gt;Migrating to Hugo&lt;/h2&gt; &lt;p&gt;This blog was previously hosted in
+                Github pages, and it used Jekyll to render the static pages. All the content was in
+                markdown already, so it was relatively easy to migrate it to hugo. The content
+                structure is relatively similar in both frameworks. I only had trouble with the
+                syntax higlight for my code snippets, and with processing the template sass files to
+                css.&lt;/p&gt; &lt;p&gt;Hugo uses a code syntax generator called &lt;a href=&quot;https://github.com/alecthomas/chroma&quot;&gt;Chroma&lt;/a&gt;.
+                The only change is that instead of using the normal markdown code marks, it uses
+                specific tags:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre
+                class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span
+                class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; highlight swift &lt;span
+                class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;You also need to declare the language you are highlighting (&lt;code class=&quot;language-text&quot;&gt;swift&lt;/code&gt;
+                in that example).&lt;/p&gt; &lt;p&gt;Generating new content is super easy and fast,
+                you just run the following command:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code
+                class=&quot;language-bash&quot;&gt;hugo new posts/title-of-blog-post.md&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;This command will create a new file in the specified content folder, with
+                some front-matter meta data already setup for you to fill.&lt;/p&gt; &lt;p&gt;The
+                template system is also straighforward to use, and you can easily define new content
+                types and front-matter, to be used by the &lt;code class=&quot;language-text&quot;&gt;hugo
+                new&lt;/code&gt; command.&lt;/p&gt; &lt;h3&gt;Hugo Extended&lt;/h3&gt; &lt;p&gt;I
+                found a gap in documentation about this, but it seems that hugo has an &quot;extended&quot;
+                version. It adds extras, like sass processing, to the usual binary.&lt;/p&gt; &lt;p&gt;When
+                I tried to edit the template sass files, the changes weren&apos;t visible on
+                refresh. They were being ignored, and since I was running locally there was no
+                change it could be some cache issue.
+                I eventually figured out that the template was using generated resources in a &lt;code
+                class=&quot;language-text&quot;&gt;resources/_gen/&lt;/code&gt; folder, and deleting
+                that basically broke the generation. Since no css was found, hugo errored out and
+                didn&apos;t generate the website.&lt;/p&gt; &lt;p&gt;After googling around, I found
+                out about the extended version of hugo that you can download from their releases
+                page. Running the extended version compiled the sass files into css, and made
+                everything work again. But now this means I need the extended version to generate my
+                website, since I want to process the sass files on every generation.&lt;/p&gt; &lt;h2&gt;Deployment
+                with Gitlab CI&lt;/h2&gt; &lt;p&gt;If you haven&apos;t tried &lt;a href=&quot;http://gitlab.com/&quot;&gt;Gitlab&lt;/a&gt;
+                you should really give it a spin. I&apos;ll to not fanboy about it too much, but
+                they have some amazing features.&lt;/p&gt; &lt;p&gt;One of them is the ability to
+                setup a CI pipeline, writing some configuration on a &lt;code class=&quot;language-text&quot;&gt;.gitlab-ci.yml&lt;/code&gt;
+                at the root of your repo. This way, everytime I push a commit to master, a
+                deployment is triggered by Gitlab.
+                You get 1000 free minutes of running time each month, more than enough for all your
+                blogging needs.&lt;/p&gt; &lt;p&gt;Since I have to use hugo extended to generate my
+                website, I couldn&apos;t use the suggested image to run my build. I created a new
+                Dockerfile that installs the right hugo binary, and also all the commands needed for
+                deployment. This highlights another cool feature of Gitlab: you have a container
+                register for each project, meaning you can have your container images right next to
+                the project they are relevant to.&lt;/p&gt; &lt;p&gt;After I built and pushed the
+                image, I just needed to reference it in my CI file to get it running the deployment
+                without a hitch! It&apos;s pretty satisfying to finally get a CI job green. Check
+                out the &lt;a href=&quot;https://gitlab.com/snippets/1757791&quot;&gt;&lt;code
+                class=&quot;language-text&quot;&gt;.gitlab-ci.yml&lt;/code&gt;&lt;/a&gt; and the
+                &lt;a href=&quot;https://gitlab.com/snippets/1757792&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dockerfile&lt;/code&gt;&lt;/a&gt;
+                used for this.&lt;/p&gt; &lt;h2&gt;Hosting on Digital Ocean&lt;/h2&gt; &lt;p&gt;The
+                final command of the deployment is a rsync into a Digital Ocean droplet. Pretty
+                satisfied with the setup process for creating a droplet, it&apos;s a one button
+                click for most of what you need. Haven&apos;t had an issue with it yet!&lt;/p&gt;
+                &lt;p&gt;I am using nginx to serve the website on the droplet, which was fairly easy
+                to setup with all the info that is available online. I setup certbot to create and
+                automatically renew ssl certificates for the website. It also takes care of updating
+                the website config for you.&lt;/p&gt; &lt;p&gt;Also, since Cloudflare has a one
+                website free tier, I got all of my traffic running through it. So hopefully, my
+                droplet will barelly be touched!&lt;/p&gt; &lt;h2&gt;DevOps for the common man&lt;/h2&gt;
+                &lt;p&gt;I am really happy with this setup. Hugo is a powerful framework, quick to
+                setup but roboust enough to handle more heavy duty websites. Gitlab enables DevOps
+                for the common man, giving me control over it but in a way that I&apos;m not
+                overwhelmed. And hosting solutions like Digital Ocean used in conjuction with CDNs
+                like Cloudflare mean that you can serve a lot of people for cheap. A lot can be done
+                by leveraging this infrastructure, which gets me excited!&lt;/p&gt; &lt;p&gt;Next
+                up, I&apos;ll add a static CMS like &lt;a href=&quot;https://www.netlifycms.org/&quot;&gt;Netlify&lt;/a&gt;
+                to this blog so I can write from anywhere!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[iOS local notifications ninja bug!]]></title>
+            <description>
+                <![CDATA[Recently I was working in a project that require me to show a local notification. And for the love of XCode, the app would not show an alert…]]></description>
+            <link>https://luisramos.dev/ios-local-notification-ninja-bug</link>
+            <guid isPermaLink="false">https://luisramos.dev/ios-local-notification-ninja-bug</guid>
+            <pubDate>Tue, 26 Sep 2017 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Recently I was working in a project that require me to show a
+                local notification. And for the love of XCode, the app would not show an alert! I
+                was at a loss!&lt;/p&gt; &lt;p&gt;Beggining with iOS 10, the iOS notification
+                framework was revamped to unify both remote and local notifications. This threw me
+                into a loop while trying to figure out the problem. The only thing I had to go by
+                was an error message that poped up when adding the notification to
+                UNUserNotificationCenter:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code
+                class=&quot;language-objc&quot;&gt;Adding notification request failed with error&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Error Domain&lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt;NSCocoaErrorDomain Code&lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;4097&lt;/span&gt;
+                &lt;span class=&quot;token string&quot;&gt;&quot;connection to service named
+                com.apple.usernotifications.usernotificationservice&quot;&lt;/span&gt; UserInfo&lt;span
+                class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt;NSDebugDescription&lt;span class=&quot;token
+                operator&quot;&gt;=&lt;/span&gt;connection to service named com&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;apple&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;usernotifications&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;usernotificationservice&lt;span
+                class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;What a cryptic message, thanks Apple Dev team! I had a custom action setup,
+                so the user could open a url with more info. I was adding this URL to the &lt;code
+                class=&quot;language-text&quot;&gt;userInfo&lt;/code&gt; of the notification and
+                here was where the bug lived! The issue was that I was adding the URL object,
+                instead of an absolute string of the url. As soon as I changed this, everything
+                worked.&lt;/p&gt; &lt;p&gt;Of course, a &lt;a href=&quot;https://stackoverflow.com/questions/41360531/unmutablenotificationcontent-with-custom-object-in-userinfo&quot;&gt;stackoverflow
+                answer&lt;/a&gt; helped me figure this out!&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Fastlane Supply uploads everything!]]></title>
+            <description>
+                <![CDATA[Ever since I found out about , I've been using it to deploy Android and iOS apps. It's amazing how streamlined things can get: it saves you…]]></description>
+            <link>https://luisramos.dev/fastlane-supply-uploads-everything</link>
+            <guid isPermaLink="false">https://luisramos.dev/fastlane-supply-uploads-everything
+            </guid>
+            <pubDate>Tue, 05 Sep 2017 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Ever since I found out about &lt;a href=&quot;https://fastlane.tools/&quot;&gt;&lt;code
+                class=&quot;language-text&quot;&gt;fastlane&lt;/code&gt;&lt;/a&gt;, I&apos;ve been
+                using it to deploy Android and iOS apps. It&apos;s amazing how streamlined things
+                can get: it saves you a bunch of time when deploying a release; it supports
+                integrations with your favourite distribution platforms (yay Crashlytics); and you
+                can easily copy the setup from one app to the other! Couldn&apos;t be happier with
+                it.&lt;/p&gt; &lt;p&gt;Here&apos;s a tip for the Android devs out there using &lt;a
+                href=&quot;https://fastlane.tools/&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;fastlane&lt;/code&gt;&lt;/a&gt;,
+                add this to your &lt;code class=&quot;language-text&quot;&gt;before_all&lt;/code&gt;
+                step:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre
+                class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;before
+                &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;all &lt;span class=&quot;token
+                keyword&quot;&gt;do&lt;/span&gt; sh &lt;span class=&quot;token string&quot;&gt;&quot;rm
+                -f ../app/build/outputs/apk/*/\_/\*.apk&quot;&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt; &lt;p&gt;I&apos;ve
+                found that when deploying Android builds using &lt;code class=&quot;language-text&quot;&gt;supply&lt;/code&gt;,
+                the tool tries to upload whatever it can find in your &lt;code class=&quot;language-text&quot;&gt;build/outputs&lt;/code&gt;
+                folder. And often the error you get are unrelated like:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code
+                class=&quot;language-objc&quot;&gt;Google Api Error&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; apkUpgradeVersionConflict&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; APK specifies a version code that has already
+                been used&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;This is obviously not true if you check your google play console and your
+                build.gradle file. Looking at the output the (at the &lt;code class=&quot;language-text&quot;&gt;GRADLE_ALL_APK_OUTPUT_PATHS&lt;/code&gt;
+                variable), it seems supply is trying to upload every apk he finds, including
+                debugging version and other flavors. Adding that line will save you some time and
+                stop you from screaming &quot;Why don&apos;t the versions match??&quot;&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Xcode crash on auto-complete: Snippets!]]></title>
+            <description>
+                <![CDATA[My XCode crashed after updating it to version 7.2. It happened everytime I tried to use auto-complete in an Obj-c file. Since my project was…]]></description>
+            <link>https://luisramos.dev/xcode-crash-autocomplete-snippets</link>
+            <guid isPermaLink="false">https://luisramos.dev/xcode-crash-autocomplete-snippets</guid>
+            <pubDate>Sun, 07 Feb 2016 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;My XCode crashed after updating it to version 7.2. It happened
+                everytime I tried to use auto-complete in an Obj-c file. Since my project was in
+                Swift, it didn&apos;t bother me much. Things got worse when I actually needed to
+                edit some library code!&lt;/p&gt; &lt;p&gt;It crash with this exception:&lt;/p&gt;
+                &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;objc&quot;&gt;&lt;pre
+                class=&quot;language-objc&quot;&gt;&lt;code class=&quot;language-objc&quot;&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;NSInvalidArgumentException&lt;span
+                class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;__NSCFData isEqualToString&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                unrecognized selector sent to instance &lt;span class=&quot;token number&quot;&gt;0x7fd01c5d4530&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;Since I got bored fast using a text editor to work around it, I tried to
+                fix it. I use some plugins, one of them being &lt;a href=&quot;https://github.com/FuzzyAutocomplete/FuzzyAutocompletePlugin&quot;&gt;fuzzy-autocomplete&lt;/a&gt;
+                (if you don&apos;t use it, check it out, it&apos;s awesome!) I assumed the problem
+                was with one of them. I removed them one by one and everytime I tried, BAM! Still
+                crashing!&lt;/p&gt; &lt;p&gt;This was bad, because plugins where my only option.
+                After googling for a while, I didn&apos;t find anyone with a similar problem, so I
+                guessed it had something to do with my custom instalation. And this is dumb, but I
+                should have looked to the XCode crash log sooner...&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;objc&quot;&gt;&lt;pre class=&quot;language-objc&quot;&gt;&lt;code
+                class=&quot;language-objc&quot;&gt;&lt;span class=&quot;token number&quot;&gt;6&lt;/span&gt;
+                &lt;span class=&quot;token number&quot;&gt;0x00000001038f4708&lt;/span&gt; &lt;span
+                class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;[&lt;/span&gt;IDECodeSnippetLibraryCompletionStrategy_scope&lt;span
+                class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;matchesScope&lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt;atBOL&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt;
+                IDEKit&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;After checking the crash log, it was apparent who the culprit was:
+                Snippets!&lt;/p&gt; &lt;p&gt;It was the only custom thing left on my instalation. I
+                renamed the snippets folder, effectivly stoping XCode from finding them. And guess
+                what? Yes! Auto-complete worked again! I re-added all my loved plugins
+                (fuzzy-autocomplete included), and back to coding I was. I dind&apos;t add my
+                snippets, because I wasn&apos;t using them at all. But recreating them with the new
+                XCode should solve the problem.&lt;/p&gt; &lt;p&gt;Just another day working with
+                XCode...&lt;/p&gt; &lt;p&gt;PS: On a side note, if you don&apos;t use plugins with
+                XCode, check &lt;a href=&quot;http://alcatraz.io/&quot;&gt;Alcatraz&lt;/a&gt;, a
+                plugin manager! You are bound to find something that will improve your XCode usage
+                :)&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[iOS Project Structure]]></title>
+            <description>
+                <![CDATA[To better organized my code, I have been changing my project structure along the years. I think I've finally set with one, so time to record…]]></description>
+            <link>https://luisramos.dev/ios-project-structure</link>
+            <guid isPermaLink="false">https://luisramos.dev/ios-project-structure</guid>
+            <pubDate>Mon, 11 Jan 2016 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;To better organized my code, I have been changing my project
+                structure along the years. I think I&apos;ve finally set with one, so time to record
+                it for the future!&lt;/p&gt; &lt;p&gt;There are two basic guidelines when creating a
+                project structure. First, keep it simple. Second, use something that makes sense to
+                you.&lt;/p&gt; &lt;p&gt;If you google a bit for this topic you may find this quora
+                &lt;a href=&quot;https://www.quora.com/How-should-I-structure-my-iOS-app&quot;&gt;answer&lt;/a&gt;
+                or these &lt;a href=&quot;https://github.com/futurice/ios-good-practices#project-structure&quot;&gt;guidelines&lt;/a&gt;.
+                They both suggest something like this:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;View
+                Controllers&lt;/li&gt; &lt;li&gt;Views&lt;/li&gt; &lt;li&gt;View Models&lt;/li&gt;
+                &lt;li&gt;UI (aka storyboards)&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;If you have small
+                projects, this structure will work fine. But when you start adding more files to it
+                it becomes confusing. I rather organize files in a functional way, separating them
+                by areas and layers of the app. So it ends up something more like this:&lt;/p&gt;
+                &lt;ul&gt; &lt;li&gt; &lt;p&gt;Interface&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Base&lt;/li&gt;
+                &lt;li&gt;Onboarding&lt;/li&gt; &lt;li&gt;Feed&lt;/li&gt; &lt;li&gt;User&lt;/li&gt;
+                &lt;li&gt;Settings&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;Networking&lt;/li&gt;
+                &lt;li&gt;Local Storage&lt;/li&gt; &lt;li&gt; &lt;p&gt;Classes&lt;/p&gt; &lt;ul&gt;
+                &lt;li&gt;Categories/Extensions&lt;/li&gt; &lt;li&gt;Classes that don&apos;t fit
+                anywhere else&lt;/li&gt; &lt;/ul&gt; &lt;/li&gt; &lt;li&gt;Resources&lt;/li&gt; &lt;/ul&gt;
+                &lt;p&gt;Inside those folders I usually follow the first setup, separating files by
+                Views, ViewControllers, etc. This way you have almost every file related to an area
+                of the app in one folder. All my images are stored in XCAssets. Fonts and other raw
+                files are in Resources (usually with a dedicated folder for each).&lt;/p&gt; &lt;p&gt;If
+                you have an even awesome setup or if you just want to share yours, feel free to &lt;a
+                href=&quot;https://twitter.com/luisramos1337&quot;&gt;send me a tweet&lt;/a&gt;.&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Swift Variables in Extensions]]></title>
+            <description>
+                <![CDATA[I have recently started working on a project that uses Swift2.0! I have been using Obj-C for the past 3 years, and when Swift came I wasn't…]]></description>
+            <link>https://luisramos.dev/swift-variables-in-extensions</link>
+            <guid isPermaLink="false">https://luisramos.dev/swift-variables-in-extensions</guid>
+            <pubDate>Mon, 19 Oct 2015 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;I have recently started working on a project that uses
+                Swift2.0! I have been using Obj-C for the past 3 years, and when Swift came I wasn&apos;t
+                one of the early adopters. Problems with the language and with SourceKit always
+                crashing in XCode 6 didn&apos;t make for a good dev enviroment. Now with the 2.0
+                released to the wild, the promisse of open source and XCode 7, Swift is good to go!&lt;/p&gt;
+                &lt;p&gt;One of the first problems I had is one that happens to many iOS developers
+                that use extensions/categories in their projects: How do I add a variable (static or
+                not) to an extension?&lt;/p&gt; &lt;p&gt;Since I seem to always be googling for this
+                one, I&apos;ll log it here for future convinience.&lt;/p&gt; &lt;h3&gt;Static
+                Variables&lt;/h3&gt; &lt;p&gt;For a static variable, there is actually a really neat
+                way:&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre
+                class=&quot;language-swift&quot;&gt;&lt;code class=&quot;language-swift&quot;&gt;&lt;span
+                class=&quot;token keyword&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;Static&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;var&lt;/span&gt; defaultPadding &lt;span class=&quot;token
+                punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt;
+                &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token
+                number&quot;&gt;16&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token
+                function&quot;&gt;widthWithPadding&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token
+                operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;bounds&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;width &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;defaultPadding &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;Since you can declare structs in an extension, you can use these value
+                objects to hold your static variables and they function the same way as declaring a
+                static variable on the class. If you don&apos;t like the extra &lt;code class=&quot;language-text&quot;&gt;Static.&lt;/code&gt;
+                declaration, you can create wrappers using computed variables:&lt;/p&gt; &lt;div
+                class=&quot;gatsby-highlight&quot; data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code
+                class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;extension&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;UIView&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt;
+                defaultPadding &lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span
+                class=&quot;token builtin&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;.&lt;/span&gt;defaultPadding &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;h3&gt;Instance Variables&lt;/h3&gt; &lt;p&gt;For instance variables the solution
+                is to use the obj-c runtime. You need to create computed variables that get and set
+                an associated object using &lt;code class=&quot;language-text&quot;&gt;objc_getAssociatedObject()&lt;/code&gt;
+                and &lt;code class=&quot;language-text&quot;&gt;objc_setAssociatedObject()&lt;/code&gt;.
+                This is the same approach taken if using it with Obj-C.&lt;/p&gt; &lt;div class=&quot;gatsby-highlight&quot;
+                data-language=&quot;swift&quot;&gt;&lt;pre class=&quot;language-swift&quot;&gt;&lt;code
+                class=&quot;language-swift&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;ObjectiveC&lt;/span&gt;
 
-&lt;span class=&quot;token keyword&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;MainTitle&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;\_MainTitle&quot;&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; mainTitle&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;objc_getAssociatedObject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;MainTitle&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; newValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; newValue &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;token function&quot;&gt;objc_setAssociatedObject&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;GenericTitle&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;newValue &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;token builtin&quot;&gt;NSString&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;OBJC_ASSOCIATION_RETAIN_NONATOMIC&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That way you can extend to your heart desire! If you want to understand the difference between structs and classes check out the &lt;a href=&quot;appledocs-class-vs-strutc&quot;&gt;Apple docs&lt;/a&gt;. And to find out more about what kind of magic you can do with obj-c runtime check out &lt;a href=&quot;nshipster-objc&quot;&gt;NSHipster post on it&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Test Post. Please Ignore.]]></title><description><![CDATA[Hey, I'm creating this to see if I can finally settle the toughs that come to me while I code away. I find that I should write down…]]></description><link>https://luisramos.dev/test-post-please-ignore</link><guid isPermaLink="false">https://luisramos.dev/test-post-please-ignore</guid><pubDate>Sun, 18 Oct 2015 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hey, I&apos;m creating this to see if I can finally settle the toughs that come to me while I code away. I find that I should write down something so future me can make use of the troubles I go through, but the past me never got around to actually do something. Let&apos;s see if this time is the charm.&lt;/p&gt;
-&lt;p&gt;I plan to write about software, mobile programming, the weather and whatever I feel like (that means gaming probably).&lt;/p&gt;
-&lt;p&gt;Let&apos;s do this!&lt;/p&gt;</content:encoded></item></channel></rss>
+                &lt;span class=&quot;token keyword&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;Static&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;MainTitle&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                &lt;span class=&quot;token string&quot;&gt;&quot;\_MainTitle&quot;&lt;/span&gt; &lt;span
+                class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;var&lt;/span&gt; mainTitle&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token
+                operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;objc_getAssociatedObject&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token
+                keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span
+                class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token
+                builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token builtin&quot;&gt;MainTitle&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt;&lt;span
+                class=&quot;token operator&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;token
+                builtin&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;(&lt;/span&gt;value&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token
+                keyword&quot;&gt;if&lt;/span&gt; newValue &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;
+                newValue &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span
+                class=&quot;token function&quot;&gt;objc_setAssociatedObject&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token
+                keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span
+                class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;token
+                builtin&quot;&gt;Static&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span
+                class=&quot;token builtin&quot;&gt;GenericTitle&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;,&lt;/span&gt;newValue &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt;
+                &lt;span class=&quot;token builtin&quot;&gt;NSString&lt;/span&gt;&lt;span class=&quot;token
+                operator&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;span
+                class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token
+                constant&quot;&gt;OBJC_ASSOCIATION_RETAIN_NONATOMIC&lt;/span&gt;&lt;span class=&quot;token
+                punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token
+                punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+                &lt;p&gt;That way you can extend to your heart desire! If you want to understand the
+                difference between structs and classes check out the &lt;a href=&quot;appledocs-class-vs-strutc&quot;&gt;Apple
+                docs&lt;/a&gt;. And to find out more about what kind of magic you can do with obj-c
+                runtime check out &lt;a href=&quot;nshipster-objc&quot;&gt;NSHipster post on it&lt;/a&gt;.&lt;/p&gt;
+            </content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Test Post. Please Ignore.]]></title>
+            <description>
+                <![CDATA[Hey, I'm creating this to see if I can finally settle the toughs that come to me while I code away. I find that I should write down…]]></description>
+            <link>https://luisramos.dev/test-post-please-ignore</link>
+            <guid isPermaLink="false">https://luisramos.dev/test-post-please-ignore</guid>
+            <pubDate>Sun, 18 Oct 2015 00:00:00 GMT</pubDate>
+            <content:encoded>&lt;p&gt;Hey, I&apos;m creating this to see if I can finally settle the
+                toughs that come to me while I code away. I find that I should write down something
+                so future me can make use of the troubles I go through, but the past me never got
+                around to actually do something. Let&apos;s see if this time is the charm.&lt;/p&gt;
+                &lt;p&gt;I plan to write about software, mobile programming, the weather and
+                whatever I feel like (that means gaming probably).&lt;/p&gt; &lt;p&gt;Let&apos;s do
+                this!&lt;/p&gt;
+            </content:encoded>
+        </item>
+    </channel>
+</rss>

@@ -24,6 +24,6 @@ class DefaultFetchChannelUseCaseTest {
 
     class StubFeedParser : FeedParser {
         var mockFeedModel = FeedModel("title", "http://example.com", updated = Date())
-        override fun parse(inputStream: InputStream): FeedModel? = mockFeedModel
+        override fun parse(inputStream: InputStream): FeedModel = mockFeedModel
     }
 }

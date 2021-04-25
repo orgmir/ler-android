@@ -19,3 +19,5 @@ google-services.json
 keystore.properties
 fastlane/README.md
 fastlane/report.xml
+.bundle/
+bin/

@@ -8,19 +8,21 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import java.net.URL
 
 class FakeApi : Api {
-    var cannedResponseBuilder = Response.Builder()
-        .protocol(Protocol.HTTP_2)
-        .message("")
-        .code(200)
-        .body("".toResponseBody())
+    private var mocks = mutableMapOf<String, Response.Builder>()
 
-    override suspend fun download(url: URL): Response {
-        val request = Request.Builder().url(url).build()
-        return cannedResponseBuilder.request(request).build()
+    fun mockResponse(url: String, responseBuilder: Response.Builder) {
+        mocks[url] = responseBuilder
     }
+
+    override suspend fun download(url: URL): Response = download(url.toString())
 
     override suspend fun download(url: String): Response {
         val request = Request.Builder().url(url).build()
-        return cannedResponseBuilder.request(request).build()
+        val responseBuilder = mocks[url] ?: Response.Builder()
+            .protocol(Protocol.HTTP_2)
+            .message("")
+            .code(200)
+            .body("".toResponseBody())
+        return responseBuilder.request(request).build()
     }
 }
