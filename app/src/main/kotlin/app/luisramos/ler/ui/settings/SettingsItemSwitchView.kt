@@ -20,14 +20,14 @@ class SettingsItemSwitchView(
     var clickListener = {}
 
     val titleTextView = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
         gravity = Gravity.CENTER_VERTICAL
         updatePadding(left = 16.dip, right = 16.dip, top = 16.dip, bottom = 4.dip)
         isClickable = false
     }
 
     val subTitleTextView = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Caption)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Caption)
         gravity = Gravity.CENTER_VERTICAL
         updatePadding(left = 16.dip, right = 16.dip, top = 4.dip, bottom = 16.dip)
         setOnClickListener { switch.performClick() }
@@ -40,7 +40,7 @@ class SettingsItemSwitchView(
     }
 
     init {
-        background = getDrawable(R.attr.selectableItemBackground)
+        background = getDrawable(androidx.appcompat.R.attr.selectableItemBackground)
         setOnClickListener { switch.performClick() }
 
         switch.layoutBy(

@@ -24,25 +24,23 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
-        freeCompilerArgs = listOf(
-            "-Xinline-classes",
-            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        )
     }
 
-    compileSdkVersion(Versions.Build.CompileSdk)
+    compileSdk = Versions.Build.CompileSdk
 
+    namespace = "app.luisramos.ler"
     defaultConfig {
         applicationId = "app.luisramos.ler"
-
-        minSdkVersion(Versions.Build.MinSdk)
-        targetSdkVersion(Versions.Build.TargetSdk)
-
-        versionCode(AppVersion.Code)
-        versionName(AppVersion.Name)
+        minSdk = Versions.Build.MinSdk
+        targetSdk = Versions.Build.TargetSdk
+        versionCode = AppVersion.Code
+        versionName = AppVersion.Name
 
         testInstrumentationRunner = "app.luisramos.ler.TestRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     signingConfigs {

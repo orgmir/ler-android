@@ -5,10 +5,10 @@ CREATE TABLE feedItem (
     title TEXT NOT NULL,
     description TEXT,
     link TEXT NOT NULL,
-    unread INTEGER as Boolean DEFAULT 1,
-    publishedAt INTEGER as Date,
-    updatedAt INTEGER as Date,
-    createdAt INTEGER as Date,
+    unread INTEGER AS Boolean DEFAULT 1,
+    publishedAt INTEGER AS Date,
+    updatedAt INTEGER AS Date,
+    createdAt INTEGER AS Date,
     feedId INTEGER NOT NULL
 );
 

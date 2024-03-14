@@ -51,12 +51,12 @@ class AddSubscriptionView(
 
     val imageButton = ImageButton(context).apply {
         id = R.id.searchButton
-        background = getDrawable(R.attr.selectableItemBackground)
+        background = getDrawable(androidx.appcompat.R.attr.selectableItemBackground)
         setImageResource(R.drawable.ic_baseline_search_24)
     }
 
     val emptyTextView = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
         gravity = Gravity.CENTER
         isVisible = false
     }

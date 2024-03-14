@@ -26,13 +26,13 @@ class SideMenuView(
             top = 40.dip,
             bottom = 18.dip
         )
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline6)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Headline6)
         setBackgroundResource(R.color.colorPrimary)
         text = resources.getString(R.string.app_name)
     }
 
     val addSubscriptionButton = Button(context).apply {
-        background = getDrawable(R.attr.selectableItemBackground)
+        background = getDrawable(androidx.appcompat.R.attr.selectableItemBackground)
         isAllCaps = false
         textAlignment = TEXT_ALIGNMENT_TEXT_START
         setText(R.string.add_subscription)
@@ -62,7 +62,7 @@ class SideMenuView(
     }
 
     private val versionTextView = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Caption)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Caption)
         setPadding(16.dip)
         setBackgroundResource(R.color.white)
         textAlignment = TEXT_ALIGNMENT_TEXT_END

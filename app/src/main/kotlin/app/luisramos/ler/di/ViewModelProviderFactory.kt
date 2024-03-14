@@ -13,7 +13,7 @@ class ViewModelProviderFactory(
     private val parentViewModel: ScaffoldViewModel
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = appContainer.run {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = appContainer.run {
         when (modelClass) {
             FeedItemsListViewModel::class.java -> FeedItemsListViewModel(
                 parentViewModel,

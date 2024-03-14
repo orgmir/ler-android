@@ -9,11 +9,11 @@ CREATE TABLE new_feed (
     link TEXT NOT NULL,
     updateLink TEXT NOT NULL DEFAULT '',
     description TEXT,
-    updateMode TEXT as FeedUpdateMode NOT NULL,
+    updateMode TEXT AS FeedUpdateMode NOT NULL,
     updateTimeInterval INTEGER NOT NULL,
-    notify INTEGER as Boolean DEFAULT 1,
-    updatedAt INTEGER as Date,
-    createdAt INTEGER as Date NOT NULL
+    notify INTEGER AS Boolean DEFAULT 1,
+    updatedAt INTEGER AS Date,
+    createdAt INTEGER AS Date NOT NULL
 );
 
 INSERT INTO new_feed

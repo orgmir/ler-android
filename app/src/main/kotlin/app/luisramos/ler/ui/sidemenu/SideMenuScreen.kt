@@ -31,6 +31,8 @@ class SideMenuScreen : Screen() {
                     Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
                 is UiState.Success ->
                     adapter.submitList(it.data)
+
+                UiState.Loading -> {}
             }
         }
     }

@@ -21,20 +21,20 @@ class FeedItemStackedView(
     }
 
     val textView1 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
         ellipsize = TextUtils.TruncateAt.END
         maxLines = 2
     }
 
     val textView2 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_AppCompat_Body2)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_AppCompat_Body2)
         ellipsize = TextUtils.TruncateAt.END
         alpha = 0.8f
         maxLines = 1
     }
 
     val textView3 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Caption)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Caption)
         maxLines = 1
         ellipsize = TextUtils.TruncateAt.END
     }

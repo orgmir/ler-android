@@ -8,7 +8,7 @@ class ActivityViewModelProviderFactory(
     private val appContainer: AppContainer
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
         when (modelClass) {
             ScaffoldViewModel::class.java -> ScaffoldViewModel(appContainer.fetchFeedUseCase) as T
             else -> modelClass.newInstance()

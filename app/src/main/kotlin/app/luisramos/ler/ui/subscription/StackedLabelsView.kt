@@ -17,11 +17,11 @@ class StackedLabelsView(context: Context, attrs: AttributeSet? = null) :
     }
 
     val textView1 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
     }
 
     val textView2 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body2)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body2)
         alpha = 0.87f
     }
 
@@ -30,7 +30,7 @@ class StackedLabelsView(context: Context, attrs: AttributeSet? = null) :
     }
 
     init {
-        background = getDrawable(R.attr.selectableItemBackground)
+        background = getDrawable(androidx.appcompat.R.attr.selectableItemBackground)
 
         imageView.layoutBy(
             x = leftTo { parent.left() + 16.xdip },

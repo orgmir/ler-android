@@ -7,7 +7,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(Dependencies.Build.Gradle)
+        // AS will auto update version
+        classpath("com.android.tools.build:gradle:8.3.0")
         classpath(Dependencies.Build.Kotlin)
         classpath(Dependencies.Build.Sqldelight)
     }

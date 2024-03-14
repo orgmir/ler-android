@@ -21,19 +21,19 @@ class FeedView(context: Context, attrs: AttributeSet? = null) : ContourLayout(co
     }
 
     val textView1 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
         maxLines = 3
     }
 
     val textView2 = TextView(context).apply {
-        setTextAppearance(R.style.TextAppearance_MaterialComponents_Body1)
+        setTextAppearance(com.google.android.material.R.style.TextAppearance_MaterialComponents_Body1)
         maxLines = 1
         textAlignment = TEXT_ALIGNMENT_CENTER
     }
 
     init {
         clipToPadding = false
-        val background = getDrawable(R.attr.selectableItemBackground)
+        val background = getDrawable(androidx.appcompat.R.attr.selectableItemBackground)
         setBackground(background)
 
         selectedAccentView.layoutBy(
