@@ -2,7 +2,7 @@ object Versions {
     object Build {
         const val CompileSdk = 30
         const val MinSdk = 26
-        const val TargetSdk = 33
+        const val TargetSdk = 34
     }
 
     const val Kotlin = "1.9.22"
@@ -15,7 +15,7 @@ object AppVersion {
 
     private const val Major = 1
     private const val Minor = 1
-    private const val Patch = 1
+    private const val Patch = 2
     private val Build get() = System.getProperty("buildNumber")?.toIntOrNull() ?: 0
 
     val Name get() = "$Major.$Minor.$Patch"

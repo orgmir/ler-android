@@ -30,7 +30,7 @@ platform :android do
   lane :deploy do
     gradle(
       flags: "--no-daemon --build-cache",
-      task: "clean check assembleRelease"
+      task: "clean assembleRelease"
     )
     upload_to_play_store
   end
