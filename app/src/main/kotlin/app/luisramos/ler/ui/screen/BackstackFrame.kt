@@ -50,8 +50,8 @@ class BackstackFrame : Parcelable {
 
     override fun describeContents(): Int = 0
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeSerializable(screen)
-        dest?.writeSparseArray(viewState)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeSerializable(screen)
+        dest.writeSparseArray(viewState)
     }
 }

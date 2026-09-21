@@ -52,17 +52,17 @@ class MainActivity : NavigatingActivity() {
         setSupportActionBar(view.toolbarContainer.toolbar)
 
         view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View?) {
+            override fun onViewAttachedToWindow(v: View) {
                 view.toolbarContainer.toolbar.setNavigationOnClickListener {
                     when {
-                        view.activity<NavigatingActivity>().backstack.size >= 1 ->
+                        view.activity<NavigatingActivity>().backstack.isNotEmpty() ->
                             goBack()
                         else -> view.openDrawer()
                     }
                 }
             }
 
-            override fun onViewDetachedFromWindow(v: View?) {}
+            override fun onViewDetachedFromWindow(v: View) {}
         })
 
         WorkManager.getInstance(this)

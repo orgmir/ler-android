@@ -1,4 +1,5 @@
 import java.util.Date;
+import kotlin.Boolean;
 
 CREATE TABLE feedItem (
     id INTEGER PRIMARY KEY,

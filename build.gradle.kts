@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
+plugins {
+    // AS will auto update version
+    id("com.android.application") version "9.4.1" apply false
+    id(Dependencies.Build.Sqldelight) version Versions.Sqldelight apply false
+}
+
 buildscript {
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
-    }
-    dependencies {
-        // AS will auto update version
-        classpath("com.android.tools.build:gradle:8.3.0")
-        classpath(Dependencies.Build.Kotlin)
-        classpath(Dependencies.Build.Sqldelight)
     }
 }
 
@@ -18,12 +18,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
-}
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
 }
 
 tasks.register("checkPreCI") {

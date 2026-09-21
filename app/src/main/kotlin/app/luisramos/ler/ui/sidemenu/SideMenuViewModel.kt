@@ -9,7 +9,6 @@ import app.luisramos.ler.domain.fold
 import app.luisramos.ler.ui.ScaffoldViewModel
 import app.luisramos.ler.ui.navigation.Navigation
 import app.luisramos.ler.ui.views.UiState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SideMenuViewModel(
@@ -47,10 +46,9 @@ class SideMenuViewModel(
     }
 
     private fun List<FeedsWithCount>.toSideMenuItems() = map { item ->
-
         SideMenuItem(
-            id = item.id,
-            title = item.title,
+            id = item.id ?: -1,
+            title = item.title.orEmpty(),
             count = when (item.itemsCount) {
                 null -> ""
                 0.0 -> ""

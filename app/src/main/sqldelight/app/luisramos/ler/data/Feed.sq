@@ -1,5 +1,6 @@
 import app.luisramos.ler.data.model.FeedUpdateMode;
 import java.util.Date;
+import kotlin.Boolean;
 
 CREATE TABLE feed (
     id INTEGER PRIMARY KEY,

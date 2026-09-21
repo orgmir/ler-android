@@ -1,11 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    id("com.squareup.sqldelight")
+    id(Dependencies.Build.Sqldelight)
 }
 
 val keystoreProperties = File("keystore.properties").run {
@@ -16,14 +14,16 @@ val keystoreProperties = File("keystore.properties").run {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    }
+}
+
 android {
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     compileSdk = Versions.Build.CompileSdk
@@ -62,18 +62,6 @@ android {
         }
     }
 
-    sourceSets["main"].java {
-        srcDir("src/main/kotlin")
-    }
-
-    sourceSets["test"].java {
-        srcDir("src/sharedTest/java")
-    }
-
-    sourceSets["androidTest"].java {
-        srcDir("src/sharedTest/java")
-    }
-
     packagingOptions {
         resources.excludes.addAll(
             listOf(
@@ -86,14 +74,17 @@ android {
             )
         )
     }
+}
 
-    sqldelight {
-        database("LerDatabase") {
-            packageName = "app.luisramos.ler"
-            schemaOutputDirectory = file("src/main/sqldelight/schema")
-            verifyMigrations = true
+sqldelight {
+    databases {
+        create("LerDatabase") {
+            packageName.set("app.luisramos.ler")
+            schemaOutputDirectory.set(file("src/main/sqldelight/schema"))
+            verifyMigrations.set(true)
         }
     }
+
 }
 
 dependencies {

@@ -9,13 +9,6 @@ const val UPDATE_WORK_ID = "sync"
 const val LOCAL_NOTIF_WORK_ID = "new_post_notif_id"
 const val LOCAL_NOTIF_TAG = "new_post_notif_tag"
 
-fun App.configureWorkManager(workerFactory: WorkerFactory) {
-    val config = Configuration.Builder()
-        .setWorkerFactory(workerFactory)
-        .build()
-    WorkManager.initialize(this, config)
-}
-
 fun Context.enqueueFeedSyncWork() {
     val work = PeriodicWorkRequestBuilder<FeedUpdateWorker>(12, TimeUnit.HOURS).build()
     WorkManager.getInstance(this)

@@ -1,17 +1,17 @@
 package app.luisramos.ler.data
 
 import android.content.Context
+import app.cash.sqldelight.ColumnAdapter
+import app.cash.sqldelight.EnumColumnAdapter
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import app.luisramos.ler.LerDatabase
 import app.luisramos.ler.data.model.FeedUpdateMode
 import app.luisramos.ler.domain.Db
-import com.squareup.sqldelight.ColumnAdapter
-import com.squareup.sqldelight.EnumColumnAdapter
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Date
 import kotlin.coroutines.CoroutineContext
 
 val dateAdapter = object : ColumnAdapter<Date, Long> {
@@ -87,7 +87,7 @@ class DefaultDatabase(
         id
     }
 
-    override suspend fun deleteFeed(id: Long) = withContext(dbContext) {
+    override suspend fun deleteFeed(id: Long): Unit = withContext(dbContext) {
         queryWrapper.feedQueries.deleteFeedById(id)
     }
 
@@ -146,7 +146,7 @@ class DefaultDatabase(
         link: String,
         publishedAt: Date,
         updatedAt: Date
-    ) = withContext(dbContext) {
+    ): Unit = withContext(dbContext) {
         queryWrapper.feedItemQueries.updateFeedItem(
             id = id,
             title = title,
@@ -157,15 +157,16 @@ class DefaultDatabase(
         )
     }
 
-    override suspend fun deleteFeedItemsByFeedId(feedId: Long) = withContext(dbContext) {
+    override suspend fun deleteFeedItemsByFeedId(feedId: Long): Unit = withContext(dbContext) {
         queryWrapper.feedItemQueries.deleteFeedItemsByFeedId(feedId)
     }
 
-    override suspend fun setFeedItemUnread(id: Long, unread: Boolean) = withContext(dbContext) {
-        queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
-    }
+    override suspend fun setFeedItemUnread(id: Long, unread: Boolean): Unit =
+        withContext(dbContext) {
+            queryWrapper.feedItemQueries.toggleUnread(id = id, unread = unread)
+        }
 
-    override suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean) =
+    override suspend fun setFeedItemsUnreadForFeedId(feedId: Long, unread: Boolean): Unit =
         withContext(dbContext) {
             queryWrapper.feedItemQueries.updateFeedItemUnreadWithFeedId(unread, feedId)
         }

@@ -15,11 +15,11 @@ inline fun <reified VM : ViewModel> ComponentActivity.appViewModels() = viewMode
 
 fun <T> LiveData<T>.observe(view: View, observer: Observer<T>) {
     view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-        override fun onViewAttachedToWindow(p0: View?) {
+        override fun onViewAttachedToWindow(p0: View) {
             this@observe.observeForever(observer)
         }
 
-        override fun onViewDetachedFromWindow(p0: View?) {
+        override fun onViewDetachedFromWindow(p0: View) {
             this@observe.removeObserver(observer)
             view.removeOnAttachStateChangeListener(this)
         }

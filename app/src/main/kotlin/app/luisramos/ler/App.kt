@@ -3,7 +3,6 @@ package app.luisramos.ler
 import android.app.Application
 import app.luisramos.ler.di.AppContainer
 import app.luisramos.ler.di.DefaultAppContainer
-import app.luisramos.ler.domain.work.configureWorkManager
 import app.luisramos.ler.ui.notifications.createNotificationChannel
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.crashes.Crashes
@@ -24,7 +23,6 @@ open class App : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
-        configureWorkManager(appContainer.workerFactory)
         createNotificationChannel()
         scheduleFeedSyncWork()
         scheduleNewPostsLocalNotification()

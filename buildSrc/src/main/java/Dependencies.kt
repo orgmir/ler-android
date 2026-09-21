@@ -1,14 +1,14 @@
 object Versions {
     object Build {
-        const val CompileSdk = 30
+        const val CompileSdk = 36
         const val MinSdk = 26
-        const val TargetSdk = 34
+        const val TargetSdk = 36
     }
 
-    const val Kotlin = "1.9.22"
-    const val Sqldelight = "1.5.4"
-    const val Coroutines = "1.8.0"
-    const val WorkManager = "2.5.0"
+    const val Kotlin = "2.4.20"
+    const val Sqldelight = "2.4.0"
+    const val Coroutines = "1.11.0"
+    const val WorkManager = "2.11.2"
 }
 
 object AppVersion {
@@ -26,8 +26,7 @@ object AppVersion {
 object Dependencies {
 
     object Build {
-        const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-        const val Sqldelight = "com.squareup.sqldelight:gradle-plugin:${Versions.Sqldelight}"
+        const val Sqldelight = "app.cash.sqldelight"
     }
 
     const val Kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.Kotlin}"
@@ -52,9 +51,9 @@ object Dependencies {
     }
 
     object SqlDelight {
-        const val Android = "com.squareup.sqldelight:android-driver:${Versions.Sqldelight}"
+        const val Android = "app.cash.sqldelight:android-driver:${Versions.Sqldelight}"
         const val Coroutines =
-            "com.squareup.sqldelight:coroutines-extensions:${Versions.Sqldelight}"
+            "app.cash.sqldelight:coroutines-extensions:${Versions.Sqldelight}"
     }
 
     object Test {
@@ -64,15 +63,15 @@ object Dependencies {
         const val Kroclin = "dev.luisramos.kroclin:snapshot:0.2.0"
         const val Truth = "com.google.truth:truth:1.0.1"
         const val Mockito = "org.mockito:mockito-core:3.5.13"
-        const val Barista = "com.schibsted.spain:barista:3.8.0"
+        const val Barista = "com.schibsted.spain:barista:3.9.0"
         const val Screengrab = "tools.fastlane:screengrab:2.0.0"
         const val Radiography = "com.squareup.radiography:radiography:2.3.0"
         const val WorkManager = "androidx.work:work-testing:${Versions.WorkManager}"
 
         object AndroidX {
-            const val Core = "androidx.test:core-ktx:1.3.0"
-            const val JUnit = "androidx.test.ext:junit:1.1.2"
-            const val Espresso = "androidx.test.espresso:espresso-core:3.3.0"
+            const val Core = "androidx.test:core-ktx:1.7.0"
+            const val JUnit = "androidx.test.ext:junit:1.3.0"
+            const val Espresso = "androidx.test.espresso:espresso-core:3.7.0"
         }
     }
 }
